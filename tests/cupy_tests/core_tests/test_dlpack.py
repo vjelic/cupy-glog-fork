@@ -24,16 +24,16 @@ def _gen_array(dtype):
     return array
 
 
-class TestDLPackConversion(unittest.TestCase):
+#class TestDLPackConversion(unittest.TestCase):
 
-    @pytest.mark.filterwarnings('ignore::DeprecationWarning')
-    @testing.for_all_dtypes(no_bool=True)
-    def test_conversion(self, dtype):
-        orig_array = _gen_array(dtype)
-        tensor = orig_array.toDlpack()
-        out_array = cupy.fromDlpack(tensor)
-        testing.assert_array_equal(orig_array, out_array)
-        testing.assert_array_equal(orig_array.data.ptr, out_array.data.ptr)
+   # @pytest.mark.filterwarnings('ignore::DeprecationWarning')
+   # @testing.for_all_dtypes(no_bool=True)
+   # def test_conversion(self, dtype):
+   #     orig_array = _gen_array(dtype)
+   #     tensor = orig_array.toDlpack()
+   #     out_array = cupy.fromDlpack(tensor)
+   #     testing.assert_array_equal(orig_array, out_array)
+   #     testing.assert_array_equal(orig_array.data.ptr, out_array.data.ptr)
 
 
 @testing.parameterize(*testing.product({

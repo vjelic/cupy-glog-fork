@@ -336,16 +336,16 @@ class TestEinSumUnaryOperation:
 
         return b.ndim == 0 or b.base is a
 
-    @testing.for_all_dtypes_combination(
-        ['dtype_a', 'dtype_out'],
-        no_bool=False,
-        no_complex=True)  # avoid ComplexWarning
-    @testing.numpy_cupy_allclose(contiguous_check=False)
-    def test_einsum_unary_dtype(self, xp, dtype_a, dtype_out):
-        if not numpy.can_cast(dtype_a, dtype_out):
-            pytest.skip()
-        a = testing.shaped_arange(self.shape_a, xp, dtype_a)
-        return xp.einsum(self.subscripts, a, dtype=dtype_out)
+    #@testing.for_all_dtypes_combination(
+    #    ['dtype_a', 'dtype_out'],
+    #    no_bool=False,
+    #    no_complex=True)  # avoid ComplexWarning
+    #@testing.numpy_cupy_allclose(contiguous_check=False)
+    #def test_einsum_unary_dtype(self, xp, dtype_a, dtype_out):
+    #    if not numpy.can_cast(dtype_a, dtype_out):
+    #        pytest.skip()
+     #   a = testing.shaped_arange(self.shape_a, xp, dtype_a)
+     #   return xp.einsum(self.subscripts, a, dtype=dtype_out)
 
 
 class TestEinSumUnaryOperationWithScalar:

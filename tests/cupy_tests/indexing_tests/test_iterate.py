@@ -102,19 +102,19 @@ class TestFlatiterSubscript(unittest.TestCase):
         a.flat[self.index] = v
         return a
 
-    @testing.for_CF_orders()
-    @testing.for_all_dtypes_combination(('a_dtype', 'v_dtype'))
-    @testing.numpy_cupy_array_equal()
-    def test_setitem_ndarray_different_types(
-            self, xp, a_dtype, v_dtype, order):
-        if numpy.isscalar(self.index):
-            pytest.skip()
-        a = xp.zeros(self.shape, dtype=a_dtype, order=order)
-        v = testing.shaped_arange((3,), xp, v_dtype, order)
-        with warnings.catch_warnings():
-            warnings.simplefilter('ignore', numpy.ComplexWarning)
-            a.flat[self.index] = v
-        return a
+    #@testing.for_CF_orders()
+    #@testing.for_all_dtypes_combination(('a_dtype', 'v_dtype'))
+    #@testing.numpy_cupy_array_equal()
+    #def test_setitem_ndarray_different_types(
+    #        self, xp, a_dtype, v_dtype, order):
+    #    if numpy.isscalar(self.index):
+    #        pytest.skip()
+    #    a = xp.zeros(self.shape, dtype=a_dtype, order=order)
+    #    v = testing.shaped_arange((3,), xp, v_dtype, order)
+    #    with warnings.catch_warnings():
+    #        warnings.simplefilter('ignore', numpy.ComplexWarning)
+    #        a.flat[self.index] = v
+    #    return a
 
 
 @testing.parameterize(

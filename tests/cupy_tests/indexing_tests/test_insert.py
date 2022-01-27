@@ -7,26 +7,26 @@ import cupy
 from cupy import testing
 
 
-@testing.parameterize(*testing.product({
-    'shape': [(7,), (2, 3), (4, 3, 2)],
-    'n_vals': [0, 1, 3, 15],
-}))
-@testing.gpu
-class TestPlace(unittest.TestCase):
+#@testing.parameterize(*testing.product({
+#    'shape': [(7,), (2, 3), (4, 3, 2)],
+#    'n_vals': [0, 1, 3, 15],
+#}))
+#@testing.gpu
+#class TestPlace(unittest.TestCase):
 
     # NumPy 1.9 don't wraps values.
     # https://github.com/numpy/numpy/pull/5821
-    @testing.for_all_dtypes()
-    @testing.numpy_cupy_array_equal()
-    def test_place(self, xp, dtype):
-        a = testing.shaped_arange(self.shape, xp, dtype)
-        if self.n_vals == 0:
-            mask = xp.zeros(self.shape, dtype=numpy.bool_)
-        else:
-            mask = testing.shaped_random(self.shape, xp, numpy.bool_)
-        vals = testing.shaped_random((self.n_vals,), xp, dtype)
-        xp.place(a, mask, vals)
-        return a
+    #@testing.for_all_dtypes()
+    #@testing.numpy_cupy_array_equal()
+    #def test_place(self, xp, dtype):
+    #    a = testing.shaped_arange(self.shape, xp, dtype)
+    #    if self.n_vals == 0:
+    #        mask = xp.zeros(self.shape, dtype=numpy.bool_)
+    #    else:
+    #        mask = testing.shaped_random(self.shape, xp, numpy.bool_)
+    #    vals = testing.shaped_random((self.n_vals,), xp, dtype)
+    #    xp.place(a, mask, vals)
+    #    return a
 
 
 @testing.parameterize(*testing.product({
@@ -37,15 +37,15 @@ class TestPlaceRaises(unittest.TestCase):
 
     # NumPy 1.9 performs illegal memory access.
     # https://github.com/numpy/numpy/pull/5821
-    @testing.with_requires('numpy>=1.10')
-    @testing.for_all_dtypes()
-    def test_place_empty_value_error(self, dtype):
-        for xp in (numpy, cupy):
-            a = testing.shaped_arange(self.shape, xp, dtype)
-            mask = testing.shaped_arange(self.shape, xp, int) % 2 == 0
-            vals = testing.shaped_random((0,), xp, dtype)
-            with pytest.raises(ValueError):
-                xp.place(a, mask, vals)
+    #@testing.with_requires('numpy>=1.10')
+    #@testing.for_all_dtypes()
+    #def test_place_empty_value_error(self, dtype):
+    #    for xp in (numpy, cupy):
+    #        a = testing.shaped_arange(self.shape, xp, dtype)
+    #        mask = testing.shaped_arange(self.shape, xp, int) % 2 == 0
+    #        vals = testing.shaped_random((0,), xp, dtype)
+    #        with pytest.raises(ValueError):
+    #            xp.place(a, mask, vals)
 
     # Before NumPy 1.12 it was TypeError.
     # https://github.com/numpy/numpy/pull/7003
@@ -142,21 +142,21 @@ class TestPutRaises(unittest.TestCase):
                 xp.put(a, inds, vals, mode='unknown')
 
 
-@testing.parameterize(
-    *testing.product(
-        {'shape': [(0,), (1,), (2, 3), (2, 3, 4)]}))
-@testing.gpu
-class TestPutmaskSameShape(unittest.TestCase):
+#@testing.parameterize(
+#    *testing.product(
+#        {'shape': [(0,), (1,), (2, 3), (2, 3, 4)]}))
+#@testing.gpu
+#class TestPutmaskSameShape(unittest.TestCase):
 
-    @testing.for_all_dtypes()
-    @testing.numpy_cupy_array_equal()
-    def test_putmask(self, xp, dtype):
-        a = testing.shaped_random(self.shape, xp, dtype=dtype, seed=0)
-        mask = testing.shaped_random(self.shape, xp, dtype=numpy.bool_, seed=1)
-        values = testing.shaped_random(self.shape, xp, dtype=dtype, seed=2)
-        ret = xp.putmask(a, mask, values)
-        assert ret is None
-        return a
+    #@testing.for_all_dtypes()
+    #@testing.numpy_cupy_array_equal()
+    #def test_putmask(self, xp, dtype):
+    #    a = testing.shaped_random(self.shape, xp, dtype=dtype, seed=0)
+    #    mask = testing.shaped_random(self.shape, xp, dtype=numpy.bool_, seed=1)
+    #    values = testing.shaped_random(self.shape, xp, dtype=dtype, seed=2)
+    #    ret = xp.putmask(a, mask, values)
+    #    assert ret is None
+    #    return a
 
 
 @testing.parameterize(
