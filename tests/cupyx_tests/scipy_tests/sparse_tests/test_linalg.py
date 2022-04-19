@@ -1179,7 +1179,7 @@ class TestLOBPCG:
         """
         n = 50
         m = 4
-        vals = -cupy.arange(1, n + 1)
+        vals = cupy.arange(1, n + 1)
         A = sparse.diags([vals], [0], (n, n))
         A = A.astype(cupy.float32)
         X = testing.shaped_random((n, m), xp=cupy, seed=1566950023)

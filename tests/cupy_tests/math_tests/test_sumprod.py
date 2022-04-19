@@ -731,7 +731,7 @@ class TestCumprod:
 
     @testing.slow
     def test_cumprod_huge_array(self):
-        size = 2 ** 32
+        size = 2 ** 31
         # Free huge memory for slow test
         cupy.get_default_memory_pool().free_all_blocks()
         a = cupy.ones(size, 'b')

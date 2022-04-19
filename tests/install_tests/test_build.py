@@ -16,7 +16,7 @@ class TestCheckVersion(unittest.TestCase):
     def setUp(self):
         self.compiler = ccompiler.new_compiler()
         sysconfig.customize_compiler(self.compiler)
-        self.settings = build.get_compiler_setting(False)
+        self.settings = build.get_compiler_setting(test_hip)
 
     @pytest.mark.gpu
     @pytest.mark.skipif(test_hip, reason='For CUDA environment')
