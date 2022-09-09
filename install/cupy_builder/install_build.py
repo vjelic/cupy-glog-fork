@@ -156,7 +156,7 @@ def get_compiler_setting(use_hip):
         library_dirs.append(os.path.join(rocm_path, 'lib'))
 
     if use_hip:
-        extra_compile_args.append('-std=c++11')
+        extra_compile_args.append('-std=c++14')
 
     if PLATFORM_WIN32:
         nvtoolsext_path = os.environ.get('NVTOOLSEXT_PATH', '')

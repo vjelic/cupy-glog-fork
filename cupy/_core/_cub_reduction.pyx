@@ -30,7 +30,7 @@ cdef function.Function _create_cub_reduction_function(
     # _J            : the index of an element in the array
 
     # static_assert needs at least C++11 in NVRTC
-    options += ('--std=c++11',)
+    options += ('--std=c++14',)
 
     cdef str backend
     if runtime._is_hip_environment:
