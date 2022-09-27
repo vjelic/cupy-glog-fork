@@ -349,7 +349,7 @@ struct _sort {
             transform(cuda::par(alloc).on(stream_),
                       make_counting_iterator<size_t>(0),
                       make_counting_iterator<size_t>(size),
-                      make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
+                      rocprim::make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
                       dp_keys_first,
                       divides<size_t>());
 
@@ -442,7 +442,7 @@ struct _argsort {
         transform(cuda::par(alloc).on(stream_),
                   make_counting_iterator<size_t>(0),
                   make_counting_iterator<size_t>(size),
-                  make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
+                  rocprim::make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
                   dp_idx_first,
                   modulus<size_t>());
 
@@ -459,7 +459,7 @@ struct _argsort {
             transform(cuda::par(alloc).on(stream_),
                       make_counting_iterator<size_t>(0),
                       make_counting_iterator<size_t>(size),
-                      make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
+                      rocprim::make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
                       dp_keys_first,
                       divides<size_t>());
 
