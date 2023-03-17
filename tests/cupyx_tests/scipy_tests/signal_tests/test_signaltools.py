@@ -343,6 +343,7 @@ class TestOrderFilter:
     @testing.for_all_dtypes(no_float16=True, no_bool=True, no_complex=True)
     @testing.numpy_cupy_allclose(atol=1e-8, rtol=1e-8, scipy_name='scp',
                                  accept_error=ValueError)  # for even kernels
+    @pytest.mark.xfail(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_order_filter(self, xp, scp, dtype):
         if dtype == xp.longlong and "1.15.0" <= scipy_version < "1.16.0":
             # https://github.com/scipy/scipy/issues/22368
