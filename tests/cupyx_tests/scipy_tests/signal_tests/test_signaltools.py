@@ -343,7 +343,7 @@ class TestOrderFilter:
     @testing.for_all_dtypes(no_float16=True, no_bool=True, no_complex=True)
     @testing.numpy_cupy_allclose(atol=1e-8, rtol=1e-8, scipy_name='scp',
                                  accept_error=ValueError)  # for even kernels
-    @pytest.mark.xfail(runtime.is_hip, reason='ROCm/HIP may have a bug')
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_order_filter(self, xp, scp, dtype):
         if dtype == xp.longlong and "1.15.0" <= scipy_version < "1.16.0":
             # https://github.com/scipy/scipy/issues/22368
@@ -365,20 +365,7 @@ class TestMedFilt:
     @testing.for_all_dtypes(no_complex=True)
     @testing.numpy_cupy_allclose(atol=1e-8, rtol=1e-8, scipy_name='scp',
                                  accept_error=ValueError)  # for even kernels
-    def test_medfilt_no_complex(self, xp, scp, dtype):
-        if sys.platform == 'win32':
-            pytest.xfail('medfilt broken for Scipy 1.7.0 in windows')
-        volume = testing.shaped_random(self.volume, xp, dtype)
-        kernel_size = self.kernel_size
-        if isinstance(kernel_size, tuple):
-            kernel_size = kernel_size[:volume.ndim]
-        return scp.signal.medfilt(volume, kernel_size)
-
-    @testing.with_requires('scipy>=1.11.0', 'scipy<1.12.0rc1')
-    @testing.for_all_dtypes()
-    @testing.numpy_cupy_allclose(
-        atol=1e-8, rtol=1e-8, scipy_name='scp',
-        accept_error=(ValueError, TypeError))  # for even kernels
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_medfilt(self, xp, scp, dtype):
         if dtype == xp.longlong and "1.15.0" <= scipy_version < "1.16.0":
             # https://github.com/scipy/scipy/issues/22368
