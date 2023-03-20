@@ -8,6 +8,7 @@ from cupy.cuda import runtime
 from cupy.exceptions import AxisError
 
 
+
 class TestJoin:
 
     @testing.for_all_dtypes(name='dtype1')
@@ -197,7 +198,7 @@ class TestJoin:
             out = xp.zeros((4, 10), dtype=xp.float64)
             with pytest.raises(ValueError):
                 xp.concatenate((a, b, c), axis=1, out=out)
-    
+
     @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_concatenate_out_invalid_shape_2(self):
         for xp in (numpy, cupy):
