@@ -12,6 +12,7 @@ from cupyx.distributed._nccl_comm import NCCLBackend
 from cupyx.distributed._store import ExceptionAwareProcess
 from cupyx.scipy import sparse
 
+import time
 
 nccl_available = nccl.available
 
@@ -117,6 +118,7 @@ def reduce_scatter(dtype, use_mpi=False):
             N_WORKERS * 10, dtype='f').reshape(N_WORKERS, 10)
         out_array = cupy.zeros((10,), dtype='f')
 
+        time.sleep(1)
         comm.reduce_scatter(in_array, out_array, 10)
         testing.assert_allclose(out_array, 2 * in_array[rank])
 
@@ -188,6 +190,7 @@ def send_recv(dtype, use_mpi=False):
         in_array = cupy.arange(10, dtype='f')
         for i in range(N_WORKERS):
             out_array = cupy.zeros((10,), dtype='f')
+            time.sleep(1)
             comm.send_recv(in_array, out_array, i)
             testing.assert_allclose(out_array, in_array)
 
@@ -210,7 +213,7 @@ def scatter(dtype, use_mpi=False):
         in_array = 1 + cupy.arange(
             N_WORKERS * 10, dtype='f').reshape(N_WORKERS, 10)
         out_array = cupy.zeros((10,), dtype='f')
-
+        time.sleep(1)
         comm.scatter(in_array, out_array, root)
         if rank > 0:
             testing.assert_allclose(out_array, in_array[rank])
@@ -235,6 +238,7 @@ def gather(dtype, use_mpi=False):
         comm = NCCLBackend(N_WORKERS, rank, use_mpi=use_mpi)
         in_array = (rank + 1) * cupy.arange(10, dtype='f')
         out_array = cupy.zeros((N_WORKERS, 10), dtype='f')
+        time.sleep(1)
         comm.gather(in_array, out_array, root)
         if rank == root:
             expected = 1 + cupy.arange(N_WORKERS).reshape(N_WORKERS, 1)
