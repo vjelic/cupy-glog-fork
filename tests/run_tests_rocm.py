@@ -1,4 +1,5 @@
 import os
+import subprocess
 import argparse
 import re
 
@@ -94,7 +95,7 @@ def parse_test_log_and_get_summary(test_name):
 def run_all_tests():
     initial_cmd = 'CUPY_TEST_GPU_LIMIT=4 CUPY_INSTALL_USE_HIP=1 ' + \
         'pytest -vvv -k "not compile_cuda and not fft_allocate" -m "not slow" '
-    os.system("mkdir -p ~/.cache/cupy-tests")
+    subprocess.Popen("mkdir -p ~/.cache/cupy-tests", shell=True)
     test_summary = []
     for test_suite in TEST_SUITES:
         if test_suite == "cupy_tests":
@@ -102,7 +103,7 @@ def run_all_tests():
                 cmd = initial_cmd + TEST_ROOT + "/cupy_tests/" + \
                     cupy_test + " | tee ~/.cache/cupy-tests/cupy_test.log"
                 print("Running : " + cmd)
-                os.system(cmd)
+                subprocess.Popen(cmd, shell=True).wait()
                 test_name = "tests/cupy_tests/" + cupy_test
                 test_summary.append(parse_test_log_and_get_summary(test_name))
         elif test_suite == "cupyx_tests":
@@ -110,14 +111,14 @@ def run_all_tests():
                 cmd = initial_cmd + TEST_ROOT + "/cupyx_tests/" + \
                     cupyx_test + " | tee ~/.cache/cupy-tests/cupy_test.log"
                 print("Running : " + cmd)
-                os.system(cmd)
+                subprocess.Popen(cmd, shell=True).wait()
                 test_name = "tests/cupyx_tests/" + cupyx_test
                 test_summary.append(parse_test_log_and_get_summary(test_name))
         else:
             cmd = initial_cmd + TEST_ROOT + "/" + test_suite + \
                 " | tee ~/.cache/cupy-tests/cupy_test.log"
             print("Running : " + cmd)
-            os.system(cmd)
+            subprocess.Popen(cmd, shell=True).wait()
             test_name = "tests/" + test_suite
             test_summary.append(parse_test_log_and_get_summary(test_name))
 
