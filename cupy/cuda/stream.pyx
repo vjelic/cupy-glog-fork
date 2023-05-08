@@ -462,9 +462,9 @@ class Stream(_BaseStream):
             ptr = 0
             device_id = -1
         elif ptds:
-            if runtime._is_hip_environment:
-                raise ValueError('HIP does not support per-thread '
-                                 'default stream (ptds)')
+            #if runtime._is_hip_environment:
+            #    raise ValueError('HIP does not support per-thread '
+            #                     'default stream (ptds)')
             ptr = runtime.streamPerThread
             device_id = -1
         elif non_blocking:
@@ -520,5 +520,5 @@ class ExternalStream(_BaseStream):
 
 
 Stream.null = Stream(null=True)
-if not runtime._is_hip_environment:
-    Stream.ptds = Stream(ptds=True)
+#if not runtime._is_hip_environment:
+Stream.ptds = Stream(ptds=True)
