@@ -30,6 +30,9 @@ def module_extension_sources(file, use_cython, no_cuda):
     pyx, others = ensure_module_file(file)
     base = os.path.join(*pyx.split('.'))
     pyx = base + ('.pyx' if use_cython else '.cpp')
+    print ("-----CHAI file: {}".format(file))
+    print ("---- CHAI: {}".format(pyx))
+    print ("************")
 
     # If CUDA SDK is not available, remove CUDA C files from extension sources
     # and use stubs defined in header files.
@@ -258,6 +261,8 @@ def make_extensions(ctx: Context, compiler, use_cython):
     """Produce a list of Extension instances which passed to cythonize()."""
 
     MODULES = ctx.features.values()
+    print ("---- CHAI: ctx.features make_extensions : {}".format(ctx.features))
+    print ("---- CHAI: MODULES : {}".format(MODULES))
 
     no_cuda = ctx.use_stub
     use_hip = not no_cuda and ctx.use_hip
@@ -379,7 +384,7 @@ def make_extensions(ctx: Context, compiler, use_cython):
                 ldflag += ','.join('-rpath,' + p for p in rpath)
                 args = s_file.setdefault('extra_link_args', [])
                 args.append(ldflag)
-
+            
             sources = module_extension_sources(f, use_cython, no_cuda)
             extension = setuptools.Extension(name, sources, **s_file)
             ret.append(extension)

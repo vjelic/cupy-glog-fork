@@ -16,6 +16,26 @@ cupy_builder.initialize(ctx)
 if not cupy_builder.preflight_check(ctx):
     sys.exit(1)
 
+## hipify cupy
+from cupy_builder.install_utils import get_rocm_version
+if get_rocm_version() > 0:
+    ## run hipify.
+    from hipify_torch import hipify_python
+    from cupy_builder.build_amd_utils import post_process_hipified_files 
+    proj_dir = os.path.join(source_root, "cupy_backends", "cuda")
+    print ("INFO: hipification of cupy_backends in progress ...")
+    with hipify_python.GeneratedFileCleaner(keep_intermediates=True) as clean_ctx:
+        hipify_python.hipify(
+            project_directory=proj_dir,
+            output_directory=proj_dir,
+            includes=['*'],
+            show_detailed=True,
+            header_include_dirs=[],
+            is_pytorch_extension=True,
+            clean_ctx=clean_ctx,
+        )
+
+    post_process_hipified_files(source_root)
 
 # TODO(kmaehashi): migrate to pyproject.toml (see #4727, #4619)
 setup_requires = [

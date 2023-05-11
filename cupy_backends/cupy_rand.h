@@ -3,7 +3,8 @@
 
 #if CUPY_USE_HIP
 
-#include "hip/cupy_hiprand.h"
+//#include "hip/cupy_hiprand.h"
+#include "hip/cupy_hiprand_new.h"
 
 #elif !defined(CUPY_NO_CUDA)
 
