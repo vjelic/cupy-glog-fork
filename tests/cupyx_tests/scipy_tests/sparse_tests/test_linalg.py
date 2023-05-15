@@ -1215,9 +1215,9 @@ class TestLOBPCG:
         return eigvals, _eigen_vec_transform(vecs, xp)
 
     @pytest.mark.xfail(
-        runtime.is_hip and 
-        driver.get_build_version() >= 5_00_00000 and 
-        driver.get_build_version() < 50530201,
+        runtime.is_hip and
+        (driver.get_build_version() >= 5_00_00000 and
+         driver.get_build_version() < 50530201),
         reason='ROCm 5.0+ may have a bug')
     @pytest.mark.xfail(
         cupy.cuda.cusolver._getVersion() >= (11, 4, 5),  # CUDA 12.1.1+
