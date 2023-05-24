@@ -367,7 +367,6 @@ cudaError_t cudaStreamDestroy(cudaStream_t stream) {
 }
 
 cudaError_t cudaStreamSynchronize(cudaStream_t stream) {
-    
     return hipStreamSynchronize(stream);
 }
 
