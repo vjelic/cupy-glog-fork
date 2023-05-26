@@ -1,7 +1,8 @@
 import os
 
 hipified_sources = [
-    "cupy_backends/cuda/libs/curand_hip.pyx"
+    "cupy_backends/cuda/libs/curand_hip.pyx",
+    "cupy_backends/cuda/libs/nvrtc_hip.pyx",
 ]
 
 def modify_hip_gen_code(path):
