@@ -29,14 +29,12 @@ if get_rocm_version() > 0:
             project_directory=proj_dir,
             output_directory=proj_dir,
             includes=['*'],
-            optional_extensions=(".pyx", ".pxd"),
+            extra_extensions=(".pyx", ".pxd"),
             show_detailed=True,
             header_include_dirs=[],
             is_pytorch_extension=True,
             clean_ctx=clean_ctx,
         )
-
-    post_process_hipified_files(source_root)
 
 # TODO(kmaehashi): migrate to pyproject.toml (see #4727, #4619)
 setup_requires = [
