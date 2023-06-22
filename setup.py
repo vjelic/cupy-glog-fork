@@ -138,30 +138,30 @@ Operating System :: Microsoft :: Windows
 """
 
 
-#setup(
-#    name=ctx.package_name,
-#    version=__version__,  # NOQA
-#    description='CuPy: NumPy & SciPy for GPU',
-#    long_description=long_description,
-#    author='Seiya Tokui',
-#    author_email='tokui@preferred.jp',
-#    maintainer='CuPy Developers',
-#    url='https://cupy.dev/',
-#    license='MIT License',
-#    project_urls={
-#        "Bug Tracker": "https://github.com/cupy/cupy/issues",
-#        "Documentation": "https://docs.cupy.dev/",
-#        "Source Code": "https://github.com/cupy/cupy",
-#    },
-#    classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
-#    packages=find_packages(exclude=['install', 'tests']),
-#    package_data=package_data,
-#    zip_safe=False,
-#    python_requires='>=3.7',
-#    setup_requires=setup_requires,
-#    install_requires=install_requires,
-#    tests_require=tests_require,
-#    extras_require=extras_require,
-#    ext_modules=ext_modules,
-#    cmdclass={'build_ext': cupy_builder._command.custom_build_ext},
-#)
+setup(
+    name=ctx.package_name,
+    version=__version__,  # NOQA
+    description='CuPy: NumPy & SciPy for GPU',
+    long_description=long_description,
+    author='Seiya Tokui',
+    author_email='tokui@preferred.jp',
+    maintainer='CuPy Developers',
+    url='https://cupy.dev/',
+    license='MIT License',
+    project_urls={
+        "Bug Tracker": "https://github.com/cupy/cupy/issues",
+        "Documentation": "https://docs.cupy.dev/",
+        "Source Code": "https://github.com/cupy/cupy",
+    },
+    classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
+    packages=find_packages(exclude=['install', 'tests']),
+    package_data=package_data,
+    zip_safe=False,
+    python_requires='>=3.7',
+    setup_requires=setup_requires,
+    install_requires=install_requires,
+    tests_require=tests_require,
+    extras_require=extras_require,
+    ext_modules=ext_modules,
+    cmdclass={'build_ext': cupy_builder._command.custom_build_ext},
+)
