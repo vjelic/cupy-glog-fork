@@ -16,14 +16,13 @@ cupy_builder.initialize(ctx)
 if not cupy_builder.preflight_check(ctx):
     sys.exit(1)
 
-## hipify cupy
+# hipify cupy
 from cupy_builder.install_utils import get_rocm_version
 if get_rocm_version() > 0:
-    ## run hipify.
+    # run hipify.
     from hipify_torch import hipify_python
-    from cupy_builder.build_amd_utils import post_process_hipified_files 
     proj_dir = os.path.join(source_root, "cupy_backends", "cuda")
-    print ("INFO: hipification of cupy_backends in progress ...")
+    print("INFO: hipification of cupy_backends in progress ...")
     with hipify_python.GeneratedFileCleaner(keep_intermediates=True) as clean_ctx:
         hipify_python.hipify(
             project_directory=proj_dir,
@@ -32,6 +31,7 @@ if get_rocm_version() > 0:
             extra_extensions=(".pyx", ".pxd"),
             show_detailed=True,
             header_include_dirs=[],
+            custom_map_list="rocm_custom_mapping.json",
             is_pytorch_extension=True,
             clean_ctx=clean_ctx,
         )
@@ -138,30 +138,30 @@ Operating System :: Microsoft :: Windows
 """
 
 
-setup(
-    name=ctx.package_name,
-    version=__version__,  # NOQA
-    description='CuPy: NumPy & SciPy for GPU',
-    long_description=long_description,
-    author='Seiya Tokui',
-    author_email='tokui@preferred.jp',
-    maintainer='CuPy Developers',
-    url='https://cupy.dev/',
-    license='MIT License',
-    project_urls={
-        "Bug Tracker": "https://github.com/cupy/cupy/issues",
-        "Documentation": "https://docs.cupy.dev/",
-        "Source Code": "https://github.com/cupy/cupy",
-    },
-    classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
-    packages=find_packages(exclude=['install', 'tests']),
-    package_data=package_data,
-    zip_safe=False,
-    python_requires='>=3.7',
-    setup_requires=setup_requires,
-    install_requires=install_requires,
-    tests_require=tests_require,
-    extras_require=extras_require,
-    ext_modules=ext_modules,
-    cmdclass={'build_ext': cupy_builder._command.custom_build_ext},
-)
+#setup(
+#    name=ctx.package_name,
+#    version=__version__,  # NOQA
+#    description='CuPy: NumPy & SciPy for GPU',
+#    long_description=long_description,
+#    author='Seiya Tokui',
+#    author_email='tokui@preferred.jp',
+#    maintainer='CuPy Developers',
+#    url='https://cupy.dev/',
+#    license='MIT License',
+#    project_urls={
+#        "Bug Tracker": "https://github.com/cupy/cupy/issues",
+#        "Documentation": "https://docs.cupy.dev/",
+#        "Source Code": "https://github.com/cupy/cupy",
+#    },
+#    classifiers=[_f for _f in CLASSIFIERS.split('\n') if _f],
+#    packages=find_packages(exclude=['install', 'tests']),
+#    package_data=package_data,
+#    zip_safe=False,
+#    python_requires='>=3.7',
+#    setup_requires=setup_requires,
+#    install_requires=install_requires,
+#    tests_require=tests_require,
+#    extras_require=extras_require,
+#    ext_modules=ext_modules,
+#    cmdclass={'build_ext': cupy_builder._command.custom_build_ext},
+#)
