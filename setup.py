@@ -32,7 +32,7 @@ if get_rocm_version() > 0:
             extra_extensions=(".pyx", ".pxd"),
             show_detailed=True,
             header_include_dirs=[],
-            custom_map_list="rocm_custom_mapping.json",
+            custom_map_list="install/amd_build/rocm_custom_mapping.json",
             is_pytorch_extension=True,
             clean_ctx=clean_ctx,
         )
