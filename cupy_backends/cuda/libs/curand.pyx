@@ -9,9 +9,9 @@ from cupy_backends.cuda cimport stream as stream_module
 IF CUPY_USE_GEN_HIP_CODE:
     from cupy_backends.cuda.libs.curand_hip import *
 ELSE:
-###############################################################################
-# Extern
-###############################################################################
+    ##########################################################################
+    # Extern
+    ##########################################################################
 
     cdef extern from '../../cupy_rand.h' nogil:
         ctypedef void* Stream 'cudaStream_t'
@@ -53,10 +53,9 @@ ELSE:
         int curandGeneratePoisson(
             Generator generator, unsigned int* outputPtr, size_t n, double lam)
 
-
-###############################################################################
-# Error handling
-###############################################################################
+    ##########################################################################
+    # Error handling
+    ##########################################################################
 
     STATUS = {
         0: 'CURAND_STATUS_SUCCESS',
@@ -74,9 +73,7 @@ ELSE:
         999: 'CURAND_STATUS_INTERNAL_ERROR',
     }
 
-
     class CURANDError(RuntimeError):
-
         def __init__(self, status):
             self.status = status
             super(CURANDError, self).__init__(STATUS[status])
@@ -84,16 +81,14 @@ ELSE:
         def __reduce__(self):
             return (type(self), (self.status,))
 
-
     @cython.profile(False)
     cpdef inline check_status(int status):
         if status != 0:
             raise CURANDError(status)
 
-
-###############################################################################
-# Generator
-###############################################################################
+    ###########################################################################
+    # Generator
+    ###########################################################################
 
     cpdef size_t createGenerator(int rng_type) except? 0:
         cdef Generator generator
@@ -102,11 +97,9 @@ ELSE:
         check_status(status)
         return <size_t>generator
 
-
     cpdef destroyGenerator(size_t generator):
         status = curandDestroyGenerator(<Generator>generator)
         check_status(status)
-
 
     cpdef int getVersion() except? -1:
         cdef int version
@@ -114,11 +107,12 @@ ELSE:
         check_status(status)
         return version
 
-
     cpdef setStream(size_t generator, size_t stream):
-        # TODO(leofang): The support of stream capture is not mentioned at all in
-        # the cuRAND docs (as of CUDA 11.5), so we disable this functionality.
-        if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
+        # TODO(leofang): The support of stream capture is not mentioned at all
+        # in the cuRAND docs (as of CUDA 11.5),
+        # so we disable this functionality.
+        if not runtime._is_hip_environment and \
+           runtime.streamIsCapturing(stream):
             raise NotImplementedError(
                 'calling cuRAND API during stream capture is currently '
                 'unsupported')
@@ -126,30 +120,27 @@ ELSE:
         status = curandSetStream(<Generator>generator, <Stream>stream)
         check_status(status)
 
-
     cdef _setStream(size_t generator):
         """Set current stream"""
         setStream(generator, stream_module.get_current_stream_ptr())
 
-
-    cpdef setPseudoRandomGeneratorSeed(size_t generator, unsigned long long seed):
+    cpdef setPseudoRandomGeneratorSeed(size_t generator,
+                                       unsigned long long seed):
         status = curandSetPseudoRandomGeneratorSeed(<Generator>generator, seed)
         check_status(status)
-
 
     cpdef setGeneratorOffset(size_t generator, unsigned long long offset):
         status = curandSetGeneratorOffset(<Generator>generator, offset)
         check_status(status)
 
-
     cpdef setGeneratorOrdering(size_t generator, int order):
-        status = curandSetGeneratorOrdering(<Generator>generator, <Ordering>order)
+        status = curandSetGeneratorOrdering(<Generator>generator,
+                                            <Ordering>order)
         check_status(status)
 
-
-###############################################################################
-# Generation functions
-###############################################################################
+    ###########################################################################
+    # Generation functions
+    ###########################################################################
 
     cpdef generate(size_t generator, size_t outputPtr, size_t num):
         _setStream(generator)
@@ -157,13 +148,11 @@ ELSE:
             <Generator>generator, <unsigned int*>outputPtr, num)
         check_status(status)
 
-
     cpdef generateLongLong(size_t generator, size_t outputPtr, size_t num):
         _setStream(generator)
         status = curandGenerateLongLong(
             <Generator>generator, <unsigned long long*>outputPtr, num)
         check_status(status)
-
 
     cpdef generateUniform(size_t generator, size_t outputPtr, size_t num):
         _setStream(generator)
@@ -171,62 +160,60 @@ ELSE:
             <Generator>generator, <float*>outputPtr, num)
         check_status(status)
 
-
-    cpdef generateUniformDouble(size_t generator, size_t outputPtr, size_t num):
+    cpdef generateUniformDouble(size_t generator, size_t outputPtr,
+                                size_t num):
         _setStream(generator)
         status = curandGenerateUniformDouble(
             <Generator>generator, <double*>outputPtr, num)
         check_status(status)
 
-
     cpdef generateNormal(size_t generator, size_t outputPtr, size_t n,
                          float mean, float stddev):
         if n % 2 == 1:
             msg = ('curandGenerateNormal can only generate even number of '
-                   'random variables simultaneously. See issue #390 for detail.')
+                   'random variables simultaneously.'
+                   'See issue #390 for detail.')
             raise ValueError(msg)
         _setStream(generator)
         status = curandGenerateNormal(
             <Generator>generator, <float*>outputPtr, n, mean, stddev)
         check_status(status)
 
-
     cpdef generateNormalDouble(size_t generator, size_t outputPtr, size_t n,
                                float mean, float stddev):
         if n % 2 == 1:
-            msg = ('curandGenerateNormalDouble can only generate even number of '
-                   'random variables simultaneously. See issue #390 for detail.')
+            msg = ('curandGenerateNormalDouble can only generate '
+                   'even number of random variables simultaneously. '
+                   'See issue #390 for detail.')
             raise ValueError(msg)
         _setStream(generator)
         status = curandGenerateNormalDouble(
             <Generator>generator, <double*>outputPtr, n, mean, stddev)
         check_status(status)
 
-
     def generateLogNormal(size_t generator, size_t outputPtr, size_t n,
                           float mean, float stddev):
         if n % 2 == 1:
             msg = ('curandGenerateLogNormal can only generate even number of '
-                   'random variables simultaneously. See issue #390 for detail.')
+                   'random variables simultaneously. '
+                   'See issue #390 for detail.')
             raise ValueError(msg)
         _setStream(generator)
         status = curandGenerateLogNormal(
             <Generator>generator, <float*>outputPtr, n, mean, stddev)
         check_status(status)
 
-
     cpdef generateLogNormalDouble(size_t generator, size_t outputPtr, size_t n,
                                   float mean, float stddev):
         if n % 2 == 1:
-            msg = ('curandGenerateLogNormalDouble can only generate even number '
-                   'of random variables simultaneously. See issue #390 for '
-                   'detail.')
+            msg = ('curandGenerateLogNormalDouble can only generate '
+                   'even number of random variables simultaneously. '
+                   'See issue #390 for detail.')
             raise ValueError(msg)
         _setStream(generator)
         status = curandGenerateLogNormalDouble(
             <Generator>generator, <double*>outputPtr, n, mean, stddev)
         check_status(status)
-
 
     cpdef generatePoisson(size_t generator, size_t outputPtr, size_t n,
                           double lam):

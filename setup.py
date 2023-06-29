@@ -10,6 +10,7 @@ sys.path.append(os.path.join(source_root, 'install'))
 
 import cupy_builder  # NOQA
 from cupy_builder import cupy_setup_build  # NOQA
+from cupy_builder.install_utils import get_rocm_version  # NOQA
 
 ctx = cupy_builder.Context(source_root)
 cupy_builder.initialize(ctx)
@@ -17,13 +18,13 @@ if not cupy_builder.preflight_check(ctx):
     sys.exit(1)
 
 # hipify cupy
-from cupy_builder.install_utils import get_rocm_version
 if get_rocm_version() > 0:
     # run hipify.
     from hipify_torch import hipify_python
     proj_dir = os.path.join(source_root, "cupy_backends", "cuda")
     print("INFO: hipification of cupy_backends in progress ...")
-    with hipify_python.GeneratedFileCleaner(keep_intermediates=True) as clean_ctx:
+    with hipify_python.GeneratedFileCleaner(keep_intermediates=True) as \
+            clean_ctx:
         hipify_python.hipify(
             project_directory=proj_dir,
             output_directory=proj_dir,

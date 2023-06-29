@@ -11,6 +11,9 @@ hipconfig
 pip3 install -U pip wheel
 pip3 install cython
 
+# install hipify_torch
+pip3 install git+https://github.com/ROCmSoftwarePlatform/hipify_torch.git
+
 export ROCM_HOME="/opt/rocm"
 export HCC_AMDGPU_TARGET="gfx900"
 export CUPY_INSTALL_USE_HIP="1"

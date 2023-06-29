@@ -379,7 +379,7 @@ def make_extensions(ctx: Context, compiler, use_cython):
                 ldflag += ','.join('-rpath,' + p for p in rpath)
                 args = s_file.setdefault('extra_link_args', [])
                 args.append(ldflag)
-            
+
             sources = module_extension_sources(f, use_cython, no_cuda)
             extension = setuptools.Extension(name, sources, **s_file)
             ret.append(extension)
