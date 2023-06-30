@@ -4,12 +4,15 @@ set -uex
 
 # Python 3.8 (Ubuntu 20.04)
 apt-get -y update
-DEBIAN_FRONTEND=noninteractive apt-get -y install python3-pip python3-dev
+DEBIAN_FRONTEND=noninteractive apt-get -y install python3-pip python3-dev git
 
 hipconfig
 
 pip3 install -U pip wheel
 pip3 install cython
+
+# install hipify_torch
+pip3 install git+https://github.com/ROCmSoftwarePlatform/hipify_torch.git
 
 export ROCM_HOME="/opt/rocm"
 export HCC_AMDGPU_TARGET="gfx900"
