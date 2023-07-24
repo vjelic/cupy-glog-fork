@@ -70,7 +70,6 @@ ELSE:
 
     available = True
 
-
     cdef nvtxEventAttributes_t make_event_attributes(message, color):
         cdef bytes b_message
         cdef nvtxEventAttributes_t attrib
@@ -94,13 +93,12 @@ ELSE:
 
         return attrib
 
-
     cpdef MarkC(message, uint32_t color=0):
         """
         Marks an instantaneous event (marker) in the application.
 
-        Markers are used to describe events at a specific time during execution of
-        the application.
+        Markers are used to describe events at a specific time during execution
+        of the application.
 
         Args:
             message (str): Name of a marker.
@@ -122,13 +120,12 @@ ELSE:
 
         nvtxMarkEx(&attrib)
 
-
     cpdef Mark(message, int id_color=-1):
         """
         Marks an instantaneous event (marker) in the application.
 
-        Markers are used to describe events at a specific time during execution of
-        the application.
+        Markers are used to describe events at a specific time during execution
+        of the application.
 
         Args:
             message (str): Name of a marker.
@@ -142,14 +139,14 @@ ELSE:
         cdef uint32_t color = colors[id_color % num_colors]
         MarkC(message, color)
 
-
     cpdef RangePushC(message, uint32_t color=0):
         """
         Starts a nested range.
 
-        Ranges are used to describe events over a time span during execution of the
-        application. This is particularly useful when profiling with Nsight Systems
-        to help connect user-specified ranges with CuPy's internal CUDA-kernels.
+        Ranges are used to describe events over a time span during execution of
+        the application. This is particularly useful when profiling with Nsight
+        Systems to help connect user-specified ranges with CuPy's
+        internal CUDA-kernels.
         The duration of a range is defined by the corresponding pair of
         ``RangePushC()`` to ``RangePop()`` calls, which can be nested.
 
@@ -184,16 +181,15 @@ ELSE:
 
         nvtxRangePushEx(&attrib)
 
-
     cpdef RangePush(message, int id_color=-1):
         """
         Starts a nested range.
 
-        Ranges are used to describe events over a time span during execution of the
-        application. This is particularly useful when profiling with Nsight Systems
-        to help connect user-specified ranges with CuPy's internal CUDA-kernels.
-        The duration of a range is defined by the corresponding pair of
-        ``RangePush()`` to ``RangePop()`` calls, which can be nested.
+        Ranges are used to describe events over a time span during execution of
+        the application. This is particularly useful when profiling with Nsight
+        Systems to help connect user-specified ranges with CuPy's internal
+        CUDA-kernels. The duration of a range is defined by the corresponding
+        pair of ``RangePush()`` to ``RangePop()`` calls, which can be nested.
 
         .. code-block:: python
 
@@ -218,18 +214,16 @@ ELSE:
         cdef uint32_t color = colors[id_color % num_colors]
         RangePushC(message, color)
 
-
     cpdef RangePop():
         """
         Ends a nested range started by a ``RangePush*()`` call.
         """
         nvtxRangePop()
 
-
     cpdef unsigned long long RangeStart(message, color) except? 0:
-        cdef nvtxEventAttributes_t attrib = make_event_attributes(message, color)
+        cdef nvtxEventAttributes_t attrib = \
+            make_event_attributes(message, color)
         return nvtxRangeStartEx(&attrib)
-
 
     cpdef RangeEnd(unsigned long long range_id):
         nvtxRangeEnd(range_id)

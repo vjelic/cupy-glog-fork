@@ -17,7 +17,6 @@ ELSE:
         cudaError_t cudaProfilerStart()
         cudaError_t cudaProfilerStop()
 
-
     cpdef initialize(str config_file,
                      str output_file,
                      int output_mode):
@@ -47,7 +46,6 @@ ELSE:
                                         <OutputMode>output_mode)
         runtime.check_status(status)
 
-
     cpdef start():
         """Enable profiling.
 
@@ -58,7 +56,6 @@ ELSE:
         """
         status = cudaProfilerStart()
         runtime.check_status(status)
-
 
     cpdef stop():
         """Disable profiling.
