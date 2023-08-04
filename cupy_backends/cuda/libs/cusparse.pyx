@@ -1388,11 +1388,14 @@ ELSE:
         else:
             _libname = 'cusparse64_12.dll'
     ELIF 0 < CUPY_HIP_VERSION:
-        _libname = __file__
+        _libname = 'libhipsparse.so'
     ELSE:
         _libname = None
 
-    cdef SoftLink _lib = SoftLink(_libname, 'cusparse')
+    IF CUPY_HIP_VERSION != 0:
+        cdef SoftLink _lib = SoftLink(_libname, 'hipsparse')
+    ELSE:
+        cdef SoftLink _lib = SoftLink(_libname, 'cusparse')
     # cuSPARSE 11.6+ (CUDA 11.3.1+)
     cdef f_type cusparseSpSM_createDescr = <f_type>_lib.get('SpSM_createDescr')
     cdef f_type cusparseSpSM_destroyDescr = <f_type>_lib.get('SpSM_destroyDescr')
