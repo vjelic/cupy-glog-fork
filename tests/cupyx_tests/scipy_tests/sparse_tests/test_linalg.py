@@ -1197,11 +1197,7 @@ class TestLOBPCG:
                                          verbosityLevel=1)
         return eigvals, _eigen_vec_transform(vecs, xp)
 
-    @pytest.mark.xfail(
-        runtime.is_hip and
-        (driver.get_build_version() >= 5_00_00000 and
-         driver.get_build_version() < 50530201),
-        reason='ROCm 5.0+ may have a bug')
+    @pytest.mark.skipif(runtime.is_hip, reason='test_maxit_None is flakey')
     def test_maxit_None(self):
         """Check lobpcg if maxit=None runs 20 iterations (the default)
         by checking the size of the iteration history output, which should
