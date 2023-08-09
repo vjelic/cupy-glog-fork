@@ -3441,7 +3441,8 @@ ELSE:
         _setStream(handle)
         status = cusparseXcscsort(
             <Handle>handle, m, n, nnz, <const MatDescr>descrA,
-            <const int *>cscColPtr, <int *>cscRowInd, <int *>P, <void *>pBuffer)
+            <const int *>cscColPtr, <int *>cscRowInd, <int *>P,
+            <void *>pBuffer)
         check_status(status)
 
     ########################################
@@ -3495,7 +3496,8 @@ ELSE:
             status = cusparseDestroyBsric02Info(<bsric02Info_t>info)
         check_status(status)
 
-    cpdef scsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef scsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3504,7 +3506,8 @@ ELSE:
                 <double*>tol, <float*>boost_val)
         check_status(status)
 
-    cpdef dcsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef dcsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3513,7 +3516,8 @@ ELSE:
                 <double*>tol, <double*>boost_val)
         check_status(status)
 
-    cpdef ccsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef ccsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3522,7 +3526,8 @@ ELSE:
                 <double*>tol, <cuComplex*>boost_val)
         check_status(status)
 
-    cpdef zcsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef zcsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3538,56 +3543,65 @@ ELSE:
                 <cusparseHandle_t>handle, <csrilu02Info_t>info, <int*>position)
         check_status(status)
 
-    cpdef int scsrilu02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                   size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int scsrilu02_bufferSize(intptr_t handle, int m, int nnz,
+                                   size_t descrA, size_t csrSortedValA,
+                                   size_t csrSortedRowPtrA,
                                    size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseScsrilu02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <float*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
-    cpdef int dcsrilu02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                   size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int dcsrilu02_bufferSize(intptr_t handle, int m, int nnz,
+                                   size_t descrA, size_t csrSortedValA,
+                                   size_t csrSortedRowPtrA,
                                    size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseDcsrilu02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <double*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
-    cpdef int ccsrilu02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                   size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int ccsrilu02_bufferSize(intptr_t handle, int m, int nnz,
+                                   size_t descrA, size_t csrSortedValA,
+                                   size_t csrSortedRowPtrA,
                                    size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseCcsrilu02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <cuComplex*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
-    cpdef int zcsrilu02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                   size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int zcsrilu02_bufferSize(intptr_t handle, int m, int nnz,
+                                   size_t descrA,
+                                   size_t csrSortedValA,
+                                   size_t csrSortedRowPtrA,
                                    size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseZcsrilu02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <cuDoubleComplex*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 &pBufferSizeInBytes)
@@ -3601,7 +3615,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseScsrilu02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const float*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3614,7 +3629,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseDcsrilu02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const double*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3627,7 +3643,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseCcsrilu02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const cuComplex*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3640,7 +3657,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseZcsrilu02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const cuDoubleComplex*>csrSortedValA,
                 <const int*>csrSortedRowPtrA, <const int*>csrSortedColIndA,
                 <csrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
@@ -3654,7 +3672,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseScsrilu02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <float*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3667,7 +3686,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseDcsrilu02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <double*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3680,7 +3700,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseCcsrilu02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <cuComplex*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3693,13 +3714,16 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseZcsrilu02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
-                <cuDoubleComplex*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>csrSortedValA_valM,
+                <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csrilu02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
         check_status(status)
 
-    cpdef sbsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef sbsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3708,7 +3732,8 @@ ELSE:
                 <double*>tol, <float*>boost_val)
         check_status(status)
 
-    cpdef dbsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef dbsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3717,7 +3742,8 @@ ELSE:
                 <double*>tol, <double*>boost_val)
         check_status(status)
 
-    cpdef cbsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef cbsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3726,7 +3752,8 @@ ELSE:
                 <double*>tol, <cuComplex*>boost_val)
         check_status(status)
 
-    cpdef zbsrilu02_numericBoost(intptr_t handle, size_t info, int enable_boost,
+    cpdef zbsrilu02_numericBoost(intptr_t handle, size_t info,
+                                 int enable_boost,
                                  size_t tol, size_t boost_val):
         _setStream(handle)
         with nogil:
@@ -3744,7 +3771,8 @@ ELSE:
 
     cpdef int sbsrilu02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                    size_t descrA, size_t bsrSortedVal,
-                                   size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                   size_t bsrSortedRowPtr,
+                                   size_t bsrSortedColInd,
                                    int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
@@ -3752,14 +3780,15 @@ ELSE:
             status = cusparseSbsrilu02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, &pBufferSizeInBytes)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef int dbsrilu02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                    size_t descrA, size_t bsrSortedVal,
-                                   size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                   size_t bsrSortedRowPtr,
+                                   size_t bsrSortedColInd,
                                    int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
@@ -3767,14 +3796,15 @@ ELSE:
             status = cusparseDbsrilu02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, &pBufferSizeInBytes)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef int cbsrilu02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                    size_t descrA, size_t bsrSortedVal,
-                                   size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                   size_t bsrSortedRowPtr,
+                                   size_t bsrSortedColInd,
                                    int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
@@ -3782,134 +3812,148 @@ ELSE:
             status = cusparseCbsrilu02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, &pBufferSizeInBytes)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef int zbsrilu02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                    size_t descrA, size_t bsrSortedVal,
-                                   size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                   size_t bsrSortedRowPtr,
+                                   size_t bsrSortedColInd,
                                    int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseZbsrilu02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, &pBufferSizeInBytes)
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef sbsrilu02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseSbsrilu02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef dbsrilu02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseDbsrilu02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef cbsrilu02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseCbsrilu02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef zbsrilu02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseZbsrilu02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef sbsrilu02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                     size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                    size_t bsrSortedColInd, int blockDim, size_t info, int policy,
-                    size_t pBuffer):
+                    size_t bsrSortedColInd, int blockDim, size_t info,
+                    int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseSbsrilu02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
                 <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef dbsrilu02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                     size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                    size_t bsrSortedColInd, int blockDim, size_t info, int policy,
-                    size_t pBuffer):
+                    size_t bsrSortedColInd, int blockDim, size_t info,
+                    int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseDbsrilu02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
                 <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef cbsrilu02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                     size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                    size_t bsrSortedColInd, int blockDim, size_t info, int policy,
+                    size_t bsrSortedColInd, int blockDim, size_t info,
+                    int policy,
                     size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseCbsrilu02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
                 <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef zbsrilu02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                     size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                    size_t bsrSortedColInd, int blockDim, size_t info, int policy,
+                    size_t bsrSortedColInd, int blockDim, size_t info,
+                    int policy,
                     size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseZbsrilu02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
                 <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pBuffer)
         check_status(status)
@@ -3921,56 +3965,68 @@ ELSE:
                 <cusparseHandle_t>handle, <csric02Info_t>info, <int*>position)
         check_status(status)
 
-    cpdef int scsric02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                  size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int scsric02_bufferSize(intptr_t handle, int m, int nnz,
+                                  size_t descrA,
+                                  size_t csrSortedValA,
+                                  size_t csrSortedRowPtrA,
                                   size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseScsric02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <float*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
-    cpdef int dcsric02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                  size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int dcsric02_bufferSize(intptr_t handle, int m, int nnz,
+                                  size_t descrA,
+                                  size_t csrSortedValA,
+                                  size_t csrSortedRowPtrA,
                                   size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseDcsric02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <double*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
-    cpdef int ccsric02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                  size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int ccsric02_bufferSize(intptr_t handle, int m, int nnz,
+                                  size_t descrA,
+                                  size_t csrSortedValA,
+                                  size_t csrSortedRowPtrA,
                                   size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseCcsric02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <cuComplex*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
-    cpdef int zcsric02_bufferSize(intptr_t handle, int m, int nnz, size_t descrA,
-                                  size_t csrSortedValA, size_t csrSortedRowPtrA,
+    cpdef int zcsric02_bufferSize(intptr_t handle, int m, int nnz,
+                                  size_t descrA,
+                                  size_t csrSortedValA,
+                                  size_t csrSortedRowPtrA,
                                   size_t csrSortedColIndA, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseZcsric02_bufferSize(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <cuDoubleComplex*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 &pBufferSizeInBytes)
@@ -3984,7 +4040,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseScsric02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const float*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -3997,7 +4054,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseDcsric02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const double*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -4010,7 +4068,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseCcsric02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const cuComplex*>csrSortedValA, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -4023,10 +4082,12 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseZcsric02_analysis(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <const cuDoubleComplex*>csrSortedValA,
                 <const int*>csrSortedRowPtrA, <const int*>csrSortedColIndA,
-                <csric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+                <csric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
 
     cpdef scsric02(intptr_t handle, int m, int nnz, size_t descrA,
@@ -4036,7 +4097,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseScsric02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <float*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -4049,7 +4111,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseDcsric02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <double*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -4062,7 +4125,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseCcsric02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
                 <cuComplex*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
@@ -4075,8 +4139,10 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseZcsric02(
-                <cusparseHandle_t>handle, m, nnz, <const cusparseMatDescr_t>descrA,
-                <cuDoubleComplex*>csrSortedValA_valM, <const int*>csrSortedRowPtrA,
+                <cusparseHandle_t>handle, m, nnz,
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>csrSortedValA_valM,
+                <const int*>csrSortedRowPtrA,
                 <const int*>csrSortedColIndA, <csric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pBuffer)
         check_status(status)
@@ -4090,7 +4156,8 @@ ELSE:
 
     cpdef int sbsric02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                   size_t descrA, size_t bsrSortedVal,
-                                  size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                  size_t bsrSortedRowPtr,
+                                  size_t bsrSortedColInd,
                                   int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
@@ -4098,14 +4165,15 @@ ELSE:
             status = cusparseSbsric02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, &pBufferSizeInBytes)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef int dbsric02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                   size_t descrA, size_t bsrSortedVal,
-                                  size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                  size_t bsrSortedRowPtr,
+                                  size_t bsrSortedColInd,
                                   int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
@@ -4113,14 +4181,16 @@ ELSE:
             status = cusparseDbsric02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
                 <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef int cbsric02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                   size_t descrA, size_t bsrSortedVal,
-                                  size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                  size_t bsrSortedRowPtr,
+                                  size_t bsrSortedColInd,
                                   int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
@@ -4128,146 +4198,167 @@ ELSE:
             status = cusparseCbsric02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
                 <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef int zbsric02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
                                   size_t descrA, size_t bsrSortedVal,
-                                  size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+                                  size_t bsrSortedRowPtr,
+                                  size_t bsrSortedColInd,
                                   int blockDim, size_t info):
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
             status = cusparseZbsric02_bufferSize(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, &pBufferSizeInBytes)
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
 
     cpdef sbsric02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pInputBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseSbsric02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <const float*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pInputBuffer)
         check_status(status)
 
     cpdef dbsric02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pInputBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseDbsric02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <const double*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pInputBuffer)
         check_status(status)
 
     cpdef cbsric02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pInputBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseCbsric02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                <const cusparseMatDescr_t>descrA, <const cuComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <const cusparseMatDescr_t>descrA,
+                <const cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim, <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
                 <void*>pInputBuffer)
         check_status(status)
 
     cpdef zbsric02_analysis(
             intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
-            size_t bsrSortedVal, size_t bsrSortedRowPtr, size_t bsrSortedColInd,
+            size_t bsrSortedVal, size_t bsrSortedRowPtr,
+            size_t bsrSortedColInd,
             int blockDim, size_t info, int policy, size_t pInputBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseZbsric02_analysis(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA,
-                <const cuDoubleComplex*>bsrSortedVal, <const int*>bsrSortedRowPtr,
+                <const cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr,
                 <const int*>bsrSortedColInd, blockDim, <bsric02Info_t>info,
                 <cusparseSolvePolicy_t>policy, <void*>pInputBuffer)
         check_status(status)
 
     cpdef sbsric02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                    size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                   size_t bsrSortedColInd, int blockDim, size_t info, int policy,
+                   size_t bsrSortedColInd, int blockDim, size_t info,
+                   int policy,
                    size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseSbsric02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
 
     cpdef dbsric02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                    size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                   size_t bsrSortedColInd, int blockDim, size_t info, int policy,
-                   size_t pBuffer):
+                   size_t bsrSortedColInd, int blockDim, size_t info,
+                   int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseDbsric02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
 
     cpdef cbsric02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                    size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                   size_t bsrSortedColInd, int blockDim, size_t info, int policy,
-                   size_t pBuffer):
+                   size_t bsrSortedColInd, int blockDim, size_t info,
+                   int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseCbsric02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
                 <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
 
     cpdef zbsric02(intptr_t handle, int dirA, int mb, int nnzb, size_t descrA,
                    size_t bsrSortedVal, size_t bsrSortedRowPtr,
-                   size_t bsrSortedColInd, int blockDim, size_t info, int policy,
-                   size_t pBuffer):
+                   size_t bsrSortedColInd, int blockDim, size_t info,
+                   int policy, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseZbsric02(
                 <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+                <const cusparseMatDescr_t>descrA,
+                <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd,
+                blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
 
-    cpdef sgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl, size_t d,
-                               size_t du, size_t B, int ldb,
+    cpdef sgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+                               size_t d, size_t du, size_t B, int ldb,
                                size_t bufferSizeInBytes):
         _setStream(handle)
         with nogil:
             status = cusparseSgtsv2_bufferSizeExt(
-                <cusparseHandle_t>handle, m, n, <const float*>dl, <const float*>d,
-                <const float*>du, <const float*>B, ldb, <size_t*>bufferSizeInBytes)
+                <cusparseHandle_t>handle, m, n, <const float*>dl,
+                <const float*>d,
+                <const float*>du, <const float*>B, ldb,
+                <size_t*>bufferSizeInBytes)
         check_status(status)
 
-    cpdef dgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl, size_t d,
-                               size_t du, size_t B, int ldb,
+    cpdef dgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+                               size_t d, size_t du, size_t B, int ldb,
                                size_t bufferSizeInBytes):
         _setStream(handle)
         with nogil:
@@ -4277,8 +4368,8 @@ ELSE:
                 <size_t*>bufferSizeInBytes)
         check_status(status)
 
-    cpdef cgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl, size_t d,
-                               size_t du, size_t B, int ldb,
+    cpdef cgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+                               size_t d, size_t du, size_t B, int ldb,
                                size_t bufferSizeInBytes):
         _setStream(handle)
         with nogil:
@@ -4288,8 +4379,8 @@ ELSE:
                 ldb, <size_t*>bufferSizeInBytes)
         check_status(status)
 
-    cpdef zgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl, size_t d,
-                               size_t du, size_t B, int ldb,
+    cpdef zgtsv2_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+                               size_t d, size_t du, size_t B, int ldb,
                                size_t bufferSizeInBytes):
         _setStream(handle)
         with nogil:
@@ -4304,7 +4395,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseSgtsv2(
-                <cusparseHandle_t>handle, m, n, <const float*>dl, <const float*>d,
+                <cusparseHandle_t>handle, m, n, <const float*>dl,
+                <const float*>d,
                 <const float*>du, <float*>B, ldb, <void*>pBuffer)
         check_status(status)
 
@@ -4338,17 +4430,21 @@ ELSE:
                 <cuDoubleComplex*>B, ldb, <void*>pBuffer)
         check_status(status)
 
-    cpdef sgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+    cpdef sgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n,
+                                       size_t dl,
                                        size_t d, size_t du, size_t B, int ldb,
                                        size_t bufferSizeInBytes):
         _setStream(handle)
         with nogil:
             status = cusparseSgtsv2_nopivot_bufferSizeExt(
-                <cusparseHandle_t>handle, m, n, <const float*>dl, <const float*>d,
-                <const float*>du, <const float*>B, ldb, <size_t*>bufferSizeInBytes)
+                <cusparseHandle_t>handle, m, n, <const float*>dl,
+                <const float*>d,
+                <const float*>du, <const float*>B, ldb,
+                <size_t*>bufferSizeInBytes)
         check_status(status)
 
-    cpdef dgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+    cpdef dgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n,
+                                       size_t dl,
                                        size_t d, size_t du, size_t B, int ldb,
                                        size_t bufferSizeInBytes):
         _setStream(handle)
@@ -4359,7 +4455,8 @@ ELSE:
                 <size_t*>bufferSizeInBytes)
         check_status(status)
 
-    cpdef cgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+    cpdef cgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n,
+                                       size_t dl,
                                        size_t d, size_t du, size_t B, int ldb,
                                        size_t bufferSizeInBytes):
         _setStream(handle)
@@ -4370,7 +4467,8 @@ ELSE:
                 ldb, <size_t*>bufferSizeInBytes)
         check_status(status)
 
-    cpdef zgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n, size_t dl,
+    cpdef zgtsv2_nopivot_bufferSizeExt(intptr_t handle, int m, int n,
+                                       size_t dl,
                                        size_t d, size_t du, size_t B, int ldb,
                                        size_t bufferSizeInBytes):
         _setStream(handle)
@@ -4386,7 +4484,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseSgtsv2_nopivot(
-                <cusparseHandle_t>handle, m, n, <const float*>dl, <const float*>d,
+                <cusparseHandle_t>handle, m, n, <const float*>dl,
+                <const float*>d,
                 <const float*>du, <float*>B, ldb, <void*>pBuffer)
         check_status(status)
 
@@ -4395,7 +4494,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseDgtsv2_nopivot(<cusparseHandle_t>handle, m, n,
-                                            <const double*>dl, <const double*>d,
+                                            <const double*>dl,
+                                            <const double*>d,
                                             <const double*>du, <double*>B, ldb,
                                             <void*>pBuffer)
         check_status(status)
@@ -4437,7 +4537,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseDgtsv2StridedBatch_bufferSizeExt(
-                <cusparseHandle_t>handle, m, <const double*>dl, <const double*>d,
+                <cusparseHandle_t>handle, m, <const double*>dl,
+                <const double*>d,
                 <const double*>du, <const double*>x, batchCount, batchStride,
                 <size_t*>bufferSizeInBytes)
         check_status(status)
@@ -4466,8 +4567,8 @@ ELSE:
         check_status(status)
 
     cpdef sgtsv2StridedBatch(intptr_t handle, int m, size_t dl, size_t d,
-                             size_t du, size_t x, int batchCount, int batchStride,
-                             size_t pBuffer):
+                             size_t du, size_t x, int batchCount,
+                             int batchStride, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseSgtsv2StridedBatch(
@@ -4477,19 +4578,20 @@ ELSE:
         check_status(status)
 
     cpdef dgtsv2StridedBatch(intptr_t handle, int m, size_t dl, size_t d,
-                             size_t du, size_t x, int batchCount, int batchStride,
-                             size_t pBuffer):
+                             size_t du, size_t x, int batchCount,
+                             int batchStride, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseDgtsv2StridedBatch(
-                <cusparseHandle_t>handle, m, <const double*>dl, <const double*>d,
+                <cusparseHandle_t>handle, m, <const double*>dl,
+                <const double*>d,
                 <const double*>du, <double*>x, batchCount, batchStride,
                 <void*>pBuffer)
         check_status(status)
 
     cpdef cgtsv2StridedBatch(intptr_t handle, int m, size_t dl, size_t d,
-                             size_t du, size_t x, int batchCount, int batchStride,
-                             size_t pBuffer):
+                             size_t du, size_t x, int batchCount,
+                             int batchStride, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseCgtsv2StridedBatch(
@@ -4499,8 +4601,8 @@ ELSE:
         check_status(status)
 
     cpdef zgtsv2StridedBatch(intptr_t handle, int m, size_t dl, size_t d,
-                             size_t du, size_t x, int batchCount, int batchStride,
-                             size_t pBuffer):
+                             size_t du, size_t x, int batchCount,
+                             int batchStride, size_t pBuffer):
         _setStream(handle)
         with nogil:
             status = cusparseZgtsv2StridedBatch(
@@ -4530,8 +4632,8 @@ ELSE:
         with nogil:
             status = cusparseDgtsvInterleavedBatch_bufferSizeExt(
                 <cusparseHandle_t>handle, algo, m, <const double*>dl,
-                <const double*>d, <const double*>du, <const double*>x, batchCount,
-                &pBufferSizeInBytes)
+                <const double*>d, <const double*>du, <const double*>x,
+                batchCount, &pBufferSizeInBytes)
         check_status(status)
         return <size_t>pBufferSizeInBytes
 
@@ -4587,7 +4689,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseCgtsvInterleavedBatch(
-                <cusparseHandle_t>handle, algo, m, <cuComplex*>dl, <cuComplex*>d,
+                <cusparseHandle_t>handle, algo, m, <cuComplex*>dl,
+                <cuComplex*>d,
                 <cuComplex*>du, <cuComplex*>x, batchCount, <void*>pBuffer)
         check_status(status)
 
@@ -4611,7 +4714,8 @@ ELSE:
             status = cusparseSgpsvInterleavedBatch_bufferSizeExt(
                 <cusparseHandle_t>handle, algo, m, <const float*>ds,
                 <const float*>dl, <const float*>d, <const float*>du,
-                <const float*>dw, <const float*>x, batchCount, &pBufferSizeInBytes)
+                <const float*>dw, <const float*>x, batchCount,
+                &pBufferSizeInBytes)
         check_status(status)
         return <size_t>pBufferSizeInBytes
 
@@ -4637,7 +4741,8 @@ ELSE:
         with nogil:
             status = cusparseCgpsvInterleavedBatch_bufferSizeExt(
                 <cusparseHandle_t>handle, algo, m, <const cuComplex*>ds,
-                <const cuComplex*>dl, <const cuComplex*>d, <const cuComplex*>du,
+                <const cuComplex*>dl, <const cuComplex*>d,
+                <const cuComplex*>du,
                 <const cuComplex*>dw, <const cuComplex*>x, batchCount,
                 &pBufferSizeInBytes)
         check_status(status)
@@ -4685,7 +4790,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusparseCgpsvInterleavedBatch(
-                <cusparseHandle_t>handle, algo, m, <cuComplex*>ds, <cuComplex*>dl,
+                <cusparseHandle_t>handle, algo, m, <cuComplex*>ds,
+                <cuComplex*>dl,
                 <cuComplex*>d, <cuComplex*>du, <cuComplex*>dw, <cuComplex*>x,
                 batchCount, <void*>pBuffer)
         check_status(status)
@@ -4697,7 +4803,8 @@ ELSE:
         with nogil:
             status = cusparseZgpsvInterleavedBatch(
                 <cusparseHandle_t>handle, algo, m, <cuDoubleComplex*>ds,
-                <cuDoubleComplex*>dl, <cuDoubleComplex*>d, <cuDoubleComplex*>du,
+                <cuDoubleComplex*>dl, <cuDoubleComplex*>d,
+                <cuDoubleComplex*>du,
                 <cuDoubleComplex*>dw, <cuDoubleComplex*>x, batchCount,
                 <void*>pBuffer)
         check_status(status)
@@ -4706,11 +4813,13 @@ ELSE:
     # Sparse Vector APIs
 
     cpdef size_t createSpVec(int64_t size, int64_t nnz, intptr_t indices,
-                             intptr_t values, IndexType idxType, IndexBase idxBase,
+                             intptr_t values, IndexType idxType,
+                             IndexBase idxBase,
                              DataType valueType) except? 0:
         cdef SpVecDescr desc
         status = cusparseCreateSpVec(&desc, size, nnz, <void*>indices,
-                                     <void*>values, idxType, idxBase, valueType)
+                                     <void*>values, idxType, idxBase,
+                                     valueType)
         check_status(status)
         return <size_t>desc
 
@@ -4809,7 +4918,8 @@ ELSE:
         cdef IndexBase idxBase,
         cdef DataType valueType
         status = cusparseCooGet(<SpMatDescr>desc, &rows, &cols, &nnz,
-                                <void**>&rowInd, <void**>&colInd, <void**>&values,
+                                <void**>&rowInd, <void**>&colInd,
+                                <void**>&values,
                                 &idxType, &idxBase, &valueType)
         check_status(status)
         return CooAttributes(rows, cols, nnz, rowInd, colInd, values,
@@ -4961,7 +5071,8 @@ ELSE:
         check_status(status)
         return DnMatBatchAttributes(batchCount, batchStride)
 
-    cpdef dnMatSetStridedBatch(size_t desc, int batchCount, int64_t batchStride):
+    cpdef dnMatSetStridedBatch(size_t desc, int batchCount,
+                               int64_t batchStride):
         status = cusparseDnMatSetStridedBatch(<DnMatDescr>desc, batchCount,
                                               batchStride)
         check_status(status)
@@ -4975,7 +5086,8 @@ ELSE:
         cdef size_t bufferSize
         status = cusparseSpVV_bufferSize(<Handle>handle, opX,
                                          <SpVecDescr>vecX, <DnVecDescr>vecY,
-                                         <void*>result, computeType, &bufferSize)
+                                         <void*>result, computeType,
+                                         &bufferSize)
         check_status(status)
         return bufferSize
 
@@ -4987,9 +5099,11 @@ ELSE:
                               <void*>externalBuffer)
         check_status(status)
 
-    cpdef size_t spMV_bufferSize(intptr_t handle, Operation opA, intptr_t alpha,
+    cpdef size_t spMV_bufferSize(intptr_t handle, Operation opA,
+                                 intptr_t alpha,
                                  size_t matA, size_t vecX, intptr_t beta,
-                                 size_t vecY, DataType computeType, SpMVAlg alg):
+                                 size_t vecY, DataType computeType,
+                                 SpMVAlg alg):
         cdef size_t bufferSize
         status = cusparseSpMV_bufferSize(<Handle>handle, opA, <void*>alpha,
                                          <SpMatDescr>matA, <DnVecDescr>vecX,
@@ -5002,7 +5116,8 @@ ELSE:
                size_t vecX, intptr_t beta, size_t vecY, DataType computeType,
                SpMVAlg alg, intptr_t externalBuffer):
         _setStream(handle)
-        status = cusparseSpMV(<Handle>handle, opA, <void*>alpha, <SpMatDescr>matA,
+        status = cusparseSpMV(<Handle>handle, opA, <void*>alpha,
+                              <SpMatDescr>matA,
                               <DnVecDescr>vecX, <void*>beta, <DnVecDescr>vecY,
                               computeType, alg, <void*>externalBuffer)
         check_status(status)
@@ -5019,10 +5134,12 @@ ELSE:
 
     cpdef size_t spSM_bufferSize(intptr_t handle, Operation opA, Operation opB,
                                  intptr_t alpha, size_t matA, size_t matB,
-                                 size_t matC, DataType computeType, SpSMAlg alg,
+                                 size_t matC, DataType computeType,
+                                 SpSMAlg alg,
                                  size_t spsmDescr):
         cdef size_t bufferSize
-        status = cusparseSpSM_bufferSize(<Handle>handle, opA, opB, <void*>alpha,
+        status = cusparseSpSM_bufferSize(<Handle>handle, opA, opB,
+                                         <void*>alpha,
                                          <SpMatDescr>matA, <DnMatDescr>matB,
                                          <DnMatDescr>matC, computeType, alg,
                                          <SpSMDescr>spsmDescr, &bufferSize)
@@ -5037,23 +5154,28 @@ ELSE:
         status = cusparseSpSM_analysis(<Handle> handle, opA, opB, <void*>alpha,
                                        <SpMatDescr>matA, <DnMatDescr>matB,
                                        <DnMatDescr>matC, computeType, alg,
-                                       <SpSMDescr>spsmDescr, <void*>externalBuffer)
+                                       <SpSMDescr>spsmDescr,
+                                       <void*>externalBuffer)
         check_status(status)
 
-    cpdef spSM_solve(intptr_t handle, Operation opA, Operation opB, intptr_t alpha,
-                     size_t matA, size_t matB, size_t matC, DataType computeType,
+    cpdef spSM_solve(intptr_t handle, Operation opA, Operation opB,
+                     intptr_t alpha,
+                     size_t matA, size_t matB, size_t matC,
+                     DataType computeType,
                      SpSMAlg alg, size_t spsmDescr, intptr_t externalBuffer=0):
         _setStream(handle)
         IF CUPY_HIP_VERSION > 0:
             # hipsparseSpSM_solve has the extra `externalBuffer` parameter that
             # cusparseSpSM_solve does not require.
-            status = cusparseSpSM_solve(<Handle> handle, opA, opB, <void*>alpha,
+            status = cusparseSpSM_solve(<Handle> handle, opA, opB,
+                                        <void*>alpha,
                                         <SpMatDescr>matA, <DnMatDescr>matB,
                                         <DnMatDescr>matC, computeType, alg,
                                         <SpSMDescr>spsmDescr,
                                         <void*>externalBuffer)
         ELSE:
-            status = cusparseSpSM_solve(<Handle> handle, opA, opB, <void*>alpha,
+            status = cusparseSpSM_solve(<Handle> handle, opA, opB,
+                                        <void*>alpha,
                                         <SpMatDescr>matA, <DnMatDescr>matB,
                                         <DnMatDescr>matC, computeType, alg,
                                         <SpSMDescr>spsmDescr)
@@ -5061,10 +5183,12 @@ ELSE:
 
     cpdef size_t spMM_bufferSize(intptr_t handle, Operation opA, Operation opB,
                                  intptr_t alpha, size_t matA, size_t matB,
-                                 intptr_t beta, size_t matC, DataType computeType,
+                                 intptr_t beta, size_t matC,
+                                 DataType computeType,
                                  SpMMAlg alg):
         cdef size_t bufferSize
-        status = cusparseSpMM_bufferSize(<Handle>handle, opA, opB, <void*>alpha,
+        status = cusparseSpMM_bufferSize(<Handle>handle, opA, opB,
+                                         <void*>alpha,
                                          <SpMatDescr>matA, <DnMatDescr>matB,
                                          <void*>beta, <DnMatDescr>matC,
                                          computeType, alg, &bufferSize)
@@ -5095,7 +5219,8 @@ ELSE:
         return bufferSize
 
     cpdef constrainedGeMM(intptr_t handle, Operation opA, Operation opB,
-                          intptr_t alpha, size_t matA, size_t matB, intptr_t beta,
+                          intptr_t alpha, size_t matA, size_t matB,
+                          intptr_t beta,
                           size_t matC, DataType computeType,
                           intptr_t externalBuffer):
         _setStream(handle)
@@ -5154,7 +5279,8 @@ ELSE:
         check_status(status)
 
     cpdef gather(intptr_t handle, size_t vecY, size_t vecX):
-        status = cusparseGather(<Handle>handle, <DnVecDescr>vecY, <SpVecDescr>vecX)
+        status = cusparseGather(<Handle>handle, <DnVecDescr>vecY,
+                                <SpVecDescr>vecX)
         check_status(status)
 
     cpdef size_t sparseToDense_bufferSize(intptr_t handle, size_t matA,
@@ -5207,8 +5333,10 @@ ELSE:
             Action copyValues, IndexBase idxBase, Csr2CscAlg alg):
         cdef size_t bufferSize
         status = cusparseCsr2cscEx2_bufferSize(
-            <Handle>handle, m, n, nnz, <const void*>csrVal, <const int*>csrRowPtr,
-            <const int*>csrColInd, <void*>cscVal, <int*>cscColPtr, <int*>cscRowInd,
+            <Handle>handle, m, n, nnz, <const void*>csrVal,
+            <const int*>csrRowPtr,
+            <const int*>csrColInd, <void*>cscVal, <int*>cscColPtr,
+            <int*>cscRowInd,
             valType, copyValues, idxBase, alg, &bufferSize)
         check_status(status)
         return bufferSize
@@ -5217,10 +5345,13 @@ ELSE:
             intptr_t handle, int m, int n, int nnz, intptr_t csrVal,
             intptr_t csrRowPtr, intptr_t csrColInd, intptr_t cscVal,
             intptr_t cscColPtr, intptr_t cscRowInd, DataType valType,
-            Action copyValues, IndexBase idxBase, Csr2CscAlg alg, intptr_t buffer):
+            Action copyValues, IndexBase idxBase, Csr2CscAlg alg,
+            intptr_t buffer):
         setStream(handle, stream_module.get_current_stream_ptr())
         status = cusparseCsr2cscEx2(
-            <Handle>handle, m, n, nnz, <const void*>csrVal, <const int*>csrRowPtr,
-            <const int*>csrColInd, <void*>cscVal, <int*>cscColPtr, <int*>cscRowInd,
+            <Handle>handle, m, n, nnz, <const void*>csrVal,
+            <const int*>csrRowPtr,
+            <const int*>csrColInd, <void*>cscVal, <int*>cscColPtr,
+            <int*>cscRowInd,
             valType, copyValues, idxBase, alg, <void*>buffer)
         check_status(status)

@@ -8,8 +8,7 @@
 #elif defined(CUPY_USE_HIP)
 
 #include "hip/cupy_hip_common.h"
-//#include "hip/cupy_hipsparse.h"
-#include "hip/cupy_hipsparse_new.h"
+#include "hip/cupy_hipsparse.h"
 
 #else
 
