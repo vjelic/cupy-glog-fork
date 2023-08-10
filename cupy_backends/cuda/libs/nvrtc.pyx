@@ -33,8 +33,9 @@ ELSE:
             const char *nvrtcGetErrorString(Result result)
             int nvrtcVersion(int *major, int *minor)
             int nvrtcCreateProgram(
-                Program* prog, const char* src, const char* name, int numHeaders,
-                const char** headers, const char** includeNames)
+                Program* prog, const char* src, const char* name,
+                int numHeaders, const char** headers,
+                const char** includeNames)
             int nvrtcDestroyProgram(Program *prog)
             int nvrtcCompileProgram(Program prog, int numOptions,
                                     const char** options)
@@ -68,10 +69,9 @@ ELSE:
         cdef f_type nvrtcGetNVVMSize = <f_type>_lib.get('GetNVVMSize')
         cdef f_type nvrtcGetNVVM = <f_type>_lib.get('GetNVVM')
 
-
-    ###############################################################################
+    ##########################################################################
     # Error handling
-    ###############################################################################
+    ##########################################################################
 
     class NVRTCError(RuntimeError):
 
@@ -84,12 +84,10 @@ ELSE:
         def __reduce__(self):
             return (type(self), (self.status,))
 
-
     @cython.profile(False)
     cpdef inline check_status(int status):
         if status != 0:
             raise NVRTCError(status)
-
 
     cpdef tuple getVersion():
         cdef int major, minor
@@ -98,14 +96,14 @@ ELSE:
         check_status(status)
         return major, minor
 
-
     cpdef tuple getSupportedArchs():
         cdef int status, num_archs
         cdef vector.vector[int] archs
         if runtime._is_hip_environment:
             raise RuntimeError("HIP does not support getSupportedArchs")
         if runtime.runtimeGetVersion() < 11020:
-            raise RuntimeError("getSupportedArchs is supported since CUDA 11.2")
+            raise RuntimeError("getSupportedArchs is supported "
+                               "since CUDA 11.2")
         with nogil:
             status = nvrtcGetNumSupportedArchs(&num_archs)
             if status == 0:
@@ -114,10 +112,9 @@ ELSE:
         check_status(status)
         return tuple(archs)
 
-
-    ###############################################################################
+    ##########################################################################
     # Program
-    ###############################################################################
+    ##########################################################################
 
     cpdef intptr_t createProgram(unicode src, unicode name, headers,
                                  include_names) except? 0:
@@ -150,13 +147,11 @@ ELSE:
         check_status(status)
         return <intptr_t>prog
 
-
     cpdef destroyProgram(intptr_t prog):
         cdef Program p = <Program>prog
         with nogil:
             status = nvrtcDestroyProgram(&p)
         check_status(status)
-
 
     cpdef compileProgram(intptr_t prog, options):
         cdef int option_num = len(options)
@@ -171,7 +166,6 @@ ELSE:
             status = nvrtcCompileProgram(<Program>prog, option_num,
                                          option_vec_ptr)
         check_status(status)
-
 
     cpdef bytes getPTX(intptr_t prog):
         cdef size_t ptxSizeRet
@@ -191,7 +185,6 @@ ELSE:
         # Strip the trailing NULL.
         return ptx_ptr[:ptxSizeRet-1]
 
-
     cpdef bytes getCUBIN(intptr_t prog):
         cdef size_t cubinSizeRet = 0
         cdef vector.vector[char] cubin
@@ -206,8 +199,8 @@ ELSE:
         if cubinSizeRet <= 1:
             # On CUDA 11.1, cubinSizeRet=1 if -arch=compute_XX is used, but the
             # spec says it should be 0 in this case...
-            raise RuntimeError('cubin is requested, but the real arch (sm_XX) is '
-                               'not provided')
+            raise RuntimeError('cubin is requested, but the real arch (sm_XX) '
+                               'is not provided')
         cubin.resize(cubinSizeRet)
         cubin_ptr = cubin.data()
         with nogil:
@@ -216,7 +209,6 @@ ELSE:
 
         # Strip the trailing NULL.
         return cubin_ptr[:cubinSizeRet-1]
-
 
     cpdef bytes getNVVM(intptr_t prog):
         if runtime._is_hip_environment:
@@ -241,7 +233,6 @@ ELSE:
         # Strip the trailing NULL.
         return nvvm_ptr[:nvvmSizeRet-1]
 
-
     cpdef unicode getProgramLog(intptr_t prog):
         cdef size_t logSizeRet
         cdef vector.vector[char] log
@@ -260,14 +251,12 @@ ELSE:
         # Strip the trailing NULL.
         return log_ptr[:logSizeRet-1].decode('UTF-8')
 
-
     cpdef addNameExpression(intptr_t prog, str name):
         cdef bytes b_name = name.encode()
         cdef const char* c_name = b_name
         with nogil:
             status = nvrtcAddNameExpression(<Program>prog, c_name)
         check_status(status)
-
 
     cpdef str getLoweredName(intptr_t prog, str name):
         cdef bytes b_name = name.encode()

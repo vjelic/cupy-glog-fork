@@ -16,17 +16,15 @@ ELSE:
         ctypedef int Result 'nvrtcResult'
         ctypedef void* Program 'nvrtcProgram'
 
-
 IF CUPY_HIP_VERSION == 0:
     cpdef check_status(int status)
 
     cpdef tuple getVersion()
     cpdef tuple getSupportedArchs()
 
-
-    ###############################################################################
+    ##########################################################################
     # Program
-    ###############################################################################
+    ##########################################################################
 
     cpdef intptr_t createProgram(unicode src, unicode name, headers,
                                  include_names) except? 0
