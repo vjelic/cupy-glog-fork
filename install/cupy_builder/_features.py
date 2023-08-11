@@ -157,6 +157,7 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
             'cupy_backends.cuda.libs.cusolver',
             'cupyx.cusolver',
             'cupy_backends.cuda.libs.curand_hip',
+            'cupy_backends.cuda.libs.profiler_hip',
         ],
         'include': [
             'hip/hip_runtime_api.h',
@@ -166,6 +167,7 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
             'hipsparse/hipsparse.h' if rocm_version >= 560 else 'hipsparse.h',
             'hipfft/hipfft.h' if rocm_version >= 560 else 'hipfft.h',
             'roctx.h',
+            'roctracer/roctracer_ext.h',
             'rocsolver/rocsolver.h' if rocm_version >= 560 else 'rocsolver.h',
         ],
         'libraries': [
@@ -176,6 +178,7 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
             'hipsparse',
             'rocfft',
             'roctx64',
+            ('roctracer64', lambda hip_version: hip_version >= 560),
             'rocblas',
             'rocsolver',
             'rocsparse',
