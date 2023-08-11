@@ -2,6 +2,7 @@
 #define INCLUDE_GUARD_HIP_CUPY_PROFILER_H
 
 #include "cupy_hip_common.h"
+#include "roctracer/roctracer_ext.h"
 
 extern "C" {
 
@@ -11,12 +12,12 @@ cudaError_t cudaProfilerInitialize(...) {
   return cudaSuccess;
 }
 
-cudaError_t cudaProfilerStart() {
-  return hipProfilerStart();
+void cudaProfilerStart() {
+  return roctracer_start();
 }
 
-cudaError_t cudaProfilerStop() {
-  return hipProfilerStop();
+void cudaProfilerStop() {
+  return roctracer_stop();
 }
 
 } // extern "C"

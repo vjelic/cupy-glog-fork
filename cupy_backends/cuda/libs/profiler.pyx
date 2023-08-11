@@ -12,8 +12,12 @@ cdef extern from '../../cupy_profiler.h' nogil:
     cudaError_t cudaProfilerInitialize(const char *configFile,
                                        const char *outputFile,
                                        int outputMode)
-    cudaError_t cudaProfilerStart()
-    cudaError_t cudaProfilerStop()
+    IF CUPY_HIP_VERSION != 0:
+        void cudaProfilerStart()
+        void cudaProfilerStop()
+    ELSE:
+        cudaError_t cudaProfilerStart()
+        cudaError_t cudaProfilerStop()
 
 
 cpdef initialize(str config_file,
@@ -40,10 +44,11 @@ cpdef initialize(str config_file,
             'cudaProfilerInitialize no longer available in CUDA 12+')
     cdef bytes b_config_file = config_file.encode()
     cdef bytes b_output_file = output_file.encode()
-    status = cudaProfilerInitialize(<const char*>b_config_file,
+    IF CUPY_HIP_VERSION == 0:
+        status = cudaProfilerInitialize(<const char*>b_config_file,
                                     <const char*>b_output_file,
                                     <OutputMode>output_mode)
-    runtime.check_status(status)
+        runtime.check_status(status)
 
 
 cpdef start():
@@ -54,8 +59,11 @@ cpdef start():
 
     See the CUDA document for detail.
     """
-    status = cudaProfilerStart()
-    runtime.check_status(status)
+    IF CUPY_HIP_VERSION != 0:
+        cudaProfilerStart()
+    ELSE:
+        status = cudaProfilerStart()
+        runtime.check_status(status)
 
 
 cpdef stop():
@@ -66,5 +74,8 @@ cpdef stop():
 
     See the CUDA document for detail.
     """
-    status = cudaProfilerStop()
-    runtime.check_status(status)
+    IF CUPY_HIP_VERSION != 0:
+        cudaProfilerStop()
+    ELSE:
+        status = cudaProfilerStop()
+        runtime.check_status(status)
