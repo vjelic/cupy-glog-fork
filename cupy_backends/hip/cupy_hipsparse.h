@@ -18,7 +18,12 @@ typedef hipsparseMatrixType_t cusparseMatrixType_t;
 typedef hipsparsePointerMode_t cusparsePointerMode_t;
 typedef hipsparseAction_t cusparseAction_t;
 typedef enum {} cusparseAlgMode_t;
+
+#if HIP_VERSION < 50631061
+typedef enum {} cusparseCsr2CscAlg_t;
+#else
 typedef hipsparseCsr2CscAlg_t cusparseCsr2CscAlg_t;
+#endif
 typedef hipsparseSpGEMMAlg_t cusparseSpGEMMAlg_t;
 
 #if HIP_VERSION >= 402
@@ -58,6 +63,93 @@ typedef enum {} cusparseSparseToDenseAlg_t;
 typedef hipsparseDenseToSparseAlg_t cusparseDenseToSparseAlg_t;
 #else
 typedef enum {} cusparseDenseToSparseAlg_t;
+#endif
+
+#if HIP_VERSION < 50631061
+hipsparseStatus_t hipsparseSgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseDgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseCgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseZgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseSgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseDgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseCgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseZgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseSgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseDgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseCgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseZgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseSgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseDgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseCgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseZgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseSpMatGetStridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseSpMatSetStridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseDnMatGetStridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseDnMatSetStridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t hipsparseCsr2cscEx2_bufferSize(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
 #endif
 
 hipsparseStatus_t cusparseCsrmvEx_bufferSize(...) {
