@@ -9,15 +9,15 @@ extern "C" {
 typedef enum {} cudaOutputMode_t;
 
 hipError_t hipProfilerInitialize(...) {
-  return hipSuccess;
+    return hipSuccess;
 }
 
 void hipProfilerStart() {
-  return roctracer_start();
+    return roctracer_start();
 }
 
 void hipProfilerStop() {
-  return roctracer_stop();
+    return roctracer_stop();
 }
 
 } // extern "C"
