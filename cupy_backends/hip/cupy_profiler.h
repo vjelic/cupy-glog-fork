@@ -7,16 +7,8 @@ extern "C" {
 
 typedef enum {} cudaOutputMode_t;
 
-cudaError_t cudaProfilerInitialize(...) {
-  return cudaSuccess;
-}
-
-cudaError_t cudaProfilerStart() {
-  return hipProfilerStart();
-}
-
-cudaError_t cudaProfilerStop() {
-  return hipProfilerStop();
+hipError_t hipProfilerInitialize(...) {
+    return hipSuccess;
 }
 
 } // extern "C"

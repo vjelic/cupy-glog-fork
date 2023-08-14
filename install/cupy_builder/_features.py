@@ -158,6 +158,9 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
             'cupyx.cusolver',
             'cupy_backends.cuda.libs.curand_hip',
             'cupy_backends.cuda.libs.cusparse_hip',
+            'cupy_backends.cuda.libs.nvrtc_hip',
+            'cupy_backends.cuda.libs.profiler_hip',
+            'cupy_backends.cuda.libs.nvtx_hip',
         ],
         'include': [
             'hip/hip_runtime_api.h',
