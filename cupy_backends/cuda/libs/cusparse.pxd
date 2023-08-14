@@ -150,71 +150,72 @@ cpdef enum:
     # cusparseDenseToSparseAlg_t
     CUSPARSE_DENSETOSPARSE_ALG_DEFAULT = 0
 
-cdef class SpVecAttributes:
-    cdef:
-        public int64_t size
-        public int64_t nnz
-        public intptr_t idx
-        public intptr_t values
-        public IndexType idxType
-        public IndexBase idxBase
-        public DataType valueType
+IF CUPY_HIP_VERSION == 0:
+    cdef class SpVecAttributes:
+        cdef:
+            public int64_t size
+            public int64_t nnz
+            public intptr_t idx
+            public intptr_t values
+            public IndexType idxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class CooAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t nnz
-        public intptr_t rowIdx
-        public intptr_t colIdx
-        public intptr_t values
-        public IndexType idxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class CooAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t nnz
+            public intptr_t rowIdx
+            public intptr_t colIdx
+            public intptr_t values
+            public IndexType idxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class CooAoSAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t nnz
-        public intptr_t ind
-        public intptr_t values
-        public IndexType idxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class CooAoSAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t nnz
+            public intptr_t ind
+            public intptr_t values
+            public IndexType idxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class CsrAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t nnz
-        public intptr_t rowOffsets
-        public intptr_t colIdx
-        public intptr_t values
-        public IndexType rowOffsetType
-        public IndexType colIdxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class CsrAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t nnz
+            public intptr_t rowOffsets
+            public intptr_t colIdx
+            public intptr_t values
+            public IndexType rowOffsetType
+            public IndexType colIdxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class DnVecAttributes:
-    cdef:
-        public int64_t size
-        public intptr_t values
-        public DataType valueType
+    cdef class DnVecAttributes:
+        cdef:
+            public int64_t size
+            public intptr_t values
+            public DataType valueType
 
-cdef class DnMatAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t ld
-        public intptr_t values
-        public DataType valueType
-        public Order order
+    cdef class DnMatAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t ld
+            public intptr_t values
+            public DataType valueType
+            public Order order
 
-cdef class DnMatBatchAttributes:
-    cdef:
-        public int count
-        public int64_t stride
+    cdef class DnMatBatchAttributes:
+        cdef:
+            public int count
+            public int64_t stride
 
-cpdef intptr_t create() except? 0
-cpdef destroy(intptr_t handle)
+    cpdef intptr_t create() except? 0
+    cpdef destroy(intptr_t handle)
