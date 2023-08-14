@@ -150,6 +150,9 @@ hipsparseStatus_t hipsparseCsr2cscEx2_bufferSize(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
 
+hipsparseStatus_t hipsparseCsr2cscEx2(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
 #endif
 
 hipsparseStatus_t cusparseCsrmvEx_bufferSize(...) {
