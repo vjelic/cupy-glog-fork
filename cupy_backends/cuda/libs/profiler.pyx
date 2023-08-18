@@ -45,7 +45,7 @@ ELSE:
                 'cudaProfilerInitialize no longer available in CUDA 12+')
         cdef bytes b_config_file = config_file.encode()
         cdef bytes b_output_file = output_file.encode()
-        IF CUPY_HIP_VERSION == 0:
+        if not runtime._is_hip_environment:
             status = cudaProfilerInitialize(<const char*>b_config_file,
                                         <const char*>b_output_file,
                                         <OutputMode>output_mode)
@@ -59,9 +59,9 @@ ELSE:
 
         See the CUDA document for detail.
         """
-        IF CUPY_HIP_VERSION != 0:
+        if runtime._is_hip_environment:
             cudaProfilerStart()
-        ELSE:
+        else:
             status = cudaProfilerStart()
             runtime.check_status(status)
 
@@ -73,8 +73,8 @@ ELSE:
 
         See the CUDA document for detail.
         """
-        IF CUPY_HIP_VERSION != 0:
+        if runtime._is_hip_environment:
             cudaProfilerStop()
-        ELSE:
+        else:
             status = cudaProfilerStop()
             runtime.check_status(status)
