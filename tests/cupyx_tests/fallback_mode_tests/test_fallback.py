@@ -411,7 +411,7 @@ class TestArrayUnaryMethods(unittest.TestCase):
     @numpy_fallback_equal()
     def test_unary_methods(self, xp):
         a = testing.shaped_random(self.shape, xp=xp)
-        return getattr(a, self.func)()
+        return getattr(a.item() if a.size==1 else a, self.func)()
 
 
 @testing.parameterize(

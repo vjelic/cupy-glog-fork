@@ -32,10 +32,10 @@ class TestFormatting(unittest.TestCase):
         a = testing.shaped_arange((1,), cupy)
         b = testing.shaped_arange((1,), numpy)
         assert cupy.format_float_positional(
-            a) == numpy.format_float_positional(b)
+            a[0]) == numpy.format_float_positional(b[0])
 
     def test_format_float_scientific(self):
         a = testing.shaped_arange((1,), cupy)
         b = testing.shaped_arange((1,), numpy)
         assert cupy.format_float_scientific(
-            a) == numpy.format_float_scientific(b)
+            a[0]) == numpy.format_float_scientific(b[0])
