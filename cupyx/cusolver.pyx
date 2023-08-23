@@ -7,12 +7,16 @@ import warnings as _warnings
 import numpy as _numpy
 
 from cupy_backends.cuda.api cimport runtime
-from cupy_backends.cuda.libs cimport cusolver
-# due to a Cython bug (cython/cython#4000) we cannot just cimport the module
-from cupy_backends.cuda.libs.cusolver cimport (  # noqa
-    sgesvd_bufferSize, dgesvd_bufferSize, cgesvd_bufferSize, zgesvd_bufferSize,
-    sgeqrf_bufferSize, dgeqrf_bufferSize, cgeqrf_bufferSize, zgeqrf_bufferSize,
-    sorgqr_bufferSize, dorgqr_bufferSize, cungqr_bufferSize, zungqr_bufferSize)
+IF CUPY_HIP_VERSION != 0:
+    from cupy_backends.cuda.libs import cusolver_hip as cusolver
+    from cupy_backends.cuda.libs.cusolver import *
+ELSE:
+    from cupy_backends.cuda.libs cimport cusolver
+    # due to a Cython bug (cython/cython#4000) we cannot just cimport the module
+    from cupy_backends.cuda.libs.cusolver cimport (  # noqa
+        sgesvd_bufferSize, dgesvd_bufferSize, cgesvd_bufferSize, zgesvd_bufferSize,
+        sgeqrf_bufferSize, dgeqrf_bufferSize, cgeqrf_bufferSize, zgeqrf_bufferSize,
+        sorgqr_bufferSize, dorgqr_bufferSize, cungqr_bufferSize, zungqr_bufferSize)
 
 from cupy.cuda cimport memory
 from cupy._core.core cimport _internal_ascontiguousarray

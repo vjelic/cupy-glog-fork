@@ -2,12 +2,15 @@
 #define INCLUDE_GUARD_HIP_CUPY_COMMON_H
 
 #include <hip/hip_runtime_api.h>
+#include <hip/library_types.h>
 #if HIP_VERSION >= 50530600
 #include <hipblas/hipblas.h>
 #include <rocsolver/rocsolver.h>
+#include <hipsolver/hipsolver.h>
 #else
 #include <hipblas.h>
 #include <rocsolver.h>
+#include <hipsolver.h>
 #endif
 
 #define CUDA_VERSION 0
@@ -155,6 +158,10 @@ typedef enum libraryPropertyType_t {
     MINOR_VERSION,
     PATCH_LEVEL
 } libraryPropertyType;
+
+#if HIP_VERSION >= 50631061
+typedef enum hipLibraryPropertyType hipLibraryPropertyType_t;
+#endif
 
 } // extern "C"
 
