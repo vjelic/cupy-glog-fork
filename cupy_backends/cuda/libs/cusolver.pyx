@@ -1098,12 +1098,27 @@ ELSE:
         check_status(status)
         return value
 
-
     cpdef tuple _getVersion():
         return (getProperty(MAJOR_VERSION),
                 getProperty(MINOR_VERSION),
                 getProperty(PATCH_LEVEL))
 
+    # TODO: The below three functions need be removed
+    # after cublas hipification for ROCm.
+    cpdef int convert_solver_fill(int fill) nogil:
+        if runtime._is_hip_environment:
+            return fill + 121
+        return fill
+
+    cpdef int convert_solver_operation(int op) nogil:
+        if runtime._is_hip_environment:
+            return op + 111
+        return op
+
+    cpdef int convert_solver_side(int side) nogil:
+        if runtime._is_hip_environment:
+            return side + 141
+        return side
 
     ###############################################################################
     # Context
@@ -1214,7 +1229,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSpotrf_bufferSize(
-                <Handle>handle, <FillMode>uplo, n,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, <int>lda, &lwork)
         check_status(status)
         return lwork
@@ -1225,7 +1240,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDpotrf_bufferSize(
-                <Handle>handle, <FillMode>uplo, n,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, <int>lda, &lwork)
         check_status(status)
         return lwork
@@ -1236,7 +1251,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCpotrf_bufferSize(
-                <Handle>handle, <FillMode>uplo, n,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, <int>lda, &lwork)
         check_status(status)
         return lwork
@@ -1247,7 +1262,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZpotrf_bufferSize(
-                <Handle>handle, <FillMode>uplo, n,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, <int>lda, &lwork)
         check_status(status)
         return lwork
@@ -1257,7 +1272,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSpotrf(
-                <Handle>handle, <FillMode>uplo, n, <float*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <float*>A,
                 lda, <float*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1266,7 +1281,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDpotrf(
-                <Handle>handle, <FillMode>uplo, n, <double*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <double*>A,
                 lda, <double*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1275,7 +1290,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCpotrf(
-                <Handle>handle, <FillMode>uplo, n, <cuComplex*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuComplex*>A,
                 lda, <cuComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1284,7 +1299,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZpotrf(
-                <Handle>handle, <FillMode>uplo, n, <cuDoubleComplex*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuDoubleComplex*>A,
                 lda, <cuDoubleComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1293,7 +1308,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSpotrs(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <const float*>A, lda, <float*>B, ldb,
                 <int*>devInfo)
         check_status(status)
@@ -1303,7 +1318,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDpotrs(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <const double*>A, lda, <double*>B, ldb,
                 <int*>devInfo)
         check_status(status)
@@ -1313,7 +1328,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCpotrs(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <const cuComplex*>A, lda, <cuComplex*>B, ldb,
                 <int*>devInfo)
         check_status(status)
@@ -1323,7 +1338,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZpotrs(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <const cuDoubleComplex*>A, lda, <cuDoubleComplex*>B, ldb,
                 <int*>devInfo)
         check_status(status)
@@ -1333,7 +1348,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSpotrfBatched(
-                <Handle>handle, <FillMode>uplo, n, <float**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <float**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
@@ -1342,7 +1357,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDpotrfBatched(
-                <Handle>handle, <FillMode>uplo, n, <double**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <double**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
@@ -1351,7 +1366,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCpotrfBatched(
-                <Handle>handle, <FillMode>uplo, n, <cuComplex**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuComplex**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
@@ -1360,7 +1375,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZpotrfBatched(
-                <Handle>handle, <FillMode>uplo, n, <cuDoubleComplex**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuDoubleComplex**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
@@ -1370,7 +1385,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSpotrsBatched(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <float**>Aarray, lda, <float**>Barray, ldb,
                 <int*>devInfo, batchSize)
         check_status(status)
@@ -1381,7 +1396,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDpotrsBatched(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <double**>Aarray, lda, <double**>Barray, ldb,
                 <int*>devInfo, batchSize)
         check_status(status)
@@ -1392,7 +1407,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCpotrsBatched(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <cuComplex**>Aarray, lda, <cuComplex**>Barray, ldb,
                 <int*>devInfo, batchSize)
         check_status(status)
@@ -1403,7 +1418,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZpotrsBatched(
-                <Handle>handle, <FillMode>uplo, n, nrhs,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, nrhs,
                 <cuDoubleComplex**>Aarray, lda, <cuDoubleComplex**>Barray, ldb,
                 <int*>devInfo, batchSize)
         check_status(status)
@@ -1493,7 +1508,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSgetrs(
-                <Handle>handle, <Operation>trans, n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
                 <const float*> A, lda, <const int*>devIpiv,
                 <float*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1504,7 +1519,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDgetrs(
-                <Handle>handle, <Operation>trans, n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
                 <const double*> A, lda, <const int*>devIpiv,
                 <double*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1515,7 +1530,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCgetrs(
-                <Handle>handle, <Operation>trans, n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
                 <const cuComplex*> A, lda, <const int*>devIpiv,
                 <cuComplex*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1526,7 +1541,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZgetrs(
-                <Handle>handle, <Operation>trans, n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
                 <const cuDoubleComplex*> A, lda, <const int*>devIpiv,
                 <cuDoubleComplex*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1708,7 +1723,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSormqr_bufferSize(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const float*>A, lda, <const float*>tau,
                 <float*>C, ldc, &lwork)
         check_status(status)
@@ -1721,7 +1736,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDormqr_bufferSize(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const double*>A, lda, <const double*>tau,
                 <double*>C, ldc, &lwork)
         check_status(status)
@@ -1734,7 +1749,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCunmqr_bufferSize(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuComplex*>A, lda, <const cuComplex*>tau,
                 <cuComplex*>C, ldc, &lwork)
         check_status(status)
@@ -1747,7 +1762,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZunmqr_bufferSize(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuDoubleComplex*>A, lda, <const cuDoubleComplex*>tau,
                 <cuDoubleComplex*>C, ldc, &lwork)
         check_status(status)
@@ -1760,7 +1775,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSormqr(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const float*>A, lda, <const float*>tau,
                 <float*>C, ldc,
                 <float*>work, lwork, <int*>devInfo)
@@ -1772,7 +1787,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDormqr(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const double*>A, lda, <const double*>tau,
                 <double*>C, ldc,
                 <double*>work, lwork, <int*>devInfo)
@@ -1784,7 +1799,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCunmqr(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuComplex*>A, lda, <const cuComplex*>tau,
                 <cuComplex*>C, ldc,
                 <cuComplex*>work, lwork, <int*>devInfo)
@@ -1796,7 +1811,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZunmqr(
-                <Handle>handle, <SideMode>side, <Operation>trans, m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuDoubleComplex*>A, lda, <const cuDoubleComplex*>tau,
                 <cuDoubleComplex*>C, ldc,
                 <cuDoubleComplex*>work, lwork, <int*>devInfo)
@@ -1863,7 +1878,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSsytrf(
-                <Handle>handle, <FillMode>uplo, n, <float*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <float*>A, lda,
                 <int*>ipiv, <float*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1872,7 +1887,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDsytrf(
-                <Handle>handle, <FillMode>uplo, n, <double*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <double*>A, lda,
                 <int*>ipiv, <double*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1881,7 +1896,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCsytrf(
-                <Handle>handle, <FillMode>uplo, n, <cuComplex*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuComplex*>A, lda,
                 <int*>ipiv, <cuComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1890,7 +1905,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZsytrf(
-                <Handle>handle, <FillMode>uplo, n, <cuDoubleComplex*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuDoubleComplex*>A, lda,
                 <int*>ipiv, <cuDoubleComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -3138,7 +3153,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSsyevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const float*>A,
                 lda, <const float*>W, &lwork)
         check_status(status)
@@ -3150,7 +3165,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDsyevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const double*>A,
                 lda, <const double*>W, &lwork)
         check_status(status)
@@ -3162,7 +3177,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCheevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuComplex*>A,
                 lda, <const float*>W, &lwork)
         check_status(status)
@@ -3174,7 +3189,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZheevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuDoubleComplex*>A,
                 lda, <const double*>W, &lwork)
         check_status(status)
@@ -3186,7 +3201,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSsyevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, lda, <float*>W,
                 <float*>work, lwork, <int*>info)
         check_status(status)
@@ -3197,7 +3212,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDsyevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, lda, <double*>W,
                 <double*>work, lwork, <int*>info)
         check_status(status)
@@ -3208,7 +3223,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCheevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, lda, <float*>W,
                 <cuComplex*>work, lwork, <int*>info)
         check_status(status)
@@ -3219,7 +3234,7 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZheevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, lda, <double*>W,
                 <cuDoubleComplex*>work, lwork, <int*>info)
         check_status(status)
@@ -3268,7 +3283,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const float*>A,
                 lda, <const float*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3281,7 +3296,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const double*>A,
                 lda, <const double*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3294,7 +3309,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuComplex*>A,
                 lda, <const float*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3307,7 +3322,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuDoubleComplex*>A,
                 lda, <const double*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3319,7 +3334,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, lda, <float*>W,
                 <float*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
@@ -3330,7 +3345,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, lda, <double*>W,
                 <double*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
@@ -3341,7 +3356,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, lda, <float*>W,
                 <cuComplex*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
@@ -3352,7 +3367,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, lda, <double*>W,
                 <cuDoubleComplex*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
@@ -3367,7 +3382,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const float *>A, lda, <const float *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3381,7 +3396,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const double *>A, lda, <const double *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3395,7 +3410,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuComplex *>A, lda, <const float *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3409,7 +3424,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuDoubleComplex *>A, lda, <const double *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3422,7 +3437,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, lda, <float*>W,
                 <float*>work, lwork, <int*>info, <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3434,7 +3449,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, lda, <double*>W,
                 <double*>work, lwork, <int*>info, <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3446,7 +3461,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, lda, <float*>W,
                 <cuComplex*>work, lwork, <int*>info, <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3458,7 +3473,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, lda, <double*>W,
                 <cuDoubleComplex*>work, lwork, <int*>info,
                 <SyevjInfo>params, batchSize)
@@ -3473,7 +3488,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnXsyevd_bufferSize(
-                <Handle>handle, <Params>params, <EigMode> jobz, <FillMode> uplo, n,
+                <Handle>handle, <Params>params, <EigMode> jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <DataType>dataTypeA, <void*>A, lda,
                 <DataType>dataTypeW, <void*>W, <DataType>computeType,
                 &workspaceInBytesOnDevice, &workspaceInBytesOnHost)
@@ -3489,7 +3504,7 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnXsyevd(
-                <Handle>handle, <Params>params, <EigMode>jobz, <FillMode>uplo, n,
+                <Handle>handle, <Params>params, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
                 <DataType>dataTypeA, <void*>A, lda,
                 <DataType>dataTypeW, <void*>W, <DataType>computeType,
                 <void*>bufferOnDevice, workspaceInBytesOnDevice,

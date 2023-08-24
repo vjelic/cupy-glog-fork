@@ -7,18 +7,6 @@
 
 extern "C" {
 
-static hipsolverFillMode_t convert_hipsolver_fill(hipsolverFillMode_t mode) {
-    return static_cast<hipsolverFillMode_t>(static_cast<int>(mode) + 121);
-}
-
-static hipsolverOperation_t convert_hipsolver_operation(hipsolverOperation_t op) {
-    return static_cast<hipsolverOperation_t>(static_cast<int>(op) + 111);
-}
-
-static hipsolverSideMode_t convert_hipsolver_side(hipsolverSideMode_t mode) {
-    return static_cast<hipsolverSideMode_t>(static_cast<int>(mode) + 141);
-}
-
 hipsolverStatus_t cusolverGetProperty(hipLibraryPropertyType_t type, int* val) {
     switch(type) {
         case MAJOR_VERSION: { *val = hipsolverVersionMajor; break; }
@@ -315,99 +303,6 @@ hipsolverStatus_t cusolverSpCcsreigvsi(...) {
 hipsolverStatus_t cusolverSpZcsreigvsi(...) {
     return HIPSOLVER_STATUS_NOT_SUPPORTED;
 }
-
-/* The following APIs need updating to enum values.
-   The below APIs can be removed after cublas is implemented in hipify flow.
-*/
-
-hipsolverStatus_t hipsolverDnSpotrf_bufferSize(hipsolverDnHandle_t handle,
-                                             hipsolverFillMode_t uplo,
-                                             int n,
-                                             float *A,
-                                             int lda,
-                                             int *Lwork) {
-    return hipsolverDnSpotrf_bufferSize(handle, convert_hipsolver_fill(uplo),
-                                        n, A, lda, Lwork);
-}
-
-hipsolverStatus_t hipsolverDnDpotrf_bufferSize(hipsolverDnHandle_t handle,
-                                             hipsolverFillMode_t uplo,
-                                             int n,
-                                             double *A,
-                                             int lda,
-                                             int *Lwork) {
-    return hipsolverDnDpotrf_bufferSize(handle, convert_hipsolver_fill(uplo),
-                                        n, A, lda, Lwork); 
-}
-
-hipsolverStatus_t hipsolverDnCpotrf_bufferSize(hipsolverDnHandle_t handle,
-                                             hipsolverFillMode_t uplo,
-                                             int n,
-                                             hipFloatComplex *A,
-                                             int lda,
-                                             int *Lwork) {
-    return hipsolverDnCpotrf_bufferSize(handle, convert_hipsolver_fill(uplo),
-                                        n, A, lda, Lwork);
-}
-
-hipsolverStatus_t hipsolverDnZpotrf_bufferSize(hipsolverDnHandle_t handle,
-                                             hipsolverFillMode_t uplo,
-                                             int n,
-                                             hipDoubleComplex *A,
-                                             int lda,
-                                             int *Lwork) {
-    return hipsolverDnZpotrf_bufferSize(handle, convert_hipsolver_fill(uplo),
-                                        n, A, lda, Lwork);
-}
-
-hipsolverStatus_t hipsolverDnSpotrf(hipsolverDnHandle_t handle,
-                                  hipsolverFillMode_t uplo,
-                                  int n,
-                                  float *A,
-                                  int lda,
-                                  float *Workspace,
-                                  int Lwork,
-                                  int *devInfo) {
-    return hipsolverDnSpotrf(handle, convert_hipsolver_fill(uplo),
-                             n, A, lda, Workspace, Lwork, devInfo);
-}
-
-hipsolverStatus_t hipsolverDnDpotrf(hipsolverDnHandle_t handle,
-                                  hipsolverFillMode_t uplo,
-                                  int n,
-                                  double *A,
-                                  int lda,
-                                  double *Workspace,
-                                  int Lwork,
-                                  int *devInfo ) {
-    return hipsolverDnDpotrf(handle, convert_hipsolver_fill(uplo),
-                             n, A, lda, Workspace, Lwork, devInfo);
-}
-
-hipsolverStatus_t hipsolverDnCpotrf(hipsolverDnHandle_t handle,
-                                  hipsolverFillMode_t uplo,
-                                  int n,
-                                  hipFloatComplex *A,
-                                  int lda,
-                                  hipFloatComplex *Workspace,
-                                  int Lwork,
-                                  int *devInfo) {
-    return hipsolverDnCpotrf(handle, convert_hipsolver_fill(uplo),
-                             n, A, lda, Workspace, Lwork, devInfo);
-}
-
-hipsolverStatus_t hipsolverDnZpotrf(hipsolverDnHandle_t handle,
-                                  hipsolverFillMode_t uplo,
-                                  int n,
-                                  hipDoubleComplex *A,
-                                  int lda,
-                                  hipDoubleComplex *Workspace,
-                                  int Lwork,
-                                  int *devInfo) {
-    return hipsolverDnZpotrf(handle, convert_hipsolver_fill(uplo),
-                             n, A, lda, Workspace, Lwork, devInfo);
-}
-
 
 } // extern "C" 
 
