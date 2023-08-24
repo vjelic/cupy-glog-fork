@@ -9,6 +9,8 @@ from cupy_backends.cuda cimport stream as stream_module
 
 IF CUPY_USE_GEN_HIP_CODE:
     from cupy_backends.cuda.libs.cusolver_hip import *
+    from cupy_backends.cuda.libs.cusolver_hip import _get_cuda_build_version
+    from cupy_backends.cuda.libs.cusolver_hip import _getVersion
 ELSE:
     cpdef _get_cuda_build_version():
         if CUPY_CUDA_VERSION > 0:
@@ -17,7 +19,6 @@ ELSE:
             return CUPY_HIP_VERSION
         else:
             return 0
-
 
     ###############################################################################
     # Extern
@@ -1050,23 +1051,22 @@ ELSE:
         31: 'CUSOLVER_STATUS_INVALID_WORKSPACE',
     }
 
-    # for rocBLAS and rocSOLVER
+    # for hipSOLVER 
     cdef dict ROC_STATUS = {
-        0: 'rocblas_status_success',
-        1: 'rocblas_status_invalid_handle',
-        2: 'rocblas_status_not_implemented',
-        3: 'rocblas_status_invalid_pointer',
-        4: 'rocblas_status_invalid_size',
-        5: 'rocblas_status_memory_error',
-        6: 'rocblas_status_internal_error',
-        7: 'rocblas_status_perf_degraded',
-        8: 'rocblas_status_size_query_mismatch',
-        9: 'rocblas_status_size_increased',
-        10: 'rocblas_status_size_unchanged',
-        11: 'rocblas_status_invalid_value',
-        12: 'rocblas_status_continue',
+        0: 'HIPSOLVER_STATUS_SUCCESS',
+        1: 'HIPSOLVER_STATUS_NOT_INITIALIZED',
+        2: 'HIPSOLVER_STATUS_ALLOC_FAILED',
+        3: 'HIPSOLVER_STATUS_INVALID_VALUE',
+        4: 'HIPSOLVER_STATUS_MAPPING_ERROR',
+        5: 'HIPSOLVER_STATUS_EXECUTION_FAILED',
+        6: 'HIPSOLVER_STATUS_INTERNAL_ERROR',
+        7: 'HIPSOLVER_STATUS_NOT_SUPPORTED',
+        8: 'HIPSOLVER_STATUS_ARCH_MISMATCH',
+        9: 'HIPSOLVER_STATUS_HANDLE_IS_NULLPTR',
+        10: 'HIPSOLVER_STATUS_INVALID_ENUM',
+        11: 'HIPSOLVER_STATUS_UNKNOWN',
+        12: 'HIPSOLVER_STATUS_ZERO_PIVOT',
     }
-
 
     class CUSOLVERError(RuntimeError):
 
@@ -1080,7 +1080,6 @@ ELSE:
 
         def __reduce__(self):
             return (type(self), (self.status,))
-
 
     @cython.profile(False)
     cpdef inline check_status(int status):

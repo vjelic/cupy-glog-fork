@@ -43,20 +43,28 @@ cdef extern from *:
 ###############################################################################
 # Enum
 ###############################################################################
+IF CUPY_HIP_VERSION != 0:
+    cpdef enum:
+        CUSOLVER_EIG_TYPE_1 = 211
+        CUSOLVER_EIG_TYPE_2 = 212
+        CUSOLVER_EIG_TYPE_3 = 213
 
-cpdef enum:
-    CUSOLVER_EIG_TYPE_1 = 1
-    CUSOLVER_EIG_TYPE_2 = 2
-    CUSOLVER_EIG_TYPE_3 = 3
+        CUSOLVER_EIG_MODE_NOVECTOR = 201
+        CUSOLVER_EIG_MODE_VECTOR = 202
+ELSE:
+    cpdef enum:
+        CUSOLVER_EIG_TYPE_1 = 1
+        CUSOLVER_EIG_TYPE_2 = 2
+        CUSOLVER_EIG_TYPE_3 = 3
 
-    CUSOLVER_EIG_MODE_NOVECTOR = 0
-    CUSOLVER_EIG_MODE_VECTOR = 1
+        CUSOLVER_EIG_MODE_NOVECTOR = 0
+        CUSOLVER_EIG_MODE_VECTOR = 1
 
-IF CUPY_HIP_VERSION == 0:
     ##########################################################################
     # Library Attributes
     ##########################################################################
 
+IF CUPY_HIP_VERSION == 0:
     cpdef int getProperty(int type) except? -1
     cpdef tuple _getVersion()
 
