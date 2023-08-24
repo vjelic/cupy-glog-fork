@@ -53,32 +53,32 @@ cpdef enum:
     CUSOLVER_EIG_MODE_VECTOR = 1
 
 IF CUPY_HIP_VERSION == 0:
-    ###############################################################################
+    ##########################################################################
     # Library Attributes
-    ###############################################################################
+    ##########################################################################
 
     cpdef int getProperty(int type) except? -1
     cpdef tuple _getVersion()
 
-    ###############################################################################
+    ##########################################################################
     # Context
-    ###############################################################################
+    ##########################################################################
 
     cpdef intptr_t create() except? 0
     cpdef intptr_t spCreate() except? 0
     cpdef destroy(intptr_t handle)
     cpdef spDestroy(intptr_t handle)
 
-    ###############################################################################
+    ##########################################################################
     # Stream
-    ###############################################################################
+    ##########################################################################
 
     cpdef setStream(intptr_t handle, size_t stream)
     cpdef size_t getStream(intptr_t handle) except? 0
 
-    ###############################################################################
+    ##########################################################################
     # Dense LAPACK Functions (Linear Solver)
-    ###############################################################################
+    ##########################################################################
 
     # Cholesky factorization
     cpdef int spotrf_bufferSize(intptr_t handle, int uplo,
@@ -108,27 +108,27 @@ IF CUPY_HIP_VERSION == 0:
     cpdef zpotrs(intptr_t handle, int uplo, int n, int nrhs,
                  size_t A, int lda, size_t B, int ldb, size_t devInfo)
 
-    cpdef spotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize)
-    cpdef dpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize)
-    cpdef cpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize)
-    cpdef zpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize)
+    cpdef spotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize)
+    cpdef dpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize)
+    cpdef cpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize)
+    cpdef zpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize)
 
-    cpdef spotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
-                        int lda, size_t Barray, int ldb, size_t devInfo,
-                        int batchSize)
-    cpdef dpotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
-                        int lda, size_t Barray, int ldb, size_t devInfo,
-                        int batchSize)
-    cpdef cpotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
-                        int lda, size_t Barray, int ldb, size_t devInfo,
-                        int batchSize)
-    cpdef zpotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
-                        int lda, size_t Barray, int ldb, size_t devInfo,
-                        int batchSize)
+    cpdef spotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray, int lda, size_t Barray, int ldb,
+                        size_t devInfo, int batchSize)
+    cpdef dpotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray, int lda, size_t Barray, int ldb,
+                        size_t devInfo, int batchSize)
+    cpdef cpotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray, int lda, size_t Barray, int ldb,
+                        size_t devInfo, int batchSize)
+    cpdef zpotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray, int lda, size_t Barray, int ldb,
+                        size_t devInfo, int batchSize)
 
     # LU factorization
     cpdef int sgetrf_bufferSize(intptr_t handle, int m, int n,
@@ -205,17 +205,17 @@ IF CUPY_HIP_VERSION == 0:
 
     # Compute Q**T*b in solve min||A*x = b||
     cpdef int sormqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1
     cpdef int dormqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1
     cpdef int cunmqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1
     cpdef int zunmqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1
 
     cpdef sormqr(intptr_t handle, int side, int trans,
                  int m, int n, int k, size_t A, int lda, size_t tau, size_t C,
@@ -229,12 +229,14 @@ IF CUPY_HIP_VERSION == 0:
     cpdef zunmqr(intptr_t handle, int side, int trans,
                  int m, int n, int k, size_t A, int lda, size_t tau, size_t C,
                  int ldc, size_t work, int lwork, size_t devInfo)
+    # (obsoleted)
     cpdef cormqr(intptr_t handle, int side, int trans,
                  int m, int n, int k, size_t A, int lda, size_t tau, size_t C,
-                 int ldc, size_t work, int lwork, size_t devInfo)  # (obsoleted)
+                 int ldc, size_t work, int lwork, size_t devInfo)
+    # (obsoleted)
     cpdef zormqr(intptr_t handle, int side, int trans,
                  int m, int n, int k, size_t A, int lda, size_t tau, size_t C,
-                 int ldc, size_t work, int lwork, size_t devInfo)  # (obsoleted)
+                 int ldc, size_t work, int lwork, size_t devInfo)
 
     # L*D*L**T,U*D*U**T factorization
     cpdef int ssytrf_bufferSize(intptr_t handle, int n, size_t A,
@@ -258,46 +260,60 @@ IF CUPY_HIP_VERSION == 0:
     # Solve A * X = B using iterative refinement
     cpdef size_t zzgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t zcgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t zygesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t zkgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ccgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t cygesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ckgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ddgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t dsgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t dxgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t dhgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ssgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t sxgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t shgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
 
     cpdef int zzgesv(intptr_t handle, int n, int nrhs, size_t dA, int ldda,
                      size_t dipiv, size_t dB, int lddb, size_t dX, int lddx,
@@ -345,93 +361,107 @@ IF CUPY_HIP_VERSION == 0:
     # Compute least-saure solution of A * X = B using iterative refinement
     cpdef size_t zzgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t zcgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t zygels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t zkgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ccgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t cygels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ckgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ddgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t dsgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t dxgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t dhgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t ssgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t sxgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
     cpdef size_t shgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1
 
-    cpdef int zzgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int zzgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int zcgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int zcgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int zygels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int zygels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int zkgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int zkgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int ccgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ccgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int ckgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ckgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int cygels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int cygels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int ddgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ddgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int dsgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int dsgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int dxgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int dxgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int dhgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int dhgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int ssgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ssgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int sxgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int sxgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
-    cpdef int shgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int shgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork_bytes, size_t dInfo)
 
-    ###############################################################################
+    ###########################################################################
     # Dense LAPACK Functions (Eigenvalue Solver)
-    ###############################################################################
+    ###########################################################################
 
     # Bidiagonal factorization
     cpdef int sgebrd_bufferSize(intptr_t handle, int m, int n) except? -1
@@ -460,9 +490,9 @@ IF CUPY_HIP_VERSION == 0:
     cpdef int cgesvd_bufferSize(intptr_t handle, int m, int n) except? -1
     cpdef int zgesvd_bufferSize(intptr_t handle, int m, int n) except? -1
 
-    cpdef sgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo)
+    cpdef sgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork, size_t devInfo)
     cpdef dgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
                  int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
                  size_t Work, int lwork, size_t rwork, size_t devInfo)
