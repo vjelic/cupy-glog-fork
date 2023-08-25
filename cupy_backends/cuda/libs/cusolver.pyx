@@ -1107,7 +1107,10 @@ ELSE:
     # after cublas hipification for ROCm.
     cpdef int convert_solver_fill(int fill) nogil:
         if runtime._is_hip_environment:
-            return fill + 121
+            if fill == 0:
+                return 122
+            elif fill == 1:
+                return 121
         return fill
 
     cpdef int convert_solver_operation(int op) nogil:

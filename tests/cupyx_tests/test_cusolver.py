@@ -4,6 +4,7 @@ import pytest
 import cupy
 from cupyx import cusolver
 from cupy import testing
+from cupy.cuda import runtime
 from cupy.testing import _attr
 from cupy._core import _routines_linalg as _linalg
 import cupyx
@@ -158,6 +159,7 @@ class TestSyevj:
         testing.assert_allclose(self.a.dot(
             v.get()), w * v, rtol=1e-3, atol=1e-4)
 
+    @pytest.mark.skipif(runtime.is_hip, reason='test_syevjBatched is flaky')
     def test_syevjBatched(self):
         lda, m = self.a.shape
 
