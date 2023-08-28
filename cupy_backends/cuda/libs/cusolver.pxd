@@ -500,16 +500,20 @@ IF CUPY_HIP_VERSION == 0:
 
     cpdef sgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
                  size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
-                 int ldvt, size_t Work, int lwork, size_t rwork, size_t devInfo)
-    cpdef dgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo)
-    cpdef cgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo)
-    cpdef zgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo)
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo)
+    cpdef dgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo)
+    cpdef cgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo)
+    cpdef zgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo)
 
     # gesvdj ... Singular value decomposition using Jacobi mathod
     cpdef intptr_t createGesvdjInfo() except? 0
@@ -521,22 +525,27 @@ IF CUPY_HIP_VERSION == 0:
     cpdef double xgesvdjGetResidual(intptr_t handle, intptr_t info)
     cpdef int xgesvdjGetSweeps(intptr_t handle, intptr_t info)
 
-    cpdef int sgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params)
-    cpdef int dgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params)
-    cpdef int cgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params)
-    cpdef int zgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params)
+    cpdef int sgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params)
+    cpdef int dgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params)
+    cpdef int cgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params)
+    cpdef int zgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params)
 
-    cpdef sgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-                  intptr_t work, int lwork, intptr_t info, intptr_t params)
+    cpdef sgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
+                  intptr_t params)
     cpdef dgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
                   int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
                   intptr_t work, int lwork, intptr_t info, intptr_t params)

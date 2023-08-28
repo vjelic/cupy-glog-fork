@@ -55,7 +55,6 @@ class TestEigenvalue:
 
     @testing.for_all_dtypes(no_bool=True, no_float16=True, no_complex=True)
     @testing.numpy_cupy_allclose(rtol=1e-3, atol=1e-4, contiguous_check=False)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_eigh_batched(self, xp, dtype):
         a = xp.array([[[1, 0, 3], [0, 5, 0], [7, 0, 9]],
                       [[3, 0, 3], [0, 7, 0], [7, 0, 11]]], dtype)
@@ -74,7 +73,6 @@ class TestEigenvalue:
 
     @testing.for_dtypes('FD')
     @testing.numpy_cupy_allclose(rtol=1e-3, atol=1e-4, contiguous_check=False)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_eigh_complex_batched(self, xp, dtype):
         a = xp.array([[[1, 2j, 3], [4j, 5, 6j], [7, 8j, 9]],
                       [[0, 2j, 3], [4j, 4, 6j], [7, 8j, 8]]], dtype)
@@ -102,7 +100,6 @@ class TestEigenvalue:
 
     @testing.for_all_dtypes(no_float16=True, no_complex=True)
     @testing.numpy_cupy_allclose(rtol=1e-3, atol=1e-4)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_eigvalsh_batched(self, xp, dtype):
         a = xp.array([[[1, 0, 3], [0, 5, 0], [7, 0, 9]],
                       [[3, 0, 3], [0, 7, 0], [7, 0, 11]]], dtype)
@@ -122,7 +119,6 @@ class TestEigenvalue:
 
     @testing.for_complex_dtypes()
     @testing.numpy_cupy_allclose(rtol=1e-3, atol=1e-4)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_eigvalsh_complex_batched(self, xp, dtype):
         a = xp.array([[[1, 2j, 3], [4j, 5, 6j], [7, 8j, 9]],
                       [[0, 2j, 3], [4j, 4, 6j], [7, 8j, 8]]], dtype)

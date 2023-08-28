@@ -159,7 +159,6 @@ class TestSyevj:
         testing.assert_allclose(self.a.dot(
             v.get()), w * v, rtol=1e-3, atol=1e-4)
 
-    @pytest.mark.skipif(runtime.is_hip, reason='test_syevjBatched is flaky')
     def test_syevjBatched(self):
         lda, m = self.a.shape
 

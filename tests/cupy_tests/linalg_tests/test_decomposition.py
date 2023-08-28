@@ -282,7 +282,6 @@ class TestSVD(unittest.TestCase):
             array, full_matrices=self.full_matrices, compute_uv=False)
 
     @_condition.repeat(3, 10)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank3(self):
         self.check_usv((2, 3, 4))
         self.check_usv((2, 3, 7))
@@ -300,7 +299,6 @@ class TestSVD(unittest.TestCase):
         self.check_usv((2, 32, 64))
 
     @_condition.repeat(3, 10)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank3_no_uv(self):
         self.check_singular((2, 3, 4))
         self.check_singular((2, 3, 7))
@@ -309,7 +307,6 @@ class TestSVD(unittest.TestCase):
         self.check_singular((2, 4, 3))
 
     @_condition.repeat(3, 10)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank3_no_uv_loop(self):
         # This tests the loop-based batched gesvd on CUDA (_gesvd_batched)
         self.check_singular((2, 64, 64))
@@ -340,7 +337,6 @@ class TestSVD(unittest.TestCase):
             array, full_matrices=self.full_matrices, compute_uv=False)
 
     @_condition.repeat(3, 10)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank4(self):
         self.check_usv((2, 2, 3, 4))
         self.check_usv((2, 2, 3, 7))
@@ -358,7 +354,6 @@ class TestSVD(unittest.TestCase):
         self.check_usv((3, 2, 32, 64))
 
     @_condition.repeat(3, 10)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank4_no_uv(self):
         self.check_singular((2, 2, 3, 4))
         self.check_singular((2, 2, 3, 7))
@@ -367,7 +362,6 @@ class TestSVD(unittest.TestCase):
         self.check_singular((2, 2, 4, 3))
 
     @_condition.repeat(3, 10)
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank4_no_uv_loop(self):
         # This tests the loop-based batched gesvd on CUDA (_gesvd_batched)
         self.check_singular((3, 2, 64, 64))

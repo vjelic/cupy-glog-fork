@@ -236,11 +236,7 @@ cpdef _gesvdj_batched(a, full_matrices, compute_uv, overwrite_a):
     handle = _device.get_cusolver_handle()
     batch_size, m, n = a.shape
     a = _cupy.array(a.swapaxes(-2, -1), order='C', copy=not overwrite_a)
-    if runtime._is_hip_environment:
-        # rocsolver_<t>gesvd_batched has a different signature...
-        ap = _linalg._mat_ptrs(a)
-    else:
-        ap = a
+    ap = a
     lda = m
     mn = min(m, n)
     s = _cupy.empty((batch_size, mn), dtype=s_dtype)
@@ -266,8 +262,6 @@ cpdef _gesvdj_batched(a, full_matrices, compute_uv, overwrite_a):
         gesvdj, info)
 
     _cusolver.destroyGesvdjInfo(params)
-    if runtime._is_hip_environment:
-        v = v.swapaxes(-1, -2).conj()
     if not full_matrices:
         u = u[..., :mn]
         v = v[..., :mn]
@@ -575,11 +569,7 @@ def _syevj_batched(a, UPLO, with_eigen_vector):
     a = a.reshape(batch_size, m, lda)
     v = _cupy.array(
         a.swapaxes(-2, -1), order='C', copy=True, dtype=dtype)
-    if runtime._is_hip_environment:
-        # the batched syev/heev has a different signature...
-        vp = _linalg._mat_ptrs(v)
-    else:
-        vp = v
+    vp = v
 
     w = _cupy.empty((batch_size, m), real_dtype).swapaxes(-2, -1)
     dev_info = _cupy.empty((batch_size,), _cupy.int32)

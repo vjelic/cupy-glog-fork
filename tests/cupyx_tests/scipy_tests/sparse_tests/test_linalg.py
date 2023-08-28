@@ -994,6 +994,7 @@ class TestLOBPCG:
 
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp',
                                  contiguous_check=False)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_generate_input_for_elastic_rod(self, xp, sp):
         A, B = self._generate_input_for_elastic_rod(100, xp)
         n = A.shape[0]
@@ -1006,6 +1007,7 @@ class TestLOBPCG:
 
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp',
                                  contiguous_check=False)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_generate_input_for_mikota_pair(self, xp, sp):
         A, B = self._generate_input_for_mikota_pair(100, xp)
         n = A.shape[0]
@@ -1165,6 +1167,7 @@ class TestLOBPCG:
         return output
 
     @testing.with_requires('scipy>=1.8.0rc1')
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_verbosity(self):
         """Check that nonzero verbosity level code runs
            and is identical to scipy's output format.

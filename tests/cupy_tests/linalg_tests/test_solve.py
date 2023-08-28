@@ -191,12 +191,10 @@ class TestPinv(unittest.TestCase):
         self.check_x((2, 5), rcond=0.5)
         self.check_x((5, 3), rcond=0.6)
 
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_pinv_batched(self):
         self.check_x((2, 3, 4), rcond=1e-15)
         self.check_x((2, 3, 4, 5), rcond=1e-15)
 
-    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_pinv_batched_vector_rcond(self):
         self.check_x((2, 3, 4), rcond=[0.2, 0.8])
         self.check_x((2, 3, 4, 5),
