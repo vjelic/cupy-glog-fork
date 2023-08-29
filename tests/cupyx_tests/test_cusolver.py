@@ -4,7 +4,6 @@ import pytest
 import cupy
 from cupyx import cusolver
 from cupy import testing
-from cupy.cuda import runtime
 from cupy.testing import _attr
 from cupy._core import _routines_linalg as _linalg
 import cupyx

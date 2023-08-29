@@ -20,9 +20,9 @@ ELSE:
         else:
             return 0
 
-    ###############################################################################
+    ###########################################################################
     # Extern
-    ###############################################################################
+    ###########################################################################
     IF CUPY_HIP_VERSION != 0:
         cdef extern from '../../cupy_complex.h':
             ctypedef struct cuComplex 'hipComplex':
@@ -65,9 +65,9 @@ ELSE:
         int MINOR_VERSION
         int PATCH_LEVEL
 
-        ###########################################################################
+        #######################################################################
         # Dense LAPACK Functions (Linear Solver)
-        ###########################################################################
+        #######################################################################
 
         # Cholesky factorization
         int cusolverDnSpotrf_bufferSize(Handle handle, FillMode uplo, int n,
@@ -77,7 +77,8 @@ ELSE:
         int cusolverDnCpotrf_bufferSize(Handle handle, FillMode uplo, int n,
                                         cuComplex* A, int lda, int* lwork)
         int cusolverDnZpotrf_bufferSize(Handle handle, FillMode uplo, int n,
-                                        cuDoubleComplex* A, int lda, int* lwork)
+                                        cuDoubleComplex* A, int lda,
+                                        int* lwork)
 
         int cusolverDnSpotrf(Handle handle, FillMode uplo, int n,
                              float* A, int lda,
@@ -131,9 +132,9 @@ ELSE:
                                     cuComplex** Barray, int ldb,
                                     int* devInfo, int batchSize)
         int cusolverDnZpotrsBatched(Handle handle, FillMode uplo, int n,
-                                    int nrhs, cuDoubleComplex** Aarray, int lda,
-                                    cuDoubleComplex** Barray, int ldb,
-                                    int* devInfo, int batchSize)
+                                    int nrhs, cuDoubleComplex** Aarray,
+                                    int lda, cuDoubleComplex** Barray,
+                                    int ldb, int* devInfo, int batchSize)
 
         # LU factorization
         int cusolverDnSgetrf_bufferSize(Handle handle, int m, int n,
@@ -143,7 +144,8 @@ ELSE:
         int cusolverDnCgetrf_bufferSize(Handle handle, int m, int n,
                                         cuComplex* A, int lda, int* lwork)
         int cusolverDnZgetrf_bufferSize(Handle handle, int m, int n,
-                                        cuDoubleComplex* A, int lda, int* lwork)
+                                        cuDoubleComplex* A, int lda,
+                                        int* lwork)
 
         int cusolverDnSgetrf(Handle handle, int m, int n,
                              float* A, int lda,
@@ -171,7 +173,8 @@ ELSE:
                              const cuComplex* A, int lda, const int* devIpiv,
                              cuComplex* B, int ldb, int* devInfo)
         int cusolverDnZgetrs(Handle handle, Operation trans, int n, int nrhs,
-                             const cuDoubleComplex* A, int lda, const int* devIpiv,
+                             const cuDoubleComplex* A, int lda,
+                             const int* devIpiv,
                              cuDoubleComplex* B, int ldb, int* devInfo)
 
         # QR factorization
@@ -182,7 +185,8 @@ ELSE:
         int cusolverDnCgeqrf_bufferSize(Handle handle, int m, int n,
                                         cuComplex* A, int lda, int* lwork)
         int cusolverDnZgeqrf_bufferSize(Handle handle, int m, int n,
-                                        cuDoubleComplex* A, int lda, int* lwork)
+                                        cuDoubleComplex* A, int lda,
+                                        int* lwork)
 
         int cusolverDnSgeqrf(Handle handle, int m, int n,
                              float* A, int lda, float* tau,
@@ -276,7 +280,8 @@ ELSE:
                              int m, int n, int k,
                              const cuDoubleComplex* A, int lda,
                              const cuDoubleComplex* tau,
-                             cuDoubleComplex* C, int ldc, cuDoubleComplex* work,
+                             cuDoubleComplex* C, int ldc,
+                             cuDoubleComplex* work,
                              int lwork, int* devInfo)
 
         # L*D*L**T,U*D*U**T factorization
@@ -287,7 +292,8 @@ ELSE:
         int cusolverDnCsytrf_bufferSize(Handle handle, int n,
                                         cuComplex* A, int lda, int* lwork)
         int cusolverDnZsytrf_bufferSize(Handle handle, int n,
-                                        cuDoubleComplex* A, int lda, int* lwork)
+                                        cuDoubleComplex* A, int lda,
+                                        int* lwork)
 
         int cusolverDnSsytrf(Handle handle, FillMode uplo, int n,
                              float* A, int lda, int* ipiv,
@@ -304,22 +310,26 @@ ELSE:
 
         # Solve A * X = B using iterative refinement
         int cusolverDnZZgesv_bufferSize(Handle handle, int n, int nrhs,
-                                        cuDoubleComplex *dA, int ldda, int *dipiv,
+                                        cuDoubleComplex *dA, int ldda,
+                                        int *dipiv,
                                         cuDoubleComplex *dB, int lddb,
                                         cuDoubleComplex *dX, int lddx,
                                         void *dWorkspace, size_t *lwork_bytes)
         int cusolverDnZCgesv_bufferSize(Handle handle, int n, int nrhs,
-                                        cuDoubleComplex *dA, int ldda, int *dipiv,
+                                        cuDoubleComplex *dA, int ldda,
+                                        int *dipiv,
                                         cuDoubleComplex *dB, int lddb,
                                         cuDoubleComplex *dX, int lddx,
                                         void *dWorkspace, size_t *lwork_bytes)
         int cusolverDnZYgesv_bufferSize(Handle handle, int n, int nrhs,
-                                        cuDoubleComplex *dA, int ldda, int *dipiv,
+                                        cuDoubleComplex *dA, int ldda,
+                                        int *dipiv,
                                         cuDoubleComplex *dB, int lddb,
                                         cuDoubleComplex *dX, int lddx,
                                         void *dWorkspace, size_t *lwork_bytes)
         int cusolverDnZKgesv_bufferSize(Handle handle, int n, int nrhs,
-                                        cuDoubleComplex *dA, int ldda, int *dipiv,
+                                        cuDoubleComplex *dA, int ldda,
+                                        int *dipiv,
                                         cuDoubleComplex *dB, int lddb,
                                         cuDoubleComplex *dX, int lddx,
                                         void *dWorkspace, size_t *lwork_bytes)
@@ -616,15 +626,19 @@ ELSE:
                              void *dWorkspace, size_t lwork_bytes,
                              int *iter, int *dInfo)
 
-        ###########################################################################
+        #######################################################################
         # Dense LAPACK Functions (Eigenvalue Solver)
-        ###########################################################################
+        #######################################################################
 
         # Bidiagonal factorization
-        int cusolverDnSgebrd_bufferSize(Handle handle, int m, int n, int* lwork)
-        int cusolverDnDgebrd_bufferSize(Handle handle, int m, int n, int* lwork)
-        int cusolverDnCgebrd_bufferSize(Handle handle, int m, int n, int* lwork)
-        int cusolverDnZgebrd_bufferSize(Handle handle, int m, int n, int* lwork)
+        int cusolverDnSgebrd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
+        int cusolverDnDgebrd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
+        int cusolverDnCgebrd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
+        int cusolverDnZgebrd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
 
         int cusolverDnSgebrd(Handle handle, int m, int n,
                              float* A, int lda,
@@ -648,31 +662,35 @@ ELSE:
                              cuDoubleComplex* Work, int lwork, int* devInfo)
 
         # Singular value decomposition, A = U * Sigma * V^H
-        int cusolverDnSgesvd_bufferSize(Handle handle, int m, int n, int* lwork)
-        int cusolverDnDgesvd_bufferSize(Handle handle, int m, int n, int* lwork)
-        int cusolverDnCgesvd_bufferSize(Handle handle, int m, int n, int* lwork)
-        int cusolverDnZgesvd_bufferSize(Handle handle, int m, int n, int* lwork)
+        int cusolverDnSgesvd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
+        int cusolverDnDgesvd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
+        int cusolverDnCgesvd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
+        int cusolverDnZgesvd_bufferSize(Handle handle, int m, int n,
+                                        int* lwork)
 
-        int cusolverDnSgesvd(Handle handle, char jobu, char jobvt, int m, int n,
-                             float* A, int lda, float* S,
+        int cusolverDnSgesvd(Handle handle, char jobu, char jobvt, int m,
+                             int n, float* A, int lda, float* S,
                              float* U, int ldu,
                              float* VT, int ldvt,
                              float* Work, int lwork,
                              float* rwork, int* devInfo)
-        int cusolverDnDgesvd(Handle handle, char jobu, char jobvt, int m, int n,
-                             double* A, int lda, double* S,
+        int cusolverDnDgesvd(Handle handle, char jobu, char jobvt, int m,
+                             int n, double* A, int lda, double* S,
                              double* U, int ldu,
                              double* VT, int ldvt,
                              double* Work, int lwork,
                              double* rwork, int* devInfo)
-        int cusolverDnCgesvd(Handle handle, char jobu, char jobvt, int m, int n,
-                             cuComplex* A, int lda, float* S,
+        int cusolverDnCgesvd(Handle handle, char jobu, char jobvt, int m,
+                             int n, cuComplex* A, int lda, float* S,
                              cuComplex* U, int ldu,
                              cuComplex* VT, int ldvt,
                              cuComplex* Work, int lwork,
                              float* rwork, int* devInfo)
-        int cusolverDnZgesvd(Handle handle, char jobu, char jobvt, int m, int n,
-                             cuDoubleComplex* A, int lda, double* S,
+        int cusolverDnZgesvd(Handle handle, char jobu, char jobvt, int m,
+                             int n, cuDoubleComplex* A, int lda, double* S,
                              cuDoubleComplex* U, int ldu,
                              cuDoubleComplex* VT, int ldvt,
                              cuDoubleComplex* Work, int lwork,
@@ -692,42 +710,50 @@ ELSE:
 
         int cusolverDnSgesvdj_bufferSize(Handle handle, EigMode jobz, int econ,
                                          int m, int n, const float* A, int lda,
-                                         const float* S, const float* U, int ldu,
-                                         const float* V, int ldv, int* lwork,
+                                         const float* S, const float* U,
+                                         int ldu, const float* V, int ldv,
+                                         int* lwork,
                                          GesvdjInfo params)
         int cusolverDnDgesvdj_bufferSize(Handle handle, EigMode jobz, int econ,
-                                         int m, int n, const double* A, int lda,
-                                         const double* S, const double* U, int ldu,
+                                         int m, int n, const double* A,
+                                         int lda, const double* S,
+                                         const double* U, int ldu,
                                          const double* V, int ldv, int* lwork,
                                          GesvdjInfo params)
         int cusolverDnCgesvdj_bufferSize(Handle handle, EigMode jobz, int econ,
-                                         int m, int n, const cuComplex* A, int lda,
-                                         const float* S, const cuComplex* U,
+                                         int m, int n, const cuComplex* A,
+                                         int lda, const float* S,
+                                         const cuComplex* U,
                                          int ldu, const cuComplex* V, int ldv,
                                          int* lwork, GesvdjInfo params)
         int cusolverDnZgesvdj_bufferSize(Handle handle, EigMode jobz, int econ,
-                                         int m, int n, const cuDoubleComplex* A,
+                                         int m, int n,
+                                         const cuDoubleComplex* A,
                                          int lda, const double* S,
                                          const cuDoubleComplex* U, int ldu,
                                          const cuDoubleComplex* V, int ldv,
                                          int* lwork, GesvdjInfo params)
 
-        int cusolverDnSgesvdj(Handle handle, EigMode jobz, int econ, int m, int n,
-                              float *A, int lda, float *S, float *U, int ldu,
-                              float *V, int ldv, float *work, int lwork, int *info,
+        int cusolverDnSgesvdj(Handle handle, EigMode jobz, int econ, int m,
+                              int n, float *A, int lda, float *S, float *U,
+                              int ldu, float *V, int ldv, float *work,
+                              int lwork, int *info,
                               GesvdjInfo params)
-        int cusolverDnDgesvdj(Handle handle, EigMode jobz, int econ, int m, int n,
-                              double *A, int lda, double *S, double *U, int ldu,
+        int cusolverDnDgesvdj(Handle handle, EigMode jobz, int econ, int m,
+                              int n, double *A, int lda, double *S, double *U,
+                              int ldu,
                               double *V, int ldv, double *work, int lwork,
                               int *info, GesvdjInfo params)
-        int cusolverDnCgesvdj(Handle handle, EigMode jobz, int econ, int m, int n,
-                              cuComplex *A, int lda, float *S, cuComplex *U,
+        int cusolverDnCgesvdj(Handle handle, EigMode jobz, int econ, int m,
+                              int n, cuComplex *A, int lda, float *S,
+                              cuComplex *U,
                               int ldu, cuComplex *V, int ldv, cuComplex *work,
                               int lwork, int *info, GesvdjInfo params)
-        int cusolverDnZgesvdj(Handle handle, EigMode jobz, int econ, int m, int n,
-                              cuDoubleComplex *A, int lda, double *S,
+        int cusolverDnZgesvdj(Handle handle, EigMode jobz, int econ, int m,
+                              int n, cuDoubleComplex *A, int lda, double *S,
                               cuDoubleComplex *U, int ldu, cuDoubleComplex *V,
-                              int ldv, cuDoubleComplex *work, int lwork, int *info,
+                              int ldv, cuDoubleComplex *work, int lwork,
+                              int *info,
                               GesvdjInfo params)
 
         int cusolverDnSgesvdjBatched_bufferSize(
@@ -743,11 +769,14 @@ ELSE:
             float* S, cuComplex* U, int ldu, cuComplex* V, int ldv,
             int* lwork, GesvdjInfo params, int batchSize)
         int cusolverDnZgesvdjBatched_bufferSize(
-            Handle handle, EigMode jobz, int m, int n, cuDoubleComplex* A, int lda,
-            double* S, cuDoubleComplex* U, int ldu, cuDoubleComplex* V, int ldv,
+            Handle handle, EigMode jobz, int m, int n, cuDoubleComplex* A,
+            int lda,
+            double* S, cuDoubleComplex* U, int ldu, cuDoubleComplex* V,
+            int ldv,
             int* lwork, GesvdjInfo params, int batchSize)
         int cusolverDnSgesvdjBatched(
-            Handle handle, EigMode jobz, int m, int n, float* A, int lda, float* S,
+            Handle handle, EigMode jobz, int m, int n, float* A, int lda,
+            float* S,
             float* U, int ldu, float* V, int ldv, float* work, int lwork,
             int* info, GesvdjInfo params, int batchSize)
         int cusolverDnDgesvdjBatched(
@@ -761,21 +790,25 @@ ELSE:
             cuComplex* work, int lwork,
             int* info, GesvdjInfo params, int batchSize)
         int cusolverDnZgesvdjBatched(
-            Handle handle, EigMode jobz, int m, int n, cuDoubleComplex* A, int lda,
-            double* S, cuDoubleComplex* U, int ldu, cuDoubleComplex* V, int ldv,
+            Handle handle, EigMode jobz, int m, int n, cuDoubleComplex* A,
+            int lda,
+            double* S, cuDoubleComplex* U, int ldu, cuDoubleComplex* V,
+            int ldv,
             cuDoubleComplex* work, int lwork,
             int* info, GesvdjInfo params, int batchSize)
 
         # gesvda ... Approximate singular value decomposition
         int cusolverDnSgesvdaStridedBatched_bufferSize(
-            Handle handle, EigMode jobz, int rank, int m, int n, const float *d_A,
+            Handle handle, EigMode jobz, int rank, int m, int n,
+            const float *d_A,
             int lda, long long int strideA, const float *d_S,
             long long int strideS, const float *d_U, int ldu,
             long long int strideU, const float *d_V, int ldv,
             long long int strideV, int *lwork, int batchSize)
 
         int cusolverDnDgesvdaStridedBatched_bufferSize(
-            Handle handle, EigMode jobz, int rank, int m, int n, const double *d_A,
+            Handle handle, EigMode jobz, int rank, int m, int n,
+            const double *d_A,
             int lda, long long int strideA, const double *d_S,
             long long int strideS, const double *d_U, int ldu,
             long long int strideU, const double *d_V, int ldv,
@@ -783,7 +816,8 @@ ELSE:
 
         int cusolverDnCgesvdaStridedBatched_bufferSize(
             Handle handle, EigMode jobz, int rank, int m, int n,
-            const cuComplex *d_A, int lda, long long int strideA, const float *d_S,
+            const cuComplex *d_A, int lda, long long int strideA,
+            const float *d_S,
             long long int strideS, const cuComplex *d_U, int ldu,
             long long int strideU, const cuComplex *d_V, int ldv,
             long long int strideV, int *lwork, int batchSize)
@@ -791,19 +825,23 @@ ELSE:
         int cusolverDnZgesvdaStridedBatched_bufferSize(
             Handle handle, EigMode jobz, int rank, int m, int n,
             const cuDoubleComplex *d_A, int lda, long long int strideA,
-            const double *d_S, long long int strideS, const cuDoubleComplex *d_U,
-            int ldu, long long int strideU, const cuDoubleComplex *d_V, int ldv,
+            const double *d_S, long long int strideS,
+            const cuDoubleComplex *d_U,
+            int ldu, long long int strideU, const cuDoubleComplex *d_V,
+            int ldv,
             long long int strideV, int *lwork, int batchSize)
 
         int cusolverDnSgesvdaStridedBatched(
-            Handle handle, EigMode jobz, int rank, int m, int n, const float *d_A,
+            Handle handle, EigMode jobz, int rank, int m, int n,
+            const float *d_A,
             int lda, long long int strideA, float *d_S, long long int strideS,
             float *d_U, int ldu, long long int strideU, float *d_V, int ldv,
             long long int strideV, float *d_work, int lwork, int *d_info,
             double *h_R_nrmF, int batchSize)
 
         int cusolverDnDgesvdaStridedBatched(
-            Handle handle, EigMode jobz, int rank, int m, int n, const double *d_A,
+            Handle handle, EigMode jobz, int rank, int m, int n,
+            const double *d_A,
             int lda, long long int strideA, double *d_S, long long int strideS,
             double *d_U, int ldu, long long int strideU, double *d_V, int ldv,
             long long int strideV, double *d_work, int lwork, int *d_info,
@@ -812,7 +850,8 @@ ELSE:
         int cusolverDnCgesvdaStridedBatched(
             Handle handle, EigMode jobz, int rank, int m, int n,
             const cuComplex *d_A, int lda, long long int strideA, float *d_S,
-            long long int strideS, cuComplex *d_U, int ldu, long long int strideU,
+            long long int strideS, cuComplex *d_U, int ldu,
+            long long int strideU,
             cuComplex *d_V, int ldv, long long int strideV, cuComplex *d_work,
             int lwork, int *d_info, double *h_R_nrmF, int batchSize)
 
@@ -821,7 +860,8 @@ ELSE:
             const cuDoubleComplex *d_A, int lda, long long int strideA,
             double *d_S, long long int strideS, cuDoubleComplex *d_U, int ldu,
             long long int strideU, cuDoubleComplex *d_V, int ldv,
-            long long int strideV, cuDoubleComplex *d_work, int lwork, int *d_info,
+            long long int strideV, cuDoubleComplex *d_work, int lwork,
+            int *d_info,
             double *h_R_nrmF, int batchSize)
 
         # Standard symmetric eigenvalue solver
@@ -943,20 +983,22 @@ ELSE:
 
         # 64bit
         int cusolverDnXsyevd_bufferSize(
-            Handle handle, Params params, EigMode jobz, FillMode uplo, int64_t n,
+            Handle handle, Params params, EigMode jobz, FillMode uplo,
+            int64_t n,
             DataType dataTypeA, void *A, int64_t lda,
             DataType dataTypeW, void *W, DataType computeType,
             size_t *workspaceInBytesOnDevice, size_t *workspaceInBytesOnHost)
         int cusolverDnXsyevd(
-            Handle handle, Params params, EigMode jobz, FillMode uplo, int64_t n,
+            Handle handle, Params params, EigMode jobz, FillMode uplo,
+            int64_t n,
             DataType dataTypeA, void *A, int64_t lda,
             DataType dataTypeW, void *W, DataType computeType,
             void *bufferOnDevice, size_t workspaceInBytesOnDevice,
             void *bufferOnHost, size_t workspaceInBytesOnHost, int *info)
 
-        ###########################################################################
+        #######################################################################
         # Sparse LAPACK Functions
-        ###########################################################################
+        #######################################################################
 
         int cusolverSpScsrlsvchol(
             SpHandle handle, int m, int nnz, const MatDescr descrA,
@@ -964,8 +1006,10 @@ ELSE:
             const float* b, float tol, int reorder, float* x, int* singularity)
         int cusolverSpDcsrlsvchol(
             SpHandle handle, int m, int nnz, const MatDescr descrA,
-            const double* csrValA, const int* csrRowPtrA, const int* csrColIndA,
-            const double* b, double tol, int reorder, double* x, int* singularity)
+            const double* csrValA, const int* csrRowPtrA,
+            const int* csrColIndA,
+            const double* b, double tol, int reorder, double* x,
+            int* singularity)
         int cusolverSpCcsrlsvchol(
             SpHandle handle, int m, int nnz,
             const MatDescr descrA, const cuComplex *csrVal,
@@ -974,7 +1018,8 @@ ELSE:
         int cusolverSpZcsrlsvchol(
             SpHandle handle, int m, int nnz,
             const MatDescr descrA, const cuDoubleComplex *csrVal,
-            const int *csrRowPtr, const int *csrColInd, const cuDoubleComplex *b,
+            const int *csrRowPtr, const int *csrColInd,
+            const cuDoubleComplex *b,
             double tol, int reorder, cuDoubleComplex *x, int *singularity)
 
         int cusolverSpScsrlsvqr(
@@ -983,8 +1028,10 @@ ELSE:
             const float* b, float tol, int reorder, float* x, int* singularity)
         int cusolverSpDcsrlsvqr(
             SpHandle handle, int m, int nnz, const MatDescr descrA,
-            const double* csrValA, const int* csrRowPtrA, const int* csrColIndA,
-            const double* b, double tol, int reorder, double* x, int* singularity)
+            const double* csrValA, const int* csrRowPtrA,
+            const int* csrColIndA,
+            const double* b, double tol, int reorder, double* x,
+            int* singularity)
         int cusolverSpCcsrlsvqr(
             SpHandle handle, int m, int nnz,
             const MatDescr descrA, const cuComplex *csrVal,
@@ -993,7 +1040,8 @@ ELSE:
         int cusolverSpZcsrlsvqr(
             SpHandle handle, int m, int nnz,
             const MatDescr descrA, const cuDoubleComplex *csrVal,
-            const int *csrRowPtr, const int *csrColInd, const cuDoubleComplex *b,
+            const int *csrRowPtr, const int *csrColInd,
+            const cuDoubleComplex *b,
             double tol, int reorder, cuDoubleComplex *x, int *singularity)
 
         int cusolverSpScsreigvsi(
@@ -1016,12 +1064,13 @@ ELSE:
             SpHandle handle, int m, int nnz,
             const MatDescr descrA, const cuDoubleComplex *csrValA,
             const int *csrRowPtrA, const int *csrColIndA, cuDoubleComplex mu0,
-            const cuDoubleComplex *x0, int maxite, double eps, cuDoubleComplex *mu,
+            const cuDoubleComplex *x0, int maxite, double eps,
+            cuDoubleComplex *mu,
             cuDoubleComplex *x)
 
-    ###############################################################################
+    ###########################################################################
     # Error handling
-    ###############################################################################
+    ###########################################################################
 
     cdef dict STATUS = {
         0: 'CUSOLVER_STATUS_SUCCESS',
@@ -1051,7 +1100,7 @@ ELSE:
         31: 'CUSOLVER_STATUS_INVALID_WORKSPACE',
     }
 
-    # for hipSOLVER 
+    # for hipSOLVER
     cdef dict ROC_STATUS = {
         0: 'HIPSOLVER_STATUS_SUCCESS',
         1: 'HIPSOLVER_STATUS_NOT_INITIALIZED',
@@ -1086,10 +1135,9 @@ ELSE:
         if status != 0:
             raise CUSOLVERError(status)
 
-
-    ###############################################################################
+    ###########################################################################
     # Library Attributes
-    ###############################################################################
+    ###########################################################################
 
     cpdef int getProperty(int type) except? -1:
         cdef int value
@@ -1123,9 +1171,9 @@ ELSE:
             return side + 141
         return side
 
-    ###############################################################################
+    ###########################################################################
     # Context
-    ###############################################################################
+    ###########################################################################
 
     cpdef intptr_t create() except? 0:
         cdef Handle handle
@@ -1134,7 +1182,6 @@ ELSE:
         check_status(status)
         return <intptr_t>handle
 
-
     cpdef intptr_t spCreate() except? 0:
         cdef SpHandle handle
         with nogil:
@@ -1142,27 +1189,26 @@ ELSE:
         check_status(status)
         return <intptr_t>handle
 
-
     cpdef destroy(intptr_t handle):
         with nogil:
             status = cusolverDnDestroy(<Handle>handle)
         check_status(status)
-
 
     cpdef spDestroy(intptr_t handle):
         with nogil:
             status = cusolverSpDestroy(<SpHandle>handle)
         check_status(status)
 
-
-    ###############################################################################
+    ###########################################################################
     # Stream
-    ###############################################################################
+    ###########################################################################
 
     cpdef setStream(intptr_t handle, size_t stream):
-        # TODO(leofang): The support of stream capture is not mentioned at all in
-        # the cuSOLVER docs (as of CUDA 11.5), so we disable this functionality.
-        if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
+        # TODO(leofang): The support of stream capture is not mentioned at all
+        # in the cuSOLVER docs (as of CUDA 11.5), so we disable
+        # this functionality.
+        if not runtime._is_hip_environment and \
+                runtime.streamIsCapturing(stream):
             raise NotImplementedError(
                 'calling cuSOLVER API during stream capture is currently '
                 'unsupported')
@@ -1171,7 +1217,6 @@ ELSE:
             status = cusolverDnSetStream(<Handle>handle, <Stream>stream)
         check_status(status)
 
-
     cpdef size_t getStream(intptr_t handle) except? 0:
         cdef Stream stream
         with nogil:
@@ -1179,12 +1224,10 @@ ELSE:
         check_status(status)
         return <size_t>stream
 
-
     cpdef spSetStream(intptr_t handle, size_t stream):
         with nogil:
             status = cusolverSpSetStream(<SpHandle>handle, <Stream>stream)
         check_status(status)
-
 
     cpdef size_t spGetStream(intptr_t handle) except *:
         cdef Stream stream
@@ -1193,20 +1236,17 @@ ELSE:
         check_status(status)
         return <size_t>stream
 
-
     cdef _setStream(intptr_t handle):
         """Set current stream"""
         setStream(handle, stream_module.get_current_stream_ptr())
-
 
     cdef _spSetStream(intptr_t handle):
         """Set current stream"""
         spSetStream(handle, stream_module.get_current_stream_ptr())
 
-
-    ###############################################################################
+    ###########################################################################
     # Params
-    ###############################################################################
+    ###########################################################################
 
     cpdef intptr_t createParams() except? 0:
         cdef Params params
@@ -1219,7 +1259,6 @@ ELSE:
         with nogil:
             status = cusolverDnDestroyParams(<Params>params)
         check_status(status)
-
 
     ###########################################################################
     # Dense LAPACK Functions (Linear Solver)
@@ -1275,7 +1314,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSpotrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <float*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <float*>A,
                 lda, <float*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1284,7 +1324,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDpotrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <double*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <double*>A,
                 lda, <double*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1293,7 +1334,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCpotrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuComplex*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <cuComplex*>A,
                 lda, <cuComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1302,7 +1344,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZpotrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuDoubleComplex*>A,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <cuDoubleComplex*>A,
                 lda, <cuDoubleComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1346,44 +1389,49 @@ ELSE:
                 <int*>devInfo)
         check_status(status)
 
-    cpdef spotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize):
+    cpdef spotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSpotrfBatched(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <float**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <float**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
-    cpdef dpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize):
+    cpdef dpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDpotrfBatched(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <double**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <double**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
-    cpdef cpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize):
+    cpdef cpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCpotrfBatched(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuComplex**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <cuComplex**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
-    cpdef zpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray, int lda,
-                        size_t infoArray, int batchSize):
+    cpdef zpotrfBatched(intptr_t handle, int uplo, int n, size_t Aarray,
+                        int lda, size_t infoArray, int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZpotrfBatched(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuDoubleComplex**>Aarray,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <cuDoubleComplex**>Aarray,
                 lda, <int*>infoArray, batchSize)
         check_status(status)
 
-    cpdef spotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
-                        int lda, size_t Barray, int ldb, size_t devInfo,
+    cpdef spotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray, int lda, size_t Barray, int ldb,
+                        size_t devInfo,
                         int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
@@ -1393,8 +1441,9 @@ ELSE:
                 <int*>devInfo, batchSize)
         check_status(status)
 
-    cpdef dpotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
-                        int lda, size_t Barray, int ldb, size_t devInfo,
+    cpdef dpotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray, int lda, size_t Barray, int ldb,
+                        size_t devInfo,
                         int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
@@ -1404,7 +1453,8 @@ ELSE:
                 <int*>devInfo, batchSize)
         check_status(status)
 
-    cpdef cpotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
+    cpdef cpotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray,
                         int lda, size_t Barray, int ldb, size_t devInfo,
                         int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
@@ -1415,7 +1465,8 @@ ELSE:
                 <int*>devInfo, batchSize)
         check_status(status)
 
-    cpdef zpotrsBatched(intptr_t handle, int uplo, int n, int nrhs, size_t Aarray,
+    cpdef zpotrsBatched(intptr_t handle, int uplo, int n, int nrhs,
+                        size_t Aarray,
                         int lda, size_t Barray, int ldb, size_t devInfo,
                         int batchSize):
         setStream(handle, stream_module.get_current_stream_ptr())
@@ -1503,7 +1554,6 @@ ELSE:
                 <cuDoubleComplex*>work, <int*>devIpiv, <int*>devInfo)
         check_status(status)
 
-
     # LU solve
     cpdef sgetrs(intptr_t handle, int trans, int n, int nrhs,
                  size_t A, int lda, size_t devIpiv,
@@ -1511,7 +1561,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSgetrs(
-                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)),
+                n, nrhs,
                 <const float*> A, lda, <const int*>devIpiv,
                 <float*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1522,7 +1573,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDgetrs(
-                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)),
+                n, nrhs,
                 <const double*> A, lda, <const int*>devIpiv,
                 <double*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1533,7 +1585,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCgetrs(
-                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)),
+                n, nrhs,
                 <const cuComplex*> A, lda, <const int*>devIpiv,
                 <cuComplex*>B, ldb, <int*> devInfo)
         check_status(status)
@@ -1544,11 +1597,11 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZgetrs(
-                <Handle>handle, <Operation>(convert_solver_operation(trans)), n, nrhs,
+                <Handle>handle, <Operation>(convert_solver_operation(trans)),
+                n, nrhs,
                 <const cuDoubleComplex*> A, lda, <const int*>devIpiv,
                 <cuDoubleComplex*>B, ldb, <int*> devInfo)
         check_status(status)
-
 
     # QR factorization
     cpdef int sgeqrf_bufferSize(intptr_t handle, int m, int n,
@@ -1630,7 +1683,6 @@ ELSE:
                 <cuDoubleComplex*>tau, <cuDoubleComplex*>work, lwork,
                 <int*>devInfo)
         check_status(status)
-
 
     # Generate unitary matrix Q from QR factorization
     cpdef int sorgqr_bufferSize(intptr_t handle, int m, int n, int k,
@@ -1717,60 +1769,62 @@ ELSE:
                 <int*>devInfo)
         check_status(status)
 
-
     # Compute Q**T*b in solve min||A*x = b||
     cpdef int sormqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1:
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1:
         cdef int lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnSormqr_bufferSize(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const float*>A, lda, <const float*>tau,
                 <float*>C, ldc, &lwork)
         check_status(status)
         return lwork
 
     cpdef int dormqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1:
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1:
         cdef int lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnDormqr_bufferSize(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const double*>A, lda, <const double*>tau,
                 <double*>C, ldc, &lwork)
         check_status(status)
         return lwork
 
     cpdef int cunmqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1:
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1:
         cdef int lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCunmqr_bufferSize(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuComplex*>A, lda, <const cuComplex*>tau,
                 <cuComplex*>C, ldc, &lwork)
         check_status(status)
         return lwork
 
     cpdef int zunmqr_bufferSize(intptr_t handle, int side, int trans,
-                                int m, int n, int k, size_t A, int lda, size_t tau,
-                                size_t C, int ldc) except? -1:
+                                int m, int n, int k, size_t A, int lda,
+                                size_t tau, size_t C, int ldc) except? -1:
         cdef int lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnZunmqr_bufferSize(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuDoubleComplex*>A, lda, <const cuDoubleComplex*>tau,
                 <cuDoubleComplex*>C, ldc, &lwork)
         check_status(status)
         return lwork
-
 
     cpdef sormqr(intptr_t handle, int side, int trans,
                  int m, int n, int k, size_t A, int lda, size_t tau,
@@ -1778,7 +1832,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSormqr(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const float*>A, lda, <const float*>tau,
                 <float*>C, ldc,
                 <float*>work, lwork, <int*>devInfo)
@@ -1790,7 +1845,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDormqr(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const double*>A, lda, <const double*>tau,
                 <double*>C, ldc,
                 <double*>work, lwork, <int*>devInfo)
@@ -1802,7 +1858,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCunmqr(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuComplex*>A, lda, <const cuComplex*>tau,
                 <cuComplex*>C, ldc,
                 <cuComplex*>work, lwork, <int*>devInfo)
@@ -1814,7 +1871,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZunmqr(
-                <Handle>handle, <SideMode>(convert_solver_side(side)), <Operation>(convert_solver_operation(trans)), m, n, k,
+                <Handle>handle, <SideMode>(convert_solver_side(side)),
+                <Operation>(convert_solver_operation(trans)), m, n, k,
                 <const cuDoubleComplex*>A, lda, <const cuDoubleComplex*>tau,
                 <cuDoubleComplex*>C, ldc,
                 <cuDoubleComplex*>work, lwork, <int*>devInfo)
@@ -1833,7 +1891,6 @@ ELSE:
                  size_t C, int ldc, size_t work, int lwork, size_t devInfo):
         return zunmqr(handle, side, trans, m, n, k, A, lda, tau,
                       C, ldc, work, lwork, devInfo)
-
 
     # L*D*L**T,U*D*U**T factorization
     cpdef int ssytrf_bufferSize(intptr_t handle, int n, size_t A,
@@ -1881,7 +1938,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSsytrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <float*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <float*>A, lda,
                 <int*>ipiv, <float*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1890,7 +1948,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDsytrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <double*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <double*>A, lda,
                 <int*>ipiv, <double*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1899,7 +1958,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCsytrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuComplex*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <cuComplex*>A, lda,
                 <int*>ipiv, <cuComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
@@ -1908,18 +1968,21 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZsytrf(
-                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n, <cuDoubleComplex*>A, lda,
+                <Handle>handle, <FillMode>(convert_solver_fill(uplo)), n,
+                <cuDoubleComplex*>A, lda,
                 <int*>ipiv, <cuDoubleComplex*>work, lwork, <int*>devInfo)
         check_status(status)
 
     cpdef size_t zzgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnZZgesv_bufferSize(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, &lwork)
         check_status(status)
@@ -1927,12 +1990,14 @@ ELSE:
 
     cpdef size_t zcgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnZCgesv_bufferSize(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, &lwork)
         check_status(status)
@@ -1940,12 +2005,14 @@ ELSE:
 
     cpdef size_t zygesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnZYgesv_bufferSize(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, &lwork)
         check_status(status)
@@ -1953,12 +2020,14 @@ ELSE:
 
     cpdef size_t zkgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnZKgesv_bufferSize(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, &lwork)
         check_status(status)
@@ -1966,43 +2035,50 @@ ELSE:
 
     cpdef size_t ccgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCCgesv_bufferSize(
                 <Handle>handle, n, nrhs, <cuComplex*>dA, ldda, <int*>dipiv,
-                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork, &lwork)
+                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork,
+                &lwork)
         check_status(status)
         return lwork
 
     cpdef size_t cygesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCYgesv_bufferSize(
                 <Handle>handle, n, nrhs, <cuComplex*>dA, ldda, <int*>dipiv,
-                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork, &lwork)
+                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork,
+                &lwork)
         check_status(status)
         return lwork
 
     cpdef size_t ckgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCKgesv_bufferSize(
                 <Handle>handle, n, nrhs, <cuComplex*>dA, ldda, <int*>dipiv,
-                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork, &lwork)
+                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork,
+                &lwork)
         check_status(status)
         return lwork
 
     cpdef size_t ddgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2014,7 +2090,8 @@ ELSE:
 
     cpdef size_t dsgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2026,7 +2103,8 @@ ELSE:
 
     cpdef size_t dxgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2038,7 +2116,8 @@ ELSE:
 
     cpdef size_t dhgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2050,7 +2129,8 @@ ELSE:
 
     cpdef size_t ssgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2062,7 +2142,8 @@ ELSE:
 
     cpdef size_t sxgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2074,7 +2155,8 @@ ELSE:
 
     cpdef size_t shgesv_bufferSize(intptr_t handle, int n, int nrhs, size_t dA,
                                    int ldda, size_t dipiv, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2091,7 +2173,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZZgesv(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, lwork, &iter, <int*>dInfo)
         check_status(status)
@@ -2104,7 +2187,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZCgesv(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, lwork, &iter, <int*>dInfo)
         check_status(status)
@@ -2117,7 +2201,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZYgesv(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, lwork, &iter, <int*>dInfo)
         check_status(status)
@@ -2130,7 +2215,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZKgesv(
-                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda, <int*>dipiv,
+                <Handle>handle, n, nrhs, <cuDoubleComplex*>dA, ldda,
+                <int*>dipiv,
                 <cuDoubleComplex*>dB, lddb, <cuDoubleComplex*>dX, lddx,
                 <void*>dwork, lwork, &iter, <int*>dInfo)
         check_status(status)
@@ -2268,7 +2354,8 @@ ELSE:
 
     cpdef size_t zzgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2281,7 +2368,8 @@ ELSE:
 
     cpdef size_t zcgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2294,7 +2382,8 @@ ELSE:
 
     cpdef size_t zygels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2307,7 +2396,8 @@ ELSE:
 
     cpdef size_t zkgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2320,43 +2410,50 @@ ELSE:
 
     cpdef size_t ccgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCCgels_bufferSize(
                 <Handle>handle, m, n, nrhs, <cuComplex*>dA, ldda,
-                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork, &lwork)
+                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork,
+                &lwork)
         check_status(status)
         return lwork
 
     cpdef size_t cygels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCYgels_bufferSize(
                 <Handle>handle, m, n, nrhs, <cuComplex*>dA, ldda,
-                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork, &lwork)
+                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork,
+                &lwork)
         check_status(status)
         return lwork
 
     cpdef size_t ckgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
             status = cusolverDnCKgels_bufferSize(
                 <Handle>handle, m, n, nrhs, <cuComplex*>dA, ldda,
-                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork, &lwork)
+                <cuComplex*>dB, lddb, <cuComplex*>dX, lddx, <void*>dwork,
+                &lwork)
         check_status(status)
         return lwork
 
     cpdef size_t ddgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2368,7 +2465,8 @@ ELSE:
 
     cpdef size_t dsgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2380,7 +2478,8 @@ ELSE:
 
     cpdef size_t dxgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2392,7 +2491,8 @@ ELSE:
 
     cpdef size_t dhgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2404,7 +2504,8 @@ ELSE:
 
     cpdef size_t ssgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2416,7 +2517,8 @@ ELSE:
 
     cpdef size_t sxgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2428,7 +2530,8 @@ ELSE:
 
     cpdef size_t shgels_bufferSize(intptr_t handle, int m, int n, int nrhs,
                                    size_t dA, int ldda, size_t dB, int lddb,
-                                   size_t dX, int lddx, size_t dwork) except? -1:
+                                   size_t dX, int lddx,
+                                   size_t dwork) except? -1:
         cdef size_t lwork
         _setStream(handle)
         with nogil:
@@ -2438,7 +2541,8 @@ ELSE:
         check_status(status)
         return lwork
 
-    cpdef int zzgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
+    cpdef int zzgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda,
                      size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
@@ -2451,7 +2555,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int zcgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
+    cpdef int zcgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda,
                      size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
@@ -2464,7 +2569,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int zygels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
+    cpdef int zygels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda,
                      size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
@@ -2477,7 +2583,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int zkgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
+    cpdef int zkgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda,
                      size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
@@ -2490,8 +2597,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int ccgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ccgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2503,8 +2610,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int cygels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int cygels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2516,8 +2623,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int ckgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ckgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2529,8 +2636,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int ddgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ddgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2542,8 +2649,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int dsgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int dsgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2555,8 +2662,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int dxgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int dxgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2568,8 +2675,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int dhgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int dhgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2581,8 +2688,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int ssgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int ssgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2594,8 +2701,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int sxgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int sxgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2607,8 +2714,8 @@ ELSE:
         check_status(status)
         return iter
 
-    cpdef int shgels(intptr_t handle, int m, int n, int nrhs, size_t dA, int ldda,
-                     size_t dB, int lddb, size_t dX, int lddx,
+    cpdef int shgels(intptr_t handle, int m, int n, int nrhs, size_t dA,
+                     int ldda, size_t dB, int lddb, size_t dX, int lddx,
                      size_t dwork, size_t lwork, size_t dInfo):
         cdef int iter
         _setStream(handle)
@@ -2620,9 +2727,9 @@ ELSE:
         check_status(status)
         return iter
 
-    ###############################################################################
+    ###########################################################################
     # Dense LAPACK Functions (Eigenvalue Solver)
-    ###############################################################################
+    ###########################################################################
 
     # Bidiagonal factorization
     cpdef int sgebrd_bufferSize(intptr_t handle, int m, int n) except? -1:
@@ -2709,7 +2816,6 @@ ELSE:
                 <cuDoubleComplex*>Work, lwork, <int*>devInfo)
         check_status(status)
 
-
     # Singular value decomposition, A = U * Sigma * V^H
     cpdef int sgesvd_bufferSize(intptr_t handle, int m, int n) except? -1:
         cdef int lwork
@@ -2743,9 +2849,10 @@ ELSE:
         check_status(status)
         return lwork
 
-    cpdef sgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo):
+    cpdef sgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo):
         _setStream(handle)
         with nogil:
             status = cusolverDnSgesvd(
@@ -2754,9 +2861,10 @@ ELSE:
                 <float*>Work, lwork, <float*>rwork, <int*>devInfo)
         check_status(status)
 
-    cpdef dgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo):
+    cpdef dgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo):
         _setStream(handle)
         with nogil:
             status = cusolverDnDgesvd(
@@ -2765,9 +2873,10 @@ ELSE:
                 <double*>Work, lwork, <double*>rwork, <int*>devInfo)
         check_status(status)
 
-    cpdef cgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo):
+    cpdef cgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo):
         _setStream(handle)
         with nogil:
             status = cusolverDnCgesvd(
@@ -2776,15 +2885,17 @@ ELSE:
                 <cuComplex*>Work, lwork, <float*>rwork, <int*>devInfo)
         check_status(status)
 
-    cpdef zgesvd(intptr_t handle, char jobu, char jobvt, int m, int n, size_t A,
-                 int lda, size_t S, size_t U, int ldu, size_t VT, int ldvt,
-                 size_t Work, int lwork, size_t rwork, size_t devInfo):
+    cpdef zgesvd(intptr_t handle, char jobu, char jobvt, int m, int n,
+                 size_t A, int lda, size_t S, size_t U, int ldu, size_t VT,
+                 int ldvt, size_t Work, int lwork, size_t rwork,
+                 size_t devInfo):
         _setStream(handle)
         with nogil:
             status = cusolverDnZgesvd(
                 <Handle>handle, jobu, jobvt, m, n, <cuDoubleComplex*>A, lda,
-                <double*>S, <cuDoubleComplex*>U, ldu, <cuDoubleComplex*>VT, ldvt,
-                <cuDoubleComplex*>Work, lwork, <double*>rwork, <int*>devInfo)
+                <double*>S, <cuDoubleComplex*>U, ldu, <cuDoubleComplex*>VT,
+                ldvt, <cuDoubleComplex*>Work, lwork, <double*>rwork,
+                <int*>devInfo)
         check_status(status)
 
     # gesvdj ... Singular value decomposition using Jacobi mathod
@@ -2824,35 +2935,38 @@ ELSE:
         check_status(status)
         return executed_sweeps
 
-    cpdef int sgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params):
+    cpdef int sgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params):
         cdef int lwork, status
         _setStream(handle)
         with nogil:
             status = cusolverDnSgesvdj_bufferSize(
-                <Handle>handle, <EigMode>jobz, econ, m, n, <const float*>A, lda,
-                <const float*>S, <const float*>U, ldu, <const float*>V, ldv,
-                &lwork, <GesvdjInfo>params)
+                <Handle>handle, <EigMode>jobz, econ, m, n, <const float*>A,
+                lda, <const float*>S, <const float*>U, ldu, <const float*>V,
+                ldv, &lwork, <GesvdjInfo>params)
         check_status(status)
         return lwork
 
-    cpdef int dgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params):
+    cpdef int dgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params):
         cdef int lwork, status
         _setStream(handle)
         with nogil:
             status = cusolverDnDgesvdj_bufferSize(
-                <Handle>handle, <EigMode>jobz, econ, m, n, <const double*>A, lda,
-                <const double*>S, <const double*>U, ldu, <const double*>V, ldv,
-                &lwork, <GesvdjInfo>params)
+                <Handle>handle, <EigMode>jobz, econ, m, n, <const double*>A,
+                lda, <const double*>S, <const double*>U, ldu, <const double*>V,
+                ldv, &lwork, <GesvdjInfo>params)
         check_status(status)
         return lwork
 
-    cpdef int cgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params):
+    cpdef int cgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params):
         cdef int lwork, status
         _setStream(handle)
         with nogil:
@@ -2863,9 +2977,10 @@ ELSE:
         check_status(status)
         return lwork
 
-    cpdef int zgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m, int n,
-                                 intptr_t A, int lda, intptr_t S, intptr_t U,
-                                 int ldu, intptr_t V, int ldv, intptr_t params):
+    cpdef int zgesvdj_bufferSize(intptr_t handle, int jobz, int econ, int m,
+                                 int n, intptr_t A, int lda, intptr_t S,
+                                 intptr_t U, int ldu, intptr_t V, int ldv,
+                                 intptr_t params):
         cdef int lwork, status
         _setStream(handle)
         with nogil:
@@ -2877,30 +2992,34 @@ ELSE:
         check_status(status)
         return lwork
 
-    cpdef sgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-                  intptr_t work, int lwork, intptr_t info, intptr_t params):
+    cpdef sgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
+                  intptr_t params):
         _setStream(handle)
         with nogil:
-            status = cusolverDnSgesvdj(<Handle>handle, <EigMode>jobz, econ, m, n,
-                                       <float*>A, lda, <float*>S, <float*>U, ldu,
-                                       <float*>V, ldv, <float*>work, lwork,
+            status = cusolverDnSgesvdj(<Handle>handle, <EigMode>jobz, econ, m,
+                                       n, <float*>A, lda, <float*>S, <float*>U,
+                                       ldu, <float*>V, ldv, <float*>work,
+                                       lwork, <int*>info, <GesvdjInfo>params)
+        check_status(status)
+
+    cpdef dgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
+                  intptr_t params):
+        _setStream(handle)
+        with nogil:
+            status = cusolverDnDgesvdj(<Handle>handle, <EigMode>jobz, econ, m,
+                                       n, <double*>A, lda, <double*>S,
+                                       <double*>U, ldu, <double*>V, ldv,
+                                       <double*>work, lwork,
                                        <int*>info, <GesvdjInfo>params)
         check_status(status)
 
-    cpdef dgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-                  intptr_t work, int lwork, intptr_t info, intptr_t params):
-        _setStream(handle)
-        with nogil:
-            status = cusolverDnDgesvdj(<Handle>handle, <EigMode>jobz, econ, m, n,
-                                       <double*>A, lda, <double*>S, <double*>U,
-                                       ldu, <double*>V, ldv, <double*>work, lwork,
-                                       <int*>info, <GesvdjInfo>params)
-        check_status(status)
-
-    cpdef cgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
+    cpdef cgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv,
                   intptr_t work, int lwork, intptr_t info, intptr_t params):
         _setStream(handle)
         with nogil:
@@ -2910,15 +3029,17 @@ ELSE:
                 <cuComplex*>work, lwork, <int*>info, <GesvdjInfo>params)
         check_status(status)
 
-    cpdef zgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
+    cpdef zgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv,
                   intptr_t work, int lwork, intptr_t info, intptr_t params):
         _setStream(handle)
         with nogil:
             status = cusolverDnZgesvdj(
                 <Handle>handle, <EigMode>jobz, econ, m, n, <cuDoubleComplex*>A,
                 lda, <double*>S, <cuDoubleComplex*>U, ldu, <cuDoubleComplex*>V,
-                ldv, <cuDoubleComplex*>work, lwork, <int*>info, <GesvdjInfo>params)
+                ldv, <cuDoubleComplex*>work, lwork, <int*>info,
+                <GesvdjInfo>params)
         check_status(status)
 
     cpdef int sgesvdjBatched_bufferSize(
@@ -3037,52 +3158,60 @@ ELSE:
     # gesvda ... Approximate singular value decomposition
     cpdef int sgesvdaStridedBatched_bufferSize(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
-            long long int strideV, int batchSize):
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv, long long int strideV, int batchSize):
         cdef int lwork
         status = cusolverDnSgesvdaStridedBatched_bufferSize(
             <Handle>handle, <EigMode>jobz, rank, m, n, <const float*>d_A, lda,
-            strideA, <const float*>d_S, strideS, <const float*>d_U, ldu, strideU,
-            <const float*>d_V, ldv, strideV, &lwork, batchSize)
+            strideA, <const float*>d_S, strideS, <const float*>d_U, ldu,
+            strideU, <const float*>d_V, ldv, strideV, &lwork, batchSize)
         check_status(status)
         return lwork
 
     cpdef int dgesvdaStridedBatched_bufferSize(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
-            long long int strideV, int batchSize):
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv, long long int strideV, int batchSize):
         cdef int lwork
         status = cusolverDnDgesvdaStridedBatched_bufferSize(
             <Handle>handle, <EigMode>jobz, rank, m, n, <const double*>d_A, lda,
-            strideA, <const double*>d_S, strideS, <const double*>d_U, ldu, strideU,
-            <const double*>d_V, ldv, strideV, &lwork, batchSize)
+            strideA, <const double*>d_S, strideS, <const double*>d_U, ldu,
+            strideU, <const double*>d_V, ldv, strideV, &lwork, batchSize)
         check_status(status)
         return lwork
 
     cpdef int cgesvdaStridedBatched_bufferSize(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
-            long long int strideV, int batchSize):
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv, long long int strideV, int batchSize):
         cdef int lwork
         status = cusolverDnCgesvdaStridedBatched_bufferSize(
-            <Handle>handle, <EigMode>jobz, rank, m, n, <const cuComplex*>d_A, lda,
-            strideA, <const float*>d_S, strideS, <const cuComplex*>d_U, ldu,
-            strideU, <const cuComplex*>d_V, ldv, strideV, &lwork, batchSize)
+            <Handle>handle, <EigMode>jobz, rank, m, n, <const cuComplex*>d_A,
+            lda, strideA, <const float*>d_S, strideS, <const cuComplex*>d_U,
+            ldu, strideU, <const cuComplex*>d_V, ldv, strideV, &lwork,
+            batchSize)
         check_status(status)
         return lwork
 
     cpdef int zgesvdaStridedBatched_bufferSize(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv,
             long long int strideV, int batchSize):
         cdef int lwork
         status = cusolverDnZgesvdaStridedBatched_bufferSize(
-            <Handle>handle, <EigMode>jobz, rank, m, n, <const cuDoubleComplex*>d_A,
-            lda, strideA, <const double*>d_S, strideS, <const cuDoubleComplex*>d_U,
+            <Handle>handle, <EigMode>jobz, rank, m, n,
+            <const cuDoubleComplex*>d_A,
+            lda, strideA, <const double*>d_S, strideS,
+            <const cuDoubleComplex*>d_U,
             ldu, strideU, <const cuDoubleComplex*>d_V, ldv, strideV, &lwork,
             batchSize)
         check_status(status)
@@ -3090,61 +3219,71 @@ ELSE:
 
     cpdef sgesvdaStridedBatched(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv,
             long long int strideV, intptr_t d_work, int lwork, intptr_t d_info,
             intptr_t h_R_nrmF, int batchSize):
         _setStream(handle)
         with nogil:
             status = cusolverDnSgesvdaStridedBatched(
-                <Handle>handle, <EigMode>jobz, rank, m, n, <const float*>d_A, lda,
-                strideA, <float*>d_S, strideS, <float*>d_U, ldu, strideU,
+                <Handle>handle, <EigMode>jobz, rank, m, n, <const float*>d_A,
+                lda, strideA, <float*>d_S, strideS, <float*>d_U, ldu, strideU,
                 <float*>d_V, ldv, strideV, <float*>d_work, lwork, <int*>d_info,
                 <double*>h_R_nrmF, batchSize)
         check_status(status)
 
     cpdef dgesvdaStridedBatched(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
-            long long int strideV, intptr_t d_work, int lwork, intptr_t d_info,
-            intptr_t h_R_nrmF, int batchSize):
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv, long long int strideV, intptr_t d_work, int lwork,
+            intptr_t d_info, intptr_t h_R_nrmF, int batchSize):
         _setStream(handle)
         with nogil:
             status = cusolverDnDgesvdaStridedBatched(
-                <Handle>handle, <EigMode>jobz, rank, m, n, <const double*>d_A, lda,
-                strideA, <double*>d_S, strideS, <double*>d_U, ldu, strideU,
-                <double*>d_V, ldv, strideV, <double*>d_work, lwork, <int*>d_info,
+                <Handle>handle, <EigMode>jobz, rank, m, n, <const double*>d_A,
+                lda, strideA, <double*>d_S, strideS, <double*>d_U, ldu,
+                strideU, <double*>d_V, ldv, strideV, <double*>d_work, lwork,
+                <int*>d_info,
                 <double*>h_R_nrmF, batchSize)
         check_status(status)
 
     cpdef cgesvdaStridedBatched(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv,
             long long int strideV, intptr_t d_work, int lwork, intptr_t d_info,
             intptr_t h_R_nrmF, int batchSize):
         _setStream(handle)
         with nogil:
             status = cusolverDnCgesvdaStridedBatched(
-                <Handle>handle, <EigMode>jobz, rank, m, n, <const cuComplex*>d_A,
-                lda, strideA, <float*>d_S, strideS, <cuComplex*>d_U, ldu, strideU,
-                <cuComplex*>d_V, ldv, strideV, <cuComplex*>d_work, lwork,
-                <int*>d_info, <double*>h_R_nrmF, batchSize)
+                <Handle>handle, <EigMode>jobz, rank, m, n,
+                <const cuComplex*>d_A,
+                lda, strideA, <float*>d_S, strideS, <cuComplex*>d_U, ldu,
+                strideU, <cuComplex*>d_V, ldv, strideV, <cuComplex*>d_work,
+                lwork, <int*>d_info, <double*>h_R_nrmF, batchSize)
         check_status(status)
 
     cpdef zgesvdaStridedBatched(
             intptr_t handle, int jobz, int rank, int m, int n, intptr_t d_A,
-            int lda, long long int strideA, intptr_t d_S, long long int strideS,
-            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V, int ldv,
+            int lda, long long int strideA, intptr_t d_S,
+            long long int strideS,
+            intptr_t d_U, int ldu, long long int strideU, intptr_t d_V,
+            int ldv,
             long long int strideV, intptr_t d_work, int lwork, intptr_t d_info,
             intptr_t h_R_nrmF, int batchSize):
         _setStream(handle)
         with nogil:
             status = cusolverDnZgesvdaStridedBatched(
                 <Handle>handle, <EigMode>jobz, rank, m, n,
-                <const cuDoubleComplex*>d_A, lda, strideA, <double*>d_S, strideS,
-                <cuDoubleComplex*>d_U, ldu, strideU, <cuDoubleComplex*>d_V, ldv,
+                <const cuDoubleComplex*>d_A, lda, strideA, <double*>d_S,
+                strideS, <cuDoubleComplex*>d_U, ldu, strideU,
+                <cuDoubleComplex*>d_V, ldv,
                 strideV, <cuDoubleComplex*>d_work, lwork, <int*>d_info,
                 <double*>h_R_nrmF, batchSize)
         check_status(status)
@@ -3156,7 +3295,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSsyevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const float*>A,
                 lda, <const float*>W, &lwork)
         check_status(status)
@@ -3168,7 +3308,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDsyevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const double*>A,
                 lda, <const double*>W, &lwork)
         check_status(status)
@@ -3180,7 +3321,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCheevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuComplex*>A,
                 lda, <const float*>W, &lwork)
         check_status(status)
@@ -3192,7 +3334,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZheevd_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuDoubleComplex*>A,
                 lda, <const double*>W, &lwork)
         check_status(status)
@@ -3204,7 +3347,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnSsyevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, lda, <float*>W,
                 <float*>work, lwork, <int*>info)
         check_status(status)
@@ -3215,7 +3359,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnDsyevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, lda, <double*>W,
                 <double*>work, lwork, <int*>info)
         check_status(status)
@@ -3226,7 +3371,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnCheevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, lda, <float*>W,
                 <cuComplex*>work, lwork, <int*>info)
         check_status(status)
@@ -3237,7 +3383,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cusolverDnZheevd(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, lda, <double*>W,
                 <cuDoubleComplex*>work, lwork, <int*>info)
         check_status(status)
@@ -3286,7 +3433,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const float*>A,
                 lda, <const float*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3299,7 +3447,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const double*>A,
                 lda, <const double*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3312,7 +3461,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuComplex*>A,
                 lda, <const float*>W, &lwork, <SyevjInfo>params)
         check_status(status)
@@ -3325,52 +3475,61 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevj_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuDoubleComplex*>A,
                 lda, <const double*>W, &lwork, <SyevjInfo>params)
         check_status(status)
         return lwork
 
     cpdef ssyevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params):
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params):
         cdef int status
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, lda, <float*>W,
                 <float*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
 
     cpdef dsyevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params):
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params):
         cdef int status
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, lda, <double*>W,
                 <double*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
 
     cpdef cheevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params):
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params):
         cdef int status
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, lda, <float*>W,
                 <cuComplex*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
 
     cpdef zheevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params):
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params):
         cdef int status
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevj(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, lda, <double*>W,
                 <cuDoubleComplex*>work, lwork, <int*>info, <SyevjInfo>params)
         check_status(status)
@@ -3385,7 +3544,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const float *>A, lda, <const float *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3399,7 +3559,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const double *>A, lda, <const double *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3413,7 +3574,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuComplex *>A, lda, <const float *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3427,7 +3589,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevjBatched_bufferSize(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <const cuDoubleComplex *>A, lda, <const double *>W, &lwork,
                 <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3440,7 +3603,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnSsyevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <float*>A, lda, <float*>W,
                 <float*>work, lwork, <int*>info, <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3452,7 +3616,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnDsyevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <double*>A, lda, <double*>W,
                 <double*>work, lwork, <int*>info, <SyevjInfo>params, batchSize)
         check_status(status)
@@ -3464,9 +3629,11 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnCheevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <cuComplex*>A, lda, <float*>W,
-                <cuComplex*>work, lwork, <int*>info, <SyevjInfo>params, batchSize)
+                <cuComplex*>work, lwork, <int*>info, <SyevjInfo>params,
+                batchSize)
         check_status(status)
 
     cpdef zheevjBatched(intptr_t handle, int jobz, int uplo, int n,
@@ -3476,7 +3643,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnZheevjBatched(
-                <Handle>handle, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <cuDoubleComplex*>A, lda, <double*>W,
                 <cuDoubleComplex*>work, lwork, <int*>info,
                 <SyevjInfo>params, batchSize)
@@ -3491,7 +3659,8 @@ ELSE:
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnXsyevd_bufferSize(
-                <Handle>handle, <Params>params, <EigMode> jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <Params>params, <EigMode> jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <DataType>dataTypeA, <void*>A, lda,
                 <DataType>dataTypeW, <void*>W, <DataType>computeType,
                 &workspaceInBytesOnDevice, &workspaceInBytesOnHost)
@@ -3501,23 +3670,24 @@ ELSE:
     cpdef xsyevd(
             intptr_t handle, intptr_t params, int jobz, int uplo,
             int64_t n, int dataTypeA, intptr_t A, int64_t lda,
-            int dataTypeW, intptr_t W, int computeType, intptr_t bufferOnDevice,
-            size_t workspaceInBytesOnDevice, intptr_t bufferOnHost,
+            int dataTypeW, intptr_t W, int computeType,
+            intptr_t bufferOnDevice, size_t workspaceInBytesOnDevice,
+            intptr_t bufferOnHost,
             size_t workspaceInBytesOnHost, intptr_t info):
         setStream(handle, stream_module.get_current_stream_ptr())
         with nogil:
             status = cusolverDnXsyevd(
-                <Handle>handle, <Params>params, <EigMode>jobz, <FillMode>(convert_solver_fill(uplo)), n,
+                <Handle>handle, <Params>params, <EigMode>jobz,
+                <FillMode>(convert_solver_fill(uplo)), n,
                 <DataType>dataTypeA, <void*>A, lda,
                 <DataType>dataTypeW, <void*>W, <DataType>computeType,
                 <void*>bufferOnDevice, workspaceInBytesOnDevice,
                 <void*>bufferOnHost, workspaceInBytesOnHost, <int*>info)
         check_status(status)
 
-
-    ###############################################################################
+    ###########################################################################
     # Sparse LAPACK Functions
-    ###############################################################################
+    ###########################################################################
     cpdef scsrlsvchol(intptr_t handle, int m, int nnz, size_t descrA,
                       size_t csrValA, size_t csrRowPtrA, size_t csrColIndA,
                       size_t b, float tol, int reorder, size_t x,
@@ -3547,7 +3717,8 @@ ELSE:
         check_status(status)
 
     cpdef ccsrlsvchol(intptr_t handle, int m, int nnz, size_t descrA,
-                      size_t csrVal, size_t csrRowPtr, size_t csrColInd, size_t b,
+                      size_t csrVal, size_t csrRowPtr, size_t csrColInd,
+                      size_t b,
                       float tol, int reorder, size_t x, size_t singularity):
         cdef int status
         _spSetStream(handle)
@@ -3560,7 +3731,8 @@ ELSE:
         check_status(status)
 
     cpdef zcsrlsvchol(intptr_t handle, int m, int nnz, size_t descrA,
-                      size_t csrVal, size_t csrRowPtr, size_t csrColInd, size_t b,
+                      size_t csrVal, size_t csrRowPtr, size_t csrColInd,
+                      size_t b,
                       double tol, int reorder, size_t x, size_t singularity):
         cdef int status
         _spSetStream(handle)
@@ -3572,7 +3744,8 @@ ELSE:
                 <cuDoubleComplex*>x, <int*>singularity)
         check_status(status)
 
-    cpdef scsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrValA,
+    cpdef scsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrValA,
                     size_t csrRowPtrA, size_t csrColIndA, size_t b, float tol,
                     int reorder, size_t x, size_t singularity):
         cdef int status
@@ -3585,7 +3758,8 @@ ELSE:
                 tol, reorder, <float*> x, <int*> singularity)
         check_status(status)
 
-    cpdef dcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrValA,
+    cpdef dcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrValA,
                     size_t csrRowPtrA, size_t csrColIndA, size_t b, double tol,
                     int reorder, size_t x, size_t singularity):
         cdef int status
@@ -3598,7 +3772,8 @@ ELSE:
                 tol, reorder, <double*> x, <int*> singularity)
         check_status(status)
 
-    cpdef ccsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrVal,
+    cpdef ccsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrVal,
                     size_t csrRowPtr, size_t csrColInd, size_t b, float tol,
                     int reorder, size_t x, size_t singularity):
         cdef int status
@@ -3611,7 +3786,8 @@ ELSE:
                 <cuComplex*>x, <int*>singularity)
         check_status(status)
 
-    cpdef zcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrVal,
+    cpdef zcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrVal,
                     size_t csrRowPtr, size_t csrColInd, size_t b, double tol,
                     int reorder, size_t x, size_t singularity):
         cdef int status
@@ -3662,7 +3838,8 @@ ELSE:
             status = cusolverSpCcsreigvsi(
                 <SpHandle>handle, m, nnz, <const MatDescr>descrA,
                 <const cuComplex*>csrValA, <const int*>csrRowPtrA,
-                <const int*>csrColIndA, (<cuComplex*>mu0)[0], <const cuComplex*>x0,
+                <const int*>csrColIndA, (<cuComplex*>mu0)[0],
+                <const cuComplex*>x0,
                 maxite, eps, <cuComplex*>mu, <cuComplex*>x)
         check_status(status)
 

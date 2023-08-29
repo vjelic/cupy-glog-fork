@@ -159,9 +159,7 @@ typedef enum libraryPropertyType_t {
     PATCH_LEVEL
 } libraryPropertyType;
 
-#if HIP_VERSION >= 50631061
 typedef enum hipLibraryPropertyType hipLibraryPropertyType_t;
-#endif
 
 } // extern "C"
 

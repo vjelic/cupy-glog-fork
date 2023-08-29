@@ -546,15 +546,18 @@ IF CUPY_HIP_VERSION == 0:
                   intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
                   intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
                   intptr_t params)
-    cpdef dgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-                  intptr_t work, int lwork, intptr_t info, intptr_t params)
-    cpdef cgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-                  intptr_t work, int lwork, intptr_t info, intptr_t params)
-    cpdef zgesvdj(intptr_t handle, int jobz, int econ, int m, int n, intptr_t A,
-                  int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-                  intptr_t work, int lwork, intptr_t info, intptr_t params)
+    cpdef dgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
+                  intptr_t params)
+    cpdef cgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
+                  intptr_t params)
+    cpdef zgesvdj(intptr_t handle, int jobz, int econ, int m, int n,
+                  intptr_t A, int lda, intptr_t S, intptr_t U, int ldu,
+                  intptr_t V, int ldv, intptr_t work, int lwork, intptr_t info,
+                  intptr_t params)
 
     cpdef int sgesvdjBatched_bufferSize(
         intptr_t handle, int jobz, int m, int n,
@@ -580,19 +583,23 @@ IF CUPY_HIP_VERSION == 0:
     cpdef sgesvdjBatched(
         intptr_t handle, int jobz, int m, int n, intptr_t A,
         int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-        intptr_t work, int lwork, intptr_t info, intptr_t params, int batchSize)
+        intptr_t work, int lwork, intptr_t info, intptr_t params,
+        int batchSize)
     cpdef dgesvdjBatched(
         intptr_t handle, int jobz, int m, int n, intptr_t A,
         int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-        intptr_t work, int lwork, intptr_t info, intptr_t params, int batchSize)
+        intptr_t work, int lwork, intptr_t info, intptr_t params,
+        int batchSize)
     cpdef cgesvdjBatched(
         intptr_t handle, int jobz, int m, int n, intptr_t A,
         int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-        intptr_t work, int lwork, intptr_t info, intptr_t params, int batchSize)
+        intptr_t work, int lwork, intptr_t info, intptr_t params,
+        int batchSize)
     cpdef zgesvdjBatched(
         intptr_t handle, int jobz, int m, int n, intptr_t A,
         int lda, intptr_t S, intptr_t U, int ldu, intptr_t V, int ldv,
-        intptr_t work, int lwork, intptr_t info, intptr_t params, int batchSize)
+        intptr_t work, int lwork, intptr_t info, intptr_t params,
+        int batchSize)
 
     # gesvda ... Approximate singular value decomposition
     cpdef int sgesvdaStridedBatched_bufferSize(
@@ -685,13 +692,17 @@ IF CUPY_HIP_VERSION == 0:
         intptr_t handle, int jobz, int uplo, int n,
         size_t A, int lda, size_t W, intptr_t params) except? -1
     cpdef ssyevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params)
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params)
     cpdef dsyevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params)
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params)
     cpdef cheevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params)
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params)
     cpdef zheevj(intptr_t handle, int jobz, int uplo, int n, size_t A, int lda,
-                 size_t W, size_t work, int lwork, size_t info, intptr_t params)
+                 size_t W, size_t work, int lwork, size_t info,
+                 intptr_t params)
 
     cpdef int ssyevjBatched_bufferSize(
         intptr_t handle, int jobz, int uplo, int n,
@@ -734,9 +745,9 @@ IF CUPY_HIP_VERSION == 0:
         size_t workspaceInBytesOnDevice, intptr_t bufferOnHost,
         size_t workspaceInBytesOnHost, intptr_t info)
 
-    ###############################################################################
+    ##########################################################################
     # Sparse LAPACK Functions
-    ###############################################################################
+    ##########################################################################
 
     cpdef scsrlsvchol(intptr_t handle, int m, int nnz, size_t descrA,
                       size_t csrValA, size_t csrRowPtrA, size_t csrColIndA,
@@ -747,24 +758,30 @@ IF CUPY_HIP_VERSION == 0:
                       size_t b, double tol, int reorder, size_t x,
                       size_t singularity)
     cpdef ccsrlsvchol(intptr_t handle, int m, int nnz, size_t descrA,
-                      size_t csrVal, size_t csrRowPtr, size_t csrColInd, size_t b,
-                      float tol, int reorder, size_t x, size_t singularity)
+                      size_t csrVal, size_t csrRowPtr, size_t csrColInd,
+                      size_t b, float tol, int reorder, size_t x,
+                      size_t singularity)
     cpdef zcsrlsvchol(intptr_t handle, int m, int nnz, size_t descrA,
-                      size_t csrVal, size_t csrRowPtr, size_t csrColInd, size_t b,
-                      double tol, int reorder, size_t x, size_t singularity)
+                      size_t csrVal, size_t csrRowPtr, size_t csrColInd,
+                      size_t b, double tol, int reorder, size_t x,
+                      size_t singularity)
 
-    cpdef scsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrValA,
-                    size_t csrRowPtrA, size_t csrColIndA, size_t b, float tol,
-                    int reorder, size_t x, size_t singularity)
-    cpdef dcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrValA,
-                    size_t csrRowPtrA, size_t csrColIndA, size_t b, double tol,
-                    int reorder, size_t x, size_t singularity)
-    cpdef ccsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrVal,
-                    size_t csrRowPtr, size_t csrColInd, size_t b, float tol,
-                    int reorder, size_t x, size_t singularity)
-    cpdef zcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA, size_t csrVal,
-                    size_t csrRowPtr, size_t csrColInd, size_t b, double tol,
-                    int reorder, size_t x, size_t singularity)
+    cpdef scsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrValA, size_t csrRowPtrA, size_t csrColIndA,
+                    size_t b, float tol, int reorder, size_t x,
+                    size_t singularity)
+    cpdef dcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrValA, size_t csrRowPtrA, size_t csrColIndA,
+                    size_t b, double tol, int reorder, size_t x,
+                    size_t singularity)
+    cpdef ccsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrVal, size_t csrRowPtr, size_t csrColInd,
+                    size_t b, float tol, int reorder, size_t x,
+                    size_t singularity)
+    cpdef zcsrlsvqr(intptr_t handle, int m, int nnz, size_t descrA,
+                    size_t csrVal, size_t csrRowPtr, size_t csrColInd,
+                    size_t b, double tol, int reorder, size_t x,
+                    size_t singularity)
 
     cpdef scsreigvsi(intptr_t handle, int m, int nnz, size_t descrA,
                      size_t csrValA, size_t csrRowPtrA, size_t csrColIndA,
