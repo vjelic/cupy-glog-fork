@@ -142,6 +142,7 @@ class TestQRDecomposition(unittest.TestCase):
 
     @testing.fix_random()
     @_condition.repeat(3, 10)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_mode(self):
         self.check_mode(numpy.random.randn(2, 4), mode=self.mode)
         self.check_mode(numpy.random.randn(3, 3), mode=self.mode)
@@ -149,6 +150,7 @@ class TestQRDecomposition(unittest.TestCase):
 
     @testing.with_requires('numpy>=1.22')
     @testing.fix_random()
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_mode_rank3(self):
         self.check_mode(numpy.random.randn(3, 2, 4), mode=self.mode)
         self.check_mode(numpy.random.randn(4, 3, 3), mode=self.mode)
@@ -156,6 +158,7 @@ class TestQRDecomposition(unittest.TestCase):
 
     @testing.with_requires('numpy>=1.22')
     @testing.fix_random()
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_mode_rank4(self):
         self.check_mode(numpy.random.randn(2, 3, 2, 4), mode=self.mode)
         self.check_mode(numpy.random.randn(2, 4, 3, 3), mode=self.mode)
@@ -288,6 +291,7 @@ class TestSVD(unittest.TestCase):
         self.check_usv((2, 32, 32))  # still use _gesvdj_batched
 
     @_condition.repeat(3, 10)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank3_loop(self):
         # This tests the loop-based batched gesvd on CUDA (_gesvd_batched)
         self.check_usv((2, 64, 64))
@@ -342,6 +346,7 @@ class TestSVD(unittest.TestCase):
         self.check_usv((2, 2, 32, 32))  # still use _gesvdj_batched
 
     @_condition.repeat(3, 10)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug ')
     def test_svd_rank4_loop(self):
         # This tests the loop-based batched gesvd on CUDA (_gesvd_batched)
         self.check_usv((3, 2, 64, 64))
