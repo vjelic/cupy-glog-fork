@@ -11,23 +11,23 @@ IF CUPY_USE_CUDA_PYTHON:
     # TODO(kmaehashi): Remove these aliases.
     ctypedef nvrtcProgram Program
 
-cpdef check_status(int status)
+IF CUPY_HIP_VERSION == 0:
+    cpdef check_status(int status)
 
-cpdef tuple getVersion()
-cpdef tuple getSupportedArchs()
+    cpdef tuple getVersion()
+    cpdef tuple getSupportedArchs()
 
+    ##########################################################################
+    # Program
+    ##########################################################################
 
-###############################################################################
-# Program
-###############################################################################
-
-cpdef intptr_t createProgram(unicode src, unicode name, headers,
-                             include_names) except? 0
-cpdef destroyProgram(intptr_t prog)
-cpdef compileProgram(intptr_t prog, options)
-cpdef bytes getPTX(intptr_t prog)
-cpdef bytes getCUBIN(intptr_t prog)
-cpdef bytes getNVVM(intptr_t prog)
-cpdef unicode getProgramLog(intptr_t prog)
-cpdef addNameExpression(intptr_t prog, str name)
-cpdef str getLoweredName(intptr_t prog, str name)
+    cpdef intptr_t createProgram(unicode src, unicode name, headers,
+                                 include_names) except? 0
+    cpdef destroyProgram(intptr_t prog)
+    cpdef compileProgram(intptr_t prog, options)
+    cpdef bytes getPTX(intptr_t prog)
+    cpdef bytes getCUBIN(intptr_t prog)
+    cpdef bytes getNVVM(intptr_t prog)
+    cpdef unicode getProgramLog(intptr_t prog)
+    cpdef addNameExpression(intptr_t prog, str name)
+    cpdef str getLoweredName(intptr_t prog, str name)

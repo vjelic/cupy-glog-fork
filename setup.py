@@ -29,7 +29,7 @@ if get_rocm_version() > 0:
             project_directory=proj_dir,
             output_directory=proj_dir,
             includes=['*'],
-            extra_extensions=(".pyx", ".pxd"),
+            extra_extensions=(".pyx", ".pxd",".pxi"),
             show_detailed=True,
             header_include_dirs=[],
             custom_map_list="install/amd_build/rocm_custom_mapping.json",
