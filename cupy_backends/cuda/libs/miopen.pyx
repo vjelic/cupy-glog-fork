@@ -9,18 +9,17 @@ from cupy_backends.cuda.api cimport driver
 from cupy_backends.cuda.api cimport runtime
 from cupy_backends.cuda cimport stream as stream_module
 
-from cupy_backends.cuda.libs.miopen import *
 ###############################################################################
 # Extern
 ###############################################################################
 
 cdef extern from '../../cupy_cudnn.h' nogil:
     # Types
-    ctypedef int ActivationMode 'cudnnActivationMode_t'
+    ctypedef int ActivationMode 'miopenActivationMode_t'
     ctypedef int AddMode 'cudnnAddMode_t'
-    ctypedef int BatchNormMode 'cudnnBatchNormMode_t'
+    ctypedef int BatchNormMode 'miopenBatchNormMode_t'
     ctypedef int BatchNormOps 'cudnnBatchNormOps_t'
-    ctypedef int ConvolutionBwdDataAlgo 'cudnnConvolutionBwdDataAlgo_t'
+    ctypedef int ConvolutionBwdDataAlgo 'miopenBwdDataAlgorithm_t'
     ctypedef int ConvolutionBwdDataPreference \
         'cudnnConvolutionBwdDataPreference_t'
     ctypedef struct ConvolutionBwdDataAlgoPerf \
@@ -37,7 +36,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         size_t memory
         int determinism
         int mathType
-    ctypedef int ConvolutionBwdFilterAlgo 'cudnnConvolutionBwdFilterAlgo_t'
+    ctypedef int ConvolutionBwdFilterAlgo 'miopenConvBwdWeightsAlgorithm_t'
     ctypedef int ConvolutionBwdFilterPreference \
         'cudnnConvolutionBwdFilterPreference_t'
     ctypedef struct ConvolutionBwdFilterAlgoPerf \
@@ -54,7 +53,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         size_t memory
         int determinism
         int mathType
-    ctypedef int ConvolutionFwdAlgo 'cudnnConvolutionFwdAlgo_t'
+    ctypedef int ConvolutionFwdAlgo 'miopenConvolutionFwdAlgorithm_t'
     ctypedef int ConvolutionFwdPreference 'cudnnConvolutionFwdPreference_t'
     ctypedef struct ConvolutionFwdAlgoPerf 'cudnnConvolutionFwdAlgoPerf_t':
         int algo
@@ -69,26 +68,27 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         size_t memory
         int determinism
         int mathType
-    ctypedef int ConvolutionMode 'cudnnConvolutionMode_t'
-    ctypedef int DataType 'cudnnDataType_t'
+    ctypedef int ConvolutionMode 'miopenConvolutionMode_t'
+    ctypedef int DataType 'miopenDataType_t'
     ctypedef int MathType 'cudnnMathType_t'
-    ctypedef int DirectionMode 'cudnnDirectionMode_t'
-    ctypedef int NanPropagation 'cudnnNanPropagation_t'
-    ctypedef int PoolingMode 'cudnnPoolingMode_t'
-    ctypedef int RNNInputMode 'cudnnRNNInputMode_t'
-    ctypedef int CTCLossAlgo 'cudnnCTCLossAlgo_t'
-    ctypedef int RNNMode 'cudnnRNNMode_t'
-    ctypedef int RNNAlgo 'cudnnRNNAlgo_t'
+    ctypedef int DirectionMode 'miopenRNNDirectionMode_t'
+    ctypedef int NanPropagation 'miopenNanPropagation_t'
+    ctypedef int PoolingMode 'miopenPoolingMode_t'
+    ctypedef int RNNInputMode 'miopenRNNInputMode_t'
+    ctypedef int CTCLossAlgo 'miopenCTCLossAlgo_t'
+    ctypedef int RNNMode 'miopenRNNMode_t'
+    ctypedef int RNNAlgo 'miopenRNNAlgo_t'
     ctypedef int RNNDataLayout 'cudnnRNNDataLayout_t'
     ctypedef int RNNPaddingMode 'cudnnRNNPaddingMode_t'
-    ctypedef int SoftmaxAlgorithm 'cudnnSoftmaxAlgorithm_t'
-    ctypedef int SoftmaxMode 'cudnnSoftmaxMode_t'
-    ctypedef int Status 'cudnnStatus_t'
+    ctypedef int SoftmaxAlgorithm 'miopenSoftmaxAlgorithm_t'
+    ctypedef int SoftmaxMode 'miopenSoftmaxMode_t'
+    ctypedef int Status 'miopenStatus_t'
     ctypedef int TensorFormat 'cudnnTensorFormat_t'
-    ctypedef int OpTensorOp 'cudnnOpTensorOp_t'
-    ctypedef int ReduceTensorOp 'cudnnReduceTensorOp_t'
-    ctypedef int ReduceTensorIndices 'cudnnReduceTensorIndices_t'
-    ctypedef int IndicesType 'cudnnIndicesType_t'
+    ctypedef int OpTensorOp 'miopenTensorOp_t'
+	
+    ctypedef int ReduceTensorOp 'miopenReduceTensorOp_t'
+    ctypedef int ReduceTensorIndices 'miopenReduceTensorIndices_t'
+    ctypedef int IndicesType 'miopenIndicesType_t'
     ctypedef int ErrQueryMode 'cudnnErrQueryMode_t'
     ctypedef int FusedOps 'cudnnFusedOps_t'
     ctypedef int FusedOpsConstParamLabel 'cudnnFusedOpsConstParamLabel_t'
@@ -96,19 +96,19 @@ cdef extern from '../../cupy_cudnn.h' nogil:
     ctypedef int FusedOpsVariantParamLabel 'cudnnFusedOpsVariantParamLabel_t'
     ctypedef struct RuntimeTag 'cudnnRuntimeTag_t'
 
-    ctypedef void* ActivationDescriptor 'cudnnActivationDescriptor_t'
-    ctypedef void* ConvolutionDescriptor 'cudnnConvolutionDescriptor_t'
-    ctypedef void* DropoutDescriptor 'cudnnDropoutDescriptor_t'
+    ctypedef void* ActivationDescriptor 'miopenActivationDescriptor_t'
+    ctypedef void* ConvolutionDescriptor 'miopenConvolutionDescriptor_t'
+    ctypedef void* DropoutDescriptor 'miopenDropoutDescriptor_t'
     ctypedef void* FilterDescriptor 'cudnnFilterDescriptor_t'
-    ctypedef void* Handle 'cudnnHandle_t'
-    ctypedef void* PoolingDescriptor 'cudnnPoolingDescriptor_t'
-    ctypedef void* CTCLossDescriptor 'cudnnCTCLossDescriptor_t'
-    ctypedef void* RNNDescriptor 'cudnnRNNDescriptor_t'
-    ctypedef void* RNNDataDescriptor 'cudnnRNNDataDescriptor_t'
+    ctypedef void* Handle 'miopenHandle_t'
+    ctypedef void* PoolingDescriptor 'miopenPoolingDescriptor_t'
+    ctypedef void* CTCLossDescriptor 'miopenCTCLossDescriptor_t'
+    ctypedef void* RNNDescriptor 'miopenRNNDescriptor_t'
+    ctypedef void* RNNDataDescriptor 'miopenRNNDataDescriptor_t'
     ctypedef void* PersistentRNNPlan 'cudnnPersistentRNNPlan_t'
-    ctypedef void* TensorDescriptor 'cudnnTensorDescriptor_t'
-    ctypedef void* OpTensorDescriptor 'cudnnOpTensorDescriptor_t'
-    ctypedef void* ReduceTensorDescriptor 'cudnnReduceTensorDescriptor_t'
+    ctypedef void* TensorDescriptor 'miopenTensorDescriptor_t'
+    ctypedef void* OpTensorDescriptor 'miopenTensorDescriptor_t'
+    ctypedef void* ReduceTensorDescriptor 'miopenReduceTensorDescriptor_t'
     ctypedef void* SpatialTransformerDescriptor \
         'cudnnSpatialTransformerDescriptor_t'
     ctypedef void* SamplerType 'cudnnSamplerType_t'
@@ -117,38 +117,38 @@ cdef extern from '../../cupy_cudnn.h' nogil:
     ctypedef void* FusedOpsPlan 'cudnnFusedOpsPlan_t'
 
     # Error handling
-    const char* cudnnGetErrorString(Status status)
+    const char* miopenGetErrorString(Status status)
 
     # Version
-    size_t cudnnGetVersion()
+    size_t miopenGetVersion()
 
     # Runtime error checking
     int cudnnQueryRuntimeError(Handle handle, Status *rstatus,
                                ErrQueryMode mode, RuntimeTag *tag)
 
     # Initialization and CUDA cooperation
-    int cudnnCreate(Handle* handle)
-    int cudnnDestroy(Handle handle)
-    int cudnnSetStream(Handle handle, driver.Stream stream)
-    int cudnnGetStream(Handle handle, driver.Stream* stream)
+    int miopenCreate(Handle* handle)
+    int miopenDestroy(Handle handle)
+    int miopenSetStream(Handle handle, driver.Stream stream)
+    int miopenGetStream(Handle handle, driver.Stream* stream)
 
     # Tensor manipulation
-    int cudnnCreateTensorDescriptor(TensorDescriptor* descriptor)
-    int cudnnSetTensor4dDescriptor(
-        TensorDescriptor tensorDesc, TensorFormat format,
+    int miopenCreateTensorDescriptor(TensorDescriptor* descriptor)
+    int miopenSet4dTensorDescriptor(
+        TensorDescriptor tensorDesc, 
         DataType dataType, int n, int c, int h, int w)
-    int cudnnSetTensor4dDescriptorEx(
+    int miopenSet4dTensorDescriptorEx(
         TensorDescriptor tensorDesc, DataType dataType,
         int n, int c, int h, int w,
         int nStride, int cStride, int hStride, int wStride)
-    int cudnnGetTensor4dDescriptor(
+    int miopenGet4dTensorDescriptor(
         TensorDescriptor tensorDesc, DataType* dataType,
         int* n, int* c, int* h, int* w,
         int* nStride, int* cStride, int* hStride, int* wStride)
     int cudnnSetTensorNdDescriptor(
         TensorDescriptor tensorDesc, DataType dataType, int nbDims,
         int* dimA, int* strideA)
-    int cudnnDestroyTensorDescriptor(TensorDescriptor tensorDesc)
+    int miopenDestroyTensorDescriptor(TensorDescriptor tensorDesc)
     int cudnnAddTensor_v3(
         Handle handle, void* alpha, TensorDescriptor bDesc,
         void* b, void* beta, TensorDescriptor yDesc, void* y)
@@ -162,42 +162,42 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         OpTensorDescriptor opTensorDesc, OpTensorOp* opTensorOp,
         DataType* opTensorCompType, NanPropagation* opTensorNanOpt)
     int cudnnDestroyOpTensorDescriptor(OpTensorDescriptor opTensorDesc)
-    int cudnnOpTensor(
+    int miopenOpTensor(
         Handle handle, OpTensorDescriptor opTensorDesc, void* alpha1,
         TensorDescriptor aDesc, void* A, void* alpha2,
         TensorDescriptor bDesc, void* B, void* beta,
         TensorDescriptor cDesc, void* C)
 
     # Tensor reductions
-    int cudnnCreateReduceTensorDescriptor(
+    int miopenCreateReduceTensorDescriptor(
         ReduceTensorDescriptor* reduceTensorDesc)
-    int cudnnSetReduceTensorDescriptor(
+    int miopenSetReduceTensorDescriptor(
         ReduceTensorDescriptor reduceTensorDesc, ReduceTensorOp reduceTensorOp,
         DataType reduceTensorCompType, NanPropagation reduceTensorNanOpt,
         ReduceTensorIndices reduceTensorIndices,
         IndicesType reduceTensorIndicesType)
-    int cudnnGetReduceTensorDescriptor(
+    int miopenGetReduceTensorDescriptor(
         ReduceTensorDescriptor reduceTensorDesc,
         ReduceTensorOp* reduceTensorOp, DataType* reduceTensorCompType,
         NanPropagation* reduceTensorNanOpt,
         ReduceTensorIndices* reduceTensorIndices,
         IndicesType* reduceTensorIndicesType)
-    int cudnnDestroyReduceTensorDescriptor(
+    int miopenDestroyReduceTensorDescriptor(
         ReduceTensorDescriptor reduceTensorDesc)
-    int cudnnGetReductionIndicesSize(
+    int miopenGetReductionIndicesSize(
         Handle handle, ReduceTensorDescriptor reduceTensorDesc,
         TensorDescriptor aDesc, TensorDescriptor cDesc, size_t* sizeInBytes)
-    int cudnnGetReductionWorkspaceSize(
+    int miopenGetReductionWorkspaceSize(
         Handle handle, ReduceTensorDescriptor reduceTensorDesc,
         TensorDescriptor aDesc, TensorDescriptor cDesc, size_t* sizeInBytes)
-    int cudnnReduceTensor(
+    int miopenReduceTensor(
         Handle handle, ReduceTensorDescriptor reduceTensorDesc, void* indices,
         size_t indicesSizeInBytes, void* workspace,
         size_t workspaceSizeInBytes, void* alpha, TensorDescriptor aDesc,
         void* A, void* beta, TensorDescriptor cDesc, void* c)
-    int cudnnSetTensor(
+    int miopenSetTensor(
         Handle handle, TensorDescriptor yDesc, void* y, void* valuePtr)
-    int cudnnScaleTensor(
+    int miopenScaleTensor(
         Handle handle, TensorDescriptor yDesc, void* y, void* alpha)
 
     # Filter manipulation
@@ -214,14 +214,14 @@ cdef extern from '../../cupy_cudnn.h' nogil:
     int cudnnDestroyFilterDescriptor(FilterDescriptor filterDesc)
 
     # Convolution
-    int cudnnCreateConvolutionDescriptor(ConvolutionDescriptor* convDesc)
+    int miopenCreateConvolutionDescriptor(ConvolutionDescriptor* convDesc)
     int cudnnSetConvolutionMathType(
         ConvolutionDescriptor convDesc, MathType mathType)
     int cudnnGetConvolutionMathType(
         ConvolutionDescriptor convDesc, MathType *mathType)
-    int cudnnSetConvolutionGroupCount(
+    int miopenSetConvolutionGroupCount(
         ConvolutionDescriptor convDesc, int groupCount)
-    int cudnnGetConvolutionGroupCount(
+    int miopenGetConvolutionGroupCount(
         ConvolutionDescriptor convDesc, int *groupCount)
     int cudnnSetConvolution2dDescriptor_v4(
         ConvolutionDescriptor convDesc, int pad_h, int pad_w, int u,
@@ -234,7 +234,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         ConvolutionDescriptor convDesc, int arrayLength, int* padA,
         int* filterStrideA, int* dilationA, ConvolutionMode mode,
         DataType dataType)
-    int cudnnDestroyConvolutionDescriptor(ConvolutionDescriptor conDesc)
+    int miopenDestroyConvolutionDescriptor(ConvolutionDescriptor conDesc)
     int cudnnFindConvolutionForwardAlgorithm(
         Handle handle, TensorDescriptor xDesc, FilterDescriptor wDesc,
         ConvolutionDescriptor convDesc, TensorDescriptor yDesc,
@@ -262,10 +262,10 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         FilterDescriptor filterDesc, ConvolutionDescriptor convDesc,
         TensorDescriptor destDesc, int requestedAlgoCount,
         int* returnedAlgoCount, ConvolutionFwdAlgoPerf_v7* perfResults)
-    int cudnnGetConvolutionForwardWorkspaceSize(
+    int miopenConvolutionForwardGetWorkSpaceSize(
         Handle handle, TensorDescriptor srcDesc,
         FilterDescriptor filterDesc, ConvolutionDescriptor convDesc,
-        TensorDescriptor destDesc, ConvolutionFwdAlgo algo,
+        TensorDescriptor destDesc,
         size_t* sizeInBytes)
     int cudnnConvolutionForward(
         Handle handle, void* alpha, TensorDescriptor srcDesc,
@@ -343,11 +343,11 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         TensorDescriptor dxDesc, void* dx, int requestedAlgoCount,
         int* returnedAlgoCount, ConvolutionBwdDataAlgoPerf_v7* perfResults,
         void* workSpace, size_t workSpaceSizeInBytes)
-    int cudnnGetConvolutionBackwardDataWorkspaceSize(
+    int miopenConvolutionBackwardDataGetWorkSpaceSize(
         Handle handle, FilterDescriptor filterDesc,
         TensorDescriptor diffDesc,
         ConvolutionDescriptor convDesc, TensorDescriptor gradDesc,
-        ConvolutionBwdDataAlgo algo, size_t* sizeInBytes)
+        size_t* sizeInBytes)
     int cudnnConvolutionBackwardData_v3(
         Handle handle, void* alpha,
         FilterDescriptor filterDesc, void* filterData,
@@ -357,7 +357,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         TensorDescriptor gradDesc, void* gradData)
 
     # Pooling
-    int cudnnCreatePoolingDescriptor(PoolingDescriptor* desc)
+    int miopenCreatePoolingDescriptor(PoolingDescriptor* desc)
     int cudnnSetPooling2dDescriptor_v4(
         PoolingDescriptor poolingDesc, PoolingMode mode,
         NanPropagation maxpoolingNanOpt, int windowHeight, int windowWidth,
@@ -367,7 +367,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         PoolingDescriptor poolingDesc, PoolingMode mode,
         NanPropagation maxpoolingNanOpt, int nbDims,
         int* windowDimA, int* paddingA, int* strideA)
-    int cudnnDestroyPoolingDescriptor(PoolingDescriptor poolingDesc)
+    int miopenDestroyPoolingDescriptor(PoolingDescriptor poolingDesc)
     int cudnnPoolingForward(
         Handle handle, PoolingDescriptor poolingDesc, void* alpha,
         TensorDescriptor srcDesc, void* srcData, void* beta,
@@ -380,10 +380,10 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         TensorDescriptor destDiffDesc, void* destDiffData)
 
     # Batch Normalization
-    int cudnnDeriveBNTensorDescriptor(
+    int miopenDeriveBNTensorDescriptor(
         TensorDescriptor derivedBnDesc, TensorDescriptor xDesc,
         BatchNormMode mode)
-    int cudnnBatchNormalizationForwardTraining(
+    int miopenBatchNormalizationForwardTraining(
         Handle handle, BatchNormMode mode,
         void* alpha, void* beta, TensorDescriptor xDesc,
         void* x, TensorDescriptor yDesc, void* y,
@@ -410,7 +410,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         void* dBnScaleResult, void* dBnBiasResult,
         double epsilon, void* savedMean, void* savedInvVariance)
 
-    int cudnnBatchNormalizationForwardTrainingEx(
+    int miopenBatchNormalizationForwardTrainingEx(
         Handle handle,
         BatchNormMode mode, BatchNormOps bnOps,
         void* alpha, void* beta,
@@ -823,14 +823,14 @@ cpdef queryRuntimeError(intptr_t handle, int mode):
 cpdef intptr_t create() except? 0:
     cdef Handle handle
     with nogil:
-        status = cudnnCreate(&handle)
+        status = miopenCreate(&handle)
     check_status(status)
     return <intptr_t>handle
 
 
 cpdef destroy(intptr_t handle):
     with nogil:
-        status = cudnnDestroy(<Handle>handle)
+        status = miopenDestroy(<Handle>handle)
     check_status(status)
 
 
@@ -842,13 +842,13 @@ cpdef setStream(intptr_t handle, size_t stream):
             'calling cuDNN API during stream capture is currently '
             'unsupported')
 
-    status = cudnnSetStream(<Handle>handle, <driver.Stream>stream)
+    status = miopenSetStream(<Handle>handle, <driver.Stream>stream)
     check_status(status)
 
 
 cpdef size_t getStream(intptr_t handle) except? 0:
     cdef driver.Stream stream
-    status = cudnnGetStream(<Handle>handle, &stream)
+    status = miopenGetStream(<Handle>handle, &stream)
     check_status(status)
     return <size_t>stream
 
@@ -863,15 +863,15 @@ cdef _setStream(intptr_t handle):
 
 cpdef size_t createTensorDescriptor() except? 0:
     cdef TensorDescriptor descriptor
-    status = cudnnCreateTensorDescriptor(&descriptor)
+    status = miopenCreateTensorDescriptor(&descriptor)
     check_status(status)
     return <size_t>descriptor
 
 
 cpdef setTensor4dDescriptor(size_t tensorDesc, int format, int dataType,
                             int n, int c, int h, int w):
-    status = cudnnSetTensor4dDescriptor(
-        <TensorDescriptor>tensorDesc, <TensorFormat>format,
+    status = miopenSet4dTensorDescriptor(
+        <TensorDescriptor>tensorDesc,
         <DataType>dataType, n, c, h, w)
     check_status(status)
 
@@ -879,7 +879,7 @@ cpdef setTensor4dDescriptor(size_t tensorDesc, int format, int dataType,
 cpdef setTensor4dDescriptorEx(size_t tensorDesc, int dataType,
                               int n, int c, int h, int w, int nStride,
                               int cStride, int hStride, int wStride):
-    status = cudnnSetTensor4dDescriptorEx(
+    status = miopenSet4dTensorDescriptorEx(
         <TensorDescriptor>tensorDesc, <DataType>dataType, n, c, h, w,
         nStride, cStride, hStride, wStride)
     check_status(status)
@@ -888,7 +888,7 @@ cpdef setTensor4dDescriptorEx(size_t tensorDesc, int dataType,
 cpdef tuple getTensor4dDescriptor(size_t tensorDesc):
     cdef DataType dataType
     cdef int n, c, h, w, nStride, cStride, hStride, wStride
-    status = cudnnGetTensor4dDescriptor(
+    status = miopenGet4dTensorDescriptor(
         <TensorDescriptor>tensorDesc, &dataType,
         &n, &c, &h, &w, &nStride, &cStride, &hStride, &wStride)
     check_status(status)
@@ -904,7 +904,7 @@ cpdef setTensorNdDescriptor(size_t tensorDesc, int dataType, int nbDims,
 
 
 cpdef destroyTensorDescriptor(size_t tensorDesc):
-    status = cudnnDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
+    status = miopenDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
     check_status(status)
 
 
@@ -1116,7 +1116,7 @@ cpdef destroyFilterDescriptor(size_t filterDesc):
 
 cpdef size_t createConvolutionDescriptor() except? 0:
     cdef ConvolutionDescriptor desc
-    status = cudnnCreateConvolutionDescriptor(&desc)
+    status = miopenCreateConvolutionDescriptor(&desc)
     check_status(status)
     return <size_t>desc
 
@@ -1131,11 +1131,12 @@ cpdef size_t getConvolutionMathType(size_t convDesc) except? 0:
     cdef MathType mathType
     status = cudnnGetConvolutionMathType(
         <ConvolutionDescriptor>convDesc, &mathType)
+    check_status(status)
     return <size_t>mathType
 
 
 cpdef setConvolutionGroupCount(size_t convDesc, int groupCount):
-    status = cudnnSetConvolutionGroupCount(
+    status = miopenSetConvolutionGroupCount(
         <ConvolutionDescriptor>convDesc, groupCount)
     check_status(status)
 
@@ -1144,6 +1145,7 @@ cpdef int getConvolutionGroupCount(size_t convDesc) except? -1:
     cdef int groupCount
     status = cudnnGetConvolutionGroupCount(
         <ConvolutionDescriptor>convDesc, &groupCount)
+    check_status(status)
     return groupCount
 
 
@@ -1176,7 +1178,7 @@ cpdef setConvolutionNdDescriptor_v3(
 
 
 cpdef destroyConvolutionDescriptor(size_t convDesc):
-    status = cudnnDestroyConvolutionDescriptor(
+    status = miopenDestroyConvolutionDescriptor(
         <ConvolutionDescriptor>convDesc)
     check_status(status)
 
@@ -1270,10 +1272,10 @@ cpdef Py_ssize_t getConvolutionForwardWorkspaceSize(
         intptr_t handle, size_t srcDesc, size_t filterDesc, size_t convDesc,
         size_t destDesc, int algo) except? -1:
     cdef size_t sizeInBytes
-    status = cudnnGetConvolutionForwardWorkspaceSize(
+    status = miopenConvolutionForwardGetWorkSpaceSize(
         <Handle>handle, <TensorDescriptor>srcDesc,
         <FilterDescriptor>filterDesc, <ConvolutionDescriptor> convDesc,
-        <TensorDescriptor>destDesc, <ConvolutionFwdAlgo>algo, &sizeInBytes)
+        <TensorDescriptor>destDesc, &sizeInBytes)
     check_status(status)
     return <Py_ssize_t>sizeInBytes
 
@@ -1285,21 +1287,13 @@ cpdef convolutionForward(
         size_t destDesc, size_t destData):
     _setStream(handle)
     with nogil:
-	if runtime._is_hip_environment:
-		status = miopenConvolutionForward(<Handle>handle, <void*>alpha,
-				<TensorDescriptor>srcDesc, <void*>srcData,
-				<FilterDescriptor>filterDesc, <void*>filterData,
-				<ConvolutionDescriptor>convDesc, <ConvolutionFwdAlgo>algo,
-				<void*>workSpace, workSpaceSizeInBytes, <void*>beta,
-				<TensorDescriptor>destDesc, <void*>destData)
-        else:
-            status = cudnnConvolutionForward(
-                <Handle>handle, <void*>alpha,
-                <TensorDescriptor>srcDesc, <void*>srcData,
-                <FilterDescriptor>filterDesc, <void*>filterData,
-                <ConvolutionDescriptor>convDesc, <ConvolutionFwdAlgo>algo,
-                <void*>workSpace, workSpaceSizeInBytes, <void*>beta,
-                <TensorDescriptor>destDesc, <void*>destData)
+        status = cudnnConvolutionForward(
+            <Handle>handle, <void*>alpha,
+            <TensorDescriptor>srcDesc, <void*>srcData,
+            <FilterDescriptor>filterDesc, <void*>filterData,
+            <ConvolutionDescriptor>convDesc, <ConvolutionFwdAlgo>algo,
+            <void*>workSpace, workSpaceSizeInBytes, <void*>beta,
+            <TensorDescriptor>destDesc, <void*>destData)
     check_status(status)
 
 
@@ -1521,11 +1515,11 @@ cpdef Py_ssize_t getConvolutionBackwardDataWorkspaceSize(
         intptr_t handle, size_t filterDesc, size_t diffDesc, size_t convDesc,
         size_t gradDesc, int algo) except? -1:
     cdef size_t sizeInBytes
-    status = cudnnGetConvolutionBackwardDataWorkspaceSize(
+    status = miopenConvolutionBackwardDataGetWorkSpaceSize(
         <Handle>handle, <FilterDescriptor>filterDesc,
         <TensorDescriptor>diffDesc,
         <ConvolutionDescriptor>convDesc, <TensorDescriptor>gradDesc,
-        <ConvolutionBwdDataAlgo>algo, &sizeInBytes)
+        &sizeInBytes)
     check_status(status)
     return <Py_ssize_t>sizeInBytes
 
@@ -1552,7 +1546,7 @@ cpdef convolutionBackwardData_v3(
 
 cpdef size_t createPoolingDescriptor() except? 0:
     cdef PoolingDescriptor desc
-    status = cudnnCreatePoolingDescriptor(&desc)
+    status = miopenCreatePoolingDescriptor(&desc)
     check_status(status)
     return <size_t>desc
 
@@ -1579,7 +1573,7 @@ cpdef setPoolingNdDescriptor_v4(
 
 
 cpdef destroyPoolingDescriptor(size_t poolingDesc):
-    status = cudnnDestroyPoolingDescriptor(<PoolingDescriptor>poolingDesc)
+    status = miopenDestroyPoolingDescriptor(<PoolingDescriptor>poolingDesc)
     check_status(status)
 
 
@@ -1618,7 +1612,7 @@ CUDNN_BN_MIN_EPSILON = _CUDNN_BN_MIN_EPSILON
 
 cpdef deriveBNTensorDescriptor(
         size_t derivedBnDesc, size_t xDesc, int mode):
-    status = cudnnDeriveBNTensorDescriptor(
+    status = miopenDeriveBNTensorDescriptor(
         <TensorDescriptor>derivedBnDesc, <TensorDescriptor>xDesc,
         <BatchNormMode> mode)
     check_status(status)
@@ -1634,7 +1628,7 @@ cpdef batchNormalizationForwardTraining(
         double epsilon, size_t resultSaveMean, size_t resultSaveInvVariance):
     _setStream(handle)
     with nogil:
-        status = cudnnBatchNormalizationForwardTraining(
+        status = miopenBatchNormalizationForwardTraining(
             <Handle>handle, <BatchNormMode> mode,
             <void*>alpha, <void*>beta, <TensorDescriptor>xDesc,
             <void*>x, <TensorDescriptor>yDesc, <void*>y,
@@ -1704,7 +1698,7 @@ cpdef batchNormalizationForwardTrainingEx(
         size_t reserveSpace, size_t reserveSpaceSizeInBytes):
     _setStream(handle)
     with nogil:
-        status = cudnnBatchNormalizationForwardTrainingEx(
+        status = miopenBatchNormalizationForwardTrainingEx(
             <Handle>handle, <BatchNormMode> mode, <BatchNormOps> bnOps,
             <void*>alpha, <void*>beta,
             <TensorDescriptor>xDesc, <void*>x,
@@ -2546,3 +2540,4 @@ cpdef fusedOpsExecute(intptr_t handle, size_t plan, size_t varPack):
         status = cudnnFusedOpsExecute(<Handle>handle, <const FusedOpsPlan>plan,
                                       <FusedOpsVariantParamPack>varPack)
     check_status(status)
+
