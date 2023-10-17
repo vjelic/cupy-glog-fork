@@ -6,9 +6,8 @@ cimport cython
 
 
 cdef class SoftLink:
-    def __init__(self, object libname, str prefix, *, bint mandatory=False):
+    def __init__(self, object libname, *, bint mandatory=False):
         self.error = None
-        self.prefix = prefix
         self._cdll = None
         if libname is None:
             # Stub build or CUDA/HIP only library.
@@ -31,7 +30,7 @@ cdef class SoftLink:
         """
         if self._cdll is None:
             return <func_ptr>_fail_unsupported
-        cdef str funcname = f'{self.prefix}{name}'
+        cdef str funcname = f'{name}'
         cdef object func = getattr(self._cdll, funcname, None)
         if func is None:
             return <func_ptr>_fail_not_found
