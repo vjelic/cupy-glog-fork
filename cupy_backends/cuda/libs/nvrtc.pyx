@@ -28,7 +28,7 @@ ELSE:
         cdef inline void initialize():
             pass
     ELSE:
-        IF CUPY_DONT_USE_GEN_HIP_CODE:
+        IF CUPY_CUDA_VERSION!=0:
             include "_cnvrtc.pxi"
         ELSE:
             include "_cnvrtc_hip.pxi"
