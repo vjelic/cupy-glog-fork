@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   static-checks:
-    runs-on: ubuntu-22.04
+    runs-on: rocm
 
     steps:
     - name: Checkout
@@ -104,7 +104,7 @@ jobs:
         python -c 'import cupy, cupyx'
 
   build-rocm:
-    runs-on: ubuntu-22.04
+    runs-on: rocm
 
     steps:
     - name: Checkout
