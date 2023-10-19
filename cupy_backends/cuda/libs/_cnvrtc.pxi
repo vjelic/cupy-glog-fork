@@ -131,11 +131,6 @@ cdef SoftLink _get_softlink():
                 libname = 'nvrtc64_120_0.dll'
     elif CUPY_HIP_VERSION != 0:
         runtime_version = runtime.runtimeGetVersion()
-        if runtime_version < 5_00_00000:
-            # ROCm 4.x
-            libname = 'libamdhip64.so.4'
-        elif runtime_version < 6_00_00000:
-            # ROCm 5.x
-            libname = 'libamdhip64.so.5'
+        libname = 'libamdhip64.so'
 
     return SoftLink(libname, mandatory=True)
