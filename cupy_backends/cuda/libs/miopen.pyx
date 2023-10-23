@@ -392,14 +392,14 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         void* resultRunningMean, void* resultRunningVariance,
         double epsilon, void* resultSaveMean,
         void* resultSaveInvVariance)
-    int cudnnBatchNormalizationForwardInference(
+    int miopenBatchNormalizationForwardInference(
         Handle handle, BatchNormMode mode,
         void* alpha, void* beta, TensorDescriptor xDesc,
         void* x, TensorDescriptor yDesc, void* y,
         TensorDescriptor bnScaleBiasMeanVarDesc, void* bnScale,
         void* bnBias, void* estimatedMean, void* estimatedVariance,
         double epsilon)
-    int cudnnBatchNormalizationBackward(
+    int miopenBatchNormalizationBackward(
         Handle handle, BatchNormMode mode,
         void* alphaDataDiff, void* betaDataDiff,
         void* alphaParamDiff, void* betaParamDiff,
@@ -410,7 +410,7 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         void* dBnScaleResult, void* dBnBiasResult,
         double epsilon, void* savedMean, void* savedInvVariance)
 
-    int miopenBatchNormalizationForwardTrainingEx(
+    int cudnnBatchNormalizationForwardTrainingEx(
         Handle handle,
         BatchNormMode mode, BatchNormOps bnOps,
         void* alpha, void* beta,
@@ -474,19 +474,19 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         size_t* sizeInBytes)
 
     # Activation
-    int cudnnCreateActivationDescriptor(
+    int miopenCreateActivationDescriptor(
         ActivationDescriptor* activationDesc)
     int cudnnSetActivationDescriptor(
         ActivationDescriptor activationDesc, ActivationMode mode,
         NanPropagation reluNanOpt, double reluCeiling)
-    int cudnnDestroyActivationDescriptor(
+    int miopenDestroyActivationDescriptor(
         ActivationDescriptor activationDesc)
-    int cudnnSoftmaxForward(
-        Handle handle, SoftmaxAlgorithm algorithm, SoftmaxMode mode,
+    int miopenSoftmaxForward(
+        Handle handle, 
         void* alpha, TensorDescriptor srcDesc, void* srcData,
         void* beta, TensorDescriptor dstDesc, void* dstData)
-    int cudnnSoftmaxBackward(
-        Handle handle, SoftmaxAlgorithm algorithm, SoftmaxMode mode,
+    int miopenSoftmaxBackward(
+        Handle handle, 
         void* alpha, TensorDescriptor srcDesc, void* srcData,
         TensorDescriptor srcDiffDesc, void* srcDiffData, void* beta,
         TensorDescriptor destDiffDesc, void* destDiffData)
@@ -502,10 +502,10 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         TensorDescriptor destDiffDesc, void* destDiffData)
 
     # Dropout
-    int cudnnCreateDropoutDescriptor(DropoutDescriptor* desc)
-    int cudnnDestroyDropoutDescriptor(DropoutDescriptor dropoutDesc)
-    int cudnnDropoutGetStatesSize(Handle handle, size_t* sizeInBytes)
-    int cudnnDropoutGetReserveSpaceSize(
+    int miopenCreateDropoutDescriptor(DropoutDescriptor* desc)
+    int miopenDestroyDropoutDescriptor(DropoutDescriptor dropoutDesc)
+    int miopenDropoutGetStatesSize(Handle handle, size_t* sizeInBytes)
+    int miopenDropoutGetReserveSpaceSize(
         TensorDescriptor xDesc, size_t* sizeInBytes)
     int cudnnSetDropoutDescriptor(
         DropoutDescriptor dropoutDesc, Handle handle, float dropout,
@@ -521,26 +521,26 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         void* dx, void* reserveSpace, size_t reserveSpaceSizeInBytes)
 
     # CTC
-    int cudnnCreateCTCLossDescriptor(CTCLossDescriptor* ctcLossDesc)
-    int cudnnDestroyCTCLossDescriptor(CTCLossDescriptor ctcLossDesc)
+    int miopenCreateCTCLossDescriptor(CTCLossDescriptor* ctcLossDesc)
+    int miopenDestroyCTCLossDescriptor(CTCLossDescriptor ctcLossDesc)
     int cudnnSetCTCLossDescriptor(
         CTCLossDescriptor ctcLossDesc, DataType dataType)
     int cudnnGetCTCLossDescriptor(
         CTCLossDescriptor ctcLossDesc, DataType* dataType)
-    int cudnnGetCTCLossWorkspaceSize(
+    int miopenGetCTCLossWorkspaceSize(
         Handle handle, TensorDescriptor probsDesc,
         TensorDescriptor gradientsDesc, int* labels,
         int* labelLengths, int* inputLengths, CTCLossAlgo algo,
         CTCLossDescriptor ctcLossDesc, size_t* sizeInBytes)
-    int cudnnCTCLoss(
+    int miopenCTCLoss(
         Handle handle, TensorDescriptor probsDesc,
         void* probs, int* labels, int* labelLengths, int* inputLengths,
         void* costs, TensorDescriptor gradientsDesc, void* gradients,
         CTCLossAlgo algo, CTCLossDescriptor ctcLossDesc,
         void* workspace, size_t workSpaceSizeInBytes)
     # RNN
-    int cudnnCreateRNNDescriptor(RNNDescriptor* rnnDesc)
-    int cudnnDestroyRNNDescriptor(RNNDescriptor rnnDesc)
+    int miopenCreateRNNDescriptor(RNNDescriptor* rnnDesc)
+    int miopenDestroyRNNDescriptor(RNNDescriptor rnnDesc)
     int cudnnCreatePersistentRNNPlan(
         RNNDescriptor rnnDesc,
         const int minibatch, DataType dataType,
@@ -571,13 +571,13 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         RNNDataLayout* layout, int* maxSeqLength, int* batchSize,
         int* vectorSize, int arrayLengthRequested, int seqLengthArray[],
         void* paddingFill)
-    int cudnnGetRNNWorkspaceSize(
+    int miopenGetRNNWorkspaceSize(
         Handle handle, RNNDescriptor rnnDesc, int seqLength,
         TensorDescriptor* xDesc, size_t* sizeInBytes)
-    int cudnnGetRNNTrainingReserveSize(
+    int miopenGetRNNTrainingReserveSize(
         Handle handle, RNNDescriptor rnnDesc, int seqLength,
         TensorDescriptor* xDesc, size_t* sizeInBytes)
-    int cudnnGetRNNParamsSize(
+    int miopenGetRNNParamsSize(
         Handle handle, RNNDescriptor rnnDesc, TensorDescriptor xDesc,
         size_t* sizeInBytes, DataType dataType)
     int cudnnGetRNNLinLayerMatrixParams(
@@ -590,14 +590,14 @@ cdef extern from '../../cupy_cudnn.h' nogil:
         TensorDescriptor xDesc, FilterDescriptor wDesc, void* w,
         int linLayerID, FilterDescriptor linLayerBiasDesc,
         void** linLayerBias)
-    int cudnnRNNForwardInference(
+    int miopenRNNForwardInference(
         Handle handle, RNNDescriptor rnnDesc, int seqLength,
         TensorDescriptor* xDesc,
         void* x, TensorDescriptor hxDesc, void* hx, TensorDescriptor cxDesc,
         void* cx, FilterDescriptor wDesc, void* w, TensorDescriptor* yDesc,
         void* y, TensorDescriptor hyDesc, void* hy, TensorDescriptor cyDesc,
         void* cy, void* workspace, size_t workSpaceSizeInBytes)
-    int cudnnRNNForwardTraining(
+    int miopenRNNForwardTraining(
         Handle handle, RNNDescriptor rnnDesc, int seqLength,
         TensorDescriptor* xDesc, void* x,
         TensorDescriptor hxDesc, void* hx, TensorDescriptor cxDesc, void* cx,
@@ -1648,7 +1648,7 @@ cpdef batchNormalizationForwardInference(
         double epsilon):
     _setStream(handle)
     with nogil:
-        status = cudnnBatchNormalizationForwardInference(
+        status = miopenBatchNormalizationForwardInference(
             <Handle>handle, <BatchNormMode> mode,
             <void*>alpha, <void*>beta, <TensorDescriptor>xDesc,
             <void*>x, <TensorDescriptor>yDesc, <void*>y,
@@ -1669,7 +1669,7 @@ cpdef batchNormalizationBackward(
         double epsilon, size_t savedMean, size_t savedInvVariance):
     _setStream(handle)
     with nogil:
-        status = cudnnBatchNormalizationBackward(
+        status = miopenBatchNormalizationBackward(
             <Handle>handle, <BatchNormMode>mode,
             <void*>alphaDataDiff, <void*>betaDataDiff,
             <void*>alphaParamDiff, <void*>betaParamDiff,
@@ -1698,7 +1698,7 @@ cpdef batchNormalizationForwardTrainingEx(
         size_t reserveSpace, size_t reserveSpaceSizeInBytes):
     _setStream(handle)
     with nogil:
-        status = miopenBatchNormalizationForwardTrainingEx(
+        status = cudnnBatchNormalizationForwardTrainingEx(
             <Handle>handle, <BatchNormMode> mode, <BatchNormOps> bnOps,
             <void*>alpha, <void*>beta,
             <TensorDescriptor>xDesc, <void*>x,
@@ -1824,7 +1824,7 @@ cpdef size_t getBatchNormalizationTrainingExReserveSpaceSize(
 
 cpdef size_t createActivationDescriptor() except? 0:
     cdef ActivationDescriptor activationDesc
-    status = cudnnCreateActivationDescriptor(&activationDesc)
+    status = miopenCreateActivationDescriptor(&activationDesc)
     check_status(status)
     return <size_t>activationDesc
 
@@ -1838,7 +1838,7 @@ cpdef setActivationDescriptor(
 
 
 cpdef destroyActivationDescriptor(size_t activationDesc):
-    status = cudnnDestroyActivationDescriptor(
+    status = miopenDestroyActivationDescriptor(
         <ActivationDescriptor>activationDesc)
     check_status(status)
 
@@ -1848,8 +1848,8 @@ cpdef softmaxForward(
         size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
     _setStream(handle)
     with nogil:
-        status = cudnnSoftmaxForward(
-            <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
+        status = miopenSoftmaxForward(
+            <Handle>handle, 
             <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
             <void*>beta, <TensorDescriptor>dstDesc, <void*>dstData)
     check_status(status)
@@ -1861,8 +1861,8 @@ cpdef softmaxBackward(
         size_t destDiffDesc, size_t destDiffData):
     _setStream(handle)
     with nogil:
-        status = cudnnSoftmaxBackward(
-            <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
+        status = miopenSoftmaxBackward(
+            <Handle>handle, 
             <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
             <TensorDescriptor>srcDiffDesc, <void*>srcDiffData, <void*>beta,
             <TensorDescriptor>destDiffDesc, <void*>destDiffData)
@@ -1903,19 +1903,19 @@ cpdef activationBackward_v4(
 
 cpdef size_t createDropoutDescriptor() except? 0:
     cdef DropoutDescriptor desc
-    status = cudnnCreateDropoutDescriptor(&desc)
+    status = miopenCreateDropoutDescriptor(&desc)
     check_status(status)
     return <size_t>desc
 
 
 cpdef destroyDropoutDescriptor(size_t dropoutDesc):
-    status = cudnnDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
+    status = miopenDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
     check_status(status)
 
 
 cpdef Py_ssize_t dropoutGetStatesSize(intptr_t handle) except? -1:
     cdef size_t sizeInBytes
-    status = cudnnDropoutGetStatesSize(
+    status = miopenDropoutGetStatesSize(
         <Handle>handle, &sizeInBytes)
     check_status(status)
     return <Py_ssize_t>sizeInBytes
@@ -1932,7 +1932,7 @@ cpdef setDropoutDescriptor(
 
 cpdef size_t getDropoutReserveSpaceSize(size_t xDesc) except? 0:
     cdef size_t sizeInBytes
-    status = cudnnDropoutGetReserveSpaceSize(
+    status = miopenDropoutGetReserveSpaceSize(
         <TensorDescriptor>xDesc, &sizeInBytes)
     check_status(status)
     return sizeInBytes
@@ -1973,12 +1973,12 @@ cpdef dropoutBackward(
 ###############################################################################
 cpdef size_t createCTCLossDescriptor() except? 0:
     cdef CTCLossDescriptor desc
-    status = cudnnCreateCTCLossDescriptor(&desc)
+    status = miopenCreateCTCLossDescriptor(&desc)
     check_status(status)
     return <size_t>desc
 
 cpdef destroyCTCLossDescriptor(size_t ctcLossDesc):
-    status = cudnnDestroyCTCLossDescriptor(<CTCLossDescriptor>ctcLossDesc)
+    status = miopenDestroyCTCLossDescriptor(<CTCLossDescriptor>ctcLossDesc)
     check_status(status)
 
 cpdef setCTCLossDescriptor(size_t ctcLossDesc, int dataType):
@@ -1998,7 +1998,7 @@ cpdef size_t getCTCLossWorkspaceSize(
         size_t labels, size_t labelLengths, size_t inputLengths,
         int algo, size_t ctcLossDesc) except? 0:
     cdef size_t sizeInBytes
-    status = cudnnGetCTCLossWorkspaceSize(
+    status = miopenGetCTCLossWorkspaceSize(
         <Handle>handle, <TensorDescriptor>probsDesc,
         <TensorDescriptor>gradientsDesc,
         <int*>labels, <int*>labelLengths, <int*>inputLengths,
@@ -2012,7 +2012,7 @@ cpdef CTCLoss(
         size_t costs, size_t gradientsDesc, size_t gradients,
         int algo, size_t ctcLossDesc,
         size_t workspace, size_t workSpaceSizeInBytes):
-    status = cudnnCTCLoss(
+    status = miopenCTCLoss(
         <Handle>handle, <TensorDescriptor>probsDesc, <void*>probs,
         <int*>labels, <int*>labelLengths, <int*>inputLengths,
         <void*>costs, <TensorDescriptor>gradientsDesc, <void*>gradients,
@@ -2027,13 +2027,13 @@ cpdef CTCLoss(
 
 cpdef size_t createRNNDescriptor() except? 0:
     cdef RNNDescriptor desc
-    status = cudnnCreateRNNDescriptor(&desc)
+    status = miopenCreateRNNDescriptor(&desc)
     check_status(status)
     return <size_t>desc
 
 
 cpdef destroyRNNDescriptor(size_t rnnDesc):
-    status = cudnnDestroyRNNDescriptor(<RNNDescriptor>rnnDesc)
+    status = miopenDestroyRNNDescriptor(<RNNDescriptor>rnnDesc)
     check_status(status)
 
 
@@ -2135,7 +2135,7 @@ cpdef getRNNDataDescriptor(
 cpdef getRNNWorkspaceSize(
         intptr_t handle, size_t rnnDesc, int seqLength, size_t xDesc):
     cdef size_t sizeInBytes
-    status = cudnnGetRNNWorkspaceSize(
+    status = miopenGetRNNWorkspaceSize(
         <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
         <TensorDescriptor*>xDesc, &sizeInBytes)
     check_status(status)
@@ -2145,7 +2145,7 @@ cpdef getRNNWorkspaceSize(
 cpdef getRNNTrainingReserveSize(
         intptr_t handle, size_t rnnDesc, int seqLength, size_t xDesc):
     cdef size_t sizeInBytes
-    status = cudnnGetRNNTrainingReserveSize(
+    status = miopenGetRNNTrainingReserveSize(
         <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
         <TensorDescriptor*>xDesc, &sizeInBytes)
     check_status(status)
@@ -2155,7 +2155,7 @@ cpdef getRNNTrainingReserveSize(
 cpdef getRNNParamsSize(
         intptr_t handle, size_t rnnDesc, size_t xDesc, int dataType):
     cdef size_t sizeInBytes
-    status = cudnnGetRNNParamsSize(
+    status = miopenGetRNNParamsSize(
         <Handle>handle, <RNNDescriptor>rnnDesc, <TensorDescriptor>xDesc,
         &sizeInBytes, <DataType>dataType)
     check_status(status)
@@ -2191,7 +2191,7 @@ cpdef RNNForwardInference(
         size_t cy, size_t workspace, size_t workSpaceSizeInBytes):
     _setStream(handle)
     with nogil:
-        status = cudnnRNNForwardInference(
+        status = miopenRNNForwardInference(
             <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
             <TensorDescriptor*>xDesc, <void*>x,
             <TensorDescriptor>hxDesc, <void*>hx,
@@ -2213,7 +2213,7 @@ cpdef RNNForwardTraining(
         size_t reserveSpaceSizeInBytes):
     _setStream(handle)
     with nogil:
-        status = cudnnRNNForwardTraining(
+        status = miopenRNNForwardTraining(
             <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
             <TensorDescriptor*>xDesc, <void*>x,
             <TensorDescriptor>hxDesc, <void*>hx,
