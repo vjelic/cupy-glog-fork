@@ -35,57 +35,6 @@ ELSE:
         pass
 
 
-###############################################################################
-# Error handling
-###############################################################################
-
-class NVRTCError(RuntimeError):
-
-    def __init__(self, status):
-        initialize()
-        self.status = status
-        cdef bytes msg = nvrtcGetErrorString(<nvrtcResult>status)
-        super(NVRTCError, self).__init__(
-            '{} ({})'.format(msg.decode(), status))
-
-    def __reduce__(self):
-        return (type(self), (self.status,))
-
-
-@cython.profile(False)
-cpdef inline check_status(int status):
-    if status != 0:
-        raise NVRTCError(status)
-
-
-cpdef tuple getVersion():
-    initialize()
-    cdef int major, minor
-    with nogil:
-        status = nvrtcVersion(&major, &minor)
-    check_status(status)
-    return major, minor
-
-
-cpdef tuple getSupportedArchs():
-    initialize()
-    cdef int status, num_archs
-    cdef vector.vector[int] archs
-    if runtime._is_hip_environment:
-        raise RuntimeError("HIP does not support getSupportedArchs")
-    if runtime.runtimeGetVersion() < 11020:
-        raise RuntimeError("getSupportedArchs is supported since CUDA 11.2")
-    with nogil:
-        status = nvrtcGetNumSupportedArchs(&num_archs)
-        if status == 0:
-            archs.resize(num_archs)
-            status = nvrtcGetSupportedArchs(archs.data())
-    check_status(status)
-    return tuple(archs)
-
->>>>>>> rocm6.1_internal_testing
-
-
     ###############################################################################
     # Error handling
     ###############################################################################
@@ -93,6 +42,7 @@ cpdef tuple getSupportedArchs():
     class NVRTCError(RuntimeError):
 
         def __init__(self, status):
+            initialize()
             self.status = status
             cdef bytes msg = nvrtcGetErrorString(<nvrtcResult>status)
             super(NVRTCError, self).__init__(
