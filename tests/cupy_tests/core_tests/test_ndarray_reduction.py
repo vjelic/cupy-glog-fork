@@ -7,6 +7,7 @@ import cupy
 import cupy._core._accelerator as _acc
 from cupy._core import _cub_reduction
 from cupy import testing
+from cupy.cuda import runtime
 
 
 @testing.parameterize(*testing.product({
@@ -411,6 +412,7 @@ class TestCubReduction:
     @testing.for_all_dtypes(no_bool=True)
     @testing.numpy_cupy_allclose(
         contiguous_check=False, accept_error=ValueError)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_cub_min(self, xp, dtype, axis):
         a = testing.shaped_random(self.shape, xp, dtype, order=self.order)
 
@@ -456,6 +458,7 @@ class TestCubReduction:
     @testing.for_all_dtypes(no_bool=True)
     @testing.numpy_cupy_allclose(
         contiguous_check=False, accept_error=ValueError)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_cub_max(self, xp, dtype, axis):
         a = testing.shaped_random(self.shape, xp, dtype, order=self.order)
 

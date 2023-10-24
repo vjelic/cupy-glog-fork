@@ -91,16 +91,10 @@ cupy_package_data = [
     'cupyx/scipy/ndimage/cuda/LICENSE',
     'cupyx/scipy/ndimage/cuda/pba_kernels_2d.h',
     'cupyx/scipy/ndimage/cuda/pba_kernels_3d.h',
+] + [
+    x for x in glob.glob('cupy/_core/include/cupy/**', recursive=True)
+    if os.path.isfile(x)
 ]
-cupy_package_include = list(set(
-    [x for x in glob.iglob('cupy/_core/include/cupy/**', recursive=True)
-     if os.path.isfile(x)
-     ]) - set(
-    [x for x in glob.iglob(
-     'cupy/_core/include/cupy/cccl/libcudacxx/**/test/**', recursive=True)
-     if os.path.isfile(x)
-     ]))
-cupy_package_data += cupy_package_include
 
 package_data = {
     'cupy': [
@@ -139,6 +133,7 @@ Programming Language :: Python :: 3
 Programming Language :: Python :: 3.9
 Programming Language :: Python :: 3.10
 Programming Language :: Python :: 3.11
+Programming Language :: Python :: 3.12
 Programming Language :: Python :: 3 :: Only
 Programming Language :: Cython
 Topic :: Software Development

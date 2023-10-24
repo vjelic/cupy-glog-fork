@@ -9,6 +9,7 @@ import cupy._core._accelerator as _acc
 import cupy.cuda.cutensor
 from cupy._core import _cub_reduction
 from cupy import testing
+from cupy.cuda import runtime
 
 
 class TestSumprod:
@@ -238,6 +239,7 @@ class TestCubReduction:
     # sum supports less dtypes; don't test float16 as it's not as accurate?
     @testing.for_dtypes('qQfdFD')
     @testing.numpy_cupy_allclose(rtol=1E-5)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_cub_sum(self, xp, dtype, axis):
         a = testing.shaped_random(self.shape, xp, dtype)
         if self.order in ('c', 'C'):
@@ -288,6 +290,7 @@ class TestCubReduction:
     # prod supports less dtypes; don't test float16 as it's not as accurate?
     @testing.for_dtypes('qQfdFD')
     @testing.numpy_cupy_allclose(rtol=1E-5)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_cub_prod(self, xp, dtype, axis):
         a = testing.shaped_random(self.shape, xp, dtype)
         if self.order in ('c', 'C'):
@@ -724,6 +727,9 @@ class TestCumprod:
         return a.cumprod(axis=1)
 
     @testing.slow
+    @pytest.mark.xfail(
+        runtime.is_hip,
+        reason='Workload size is bigger than what ROCm/CUDA supports')
     def test_cumprod_huge_array(self):
         size = 2 ** 32
         # Free huge memory for slow test

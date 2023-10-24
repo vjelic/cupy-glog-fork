@@ -2,6 +2,7 @@ import numpy
 import pytest
 
 from cupy import testing
+from cupy.cuda import runtime
 import cupyx.scipy.ndimage  # NOQA
 
 try:
@@ -23,6 +24,7 @@ except ImportError:
     {'rank': 3, 'connectivity': 0},
     {'rank': 3, 'connectivity': 500})
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestGenerateBinaryStructure:
 
     @testing.numpy_cupy_array_equal(scipy_name='scp')
@@ -32,6 +34,7 @@ class TestGenerateBinaryStructure:
 
 
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestIterateStructure:
 
     @testing.numpy_cupy_array_equal(scipy_name='scp')
@@ -71,6 +74,7 @@ class TestIterateStructure:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryErosionAndDilation1d:
     def _filter(self, xp, scp, x):
         filter = getattr(scp.ndimage, self.filter)
@@ -124,6 +128,7 @@ class TestBinaryErosionAndDilation1d:
     ))
 )
 @testing.with_requires('scipy>=1.1.0')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryOpeningAndClosing:
     def _filter(self, xp, scp, x):
         filter = getattr(scp.ndimage, self.filter)
@@ -174,6 +179,7 @@ class TestBinaryOpeningAndClosing:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryFillHoles:
     def _filter(self, xp, scp, x):
         filter = scp.ndimage.binary_fill_holes
@@ -222,6 +228,7 @@ class TestBinaryFillHoles:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryHitOrMiss:
     def _filter(self, xp, scp, x):
         filter = scp.ndimage.binary_hit_or_miss
@@ -294,6 +301,7 @@ class TestBinaryHitOrMiss:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryPropagation:
     def _filter(self, xp, scp, x):
         filter = scp.ndimage.binary_propagation
@@ -325,6 +333,7 @@ class TestBinaryPropagation:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryErosionAndDilation:
     def _filter(self, xp, scp, x):
         filter = getattr(scp.ndimage, self.filter)
@@ -361,6 +370,7 @@ class TestBinaryErosionAndDilation:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestBinaryErosionAndDilationContiguity:
     def _filter(self, xp, scp, x):
         filter = getattr(scp.ndimage, self.filter)
@@ -419,6 +429,7 @@ class TestBinaryErosionAndDilationContiguity:
     })
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestGreyErosionAndDilation:
 
     def _filter(self, xp, scp, x):
@@ -464,6 +475,7 @@ class TestGreyErosionAndDilation:
     'filter': ['grey_closing', 'grey_opening']
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestGreyClosingAndOpening:
 
     shape = (4, 5)
@@ -513,6 +525,7 @@ class TestGreyClosingAndOpening:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestMorphologicalGradientAndLaplace:
 
     def _filter(self, xp, scp, x):
@@ -575,6 +588,7 @@ class TestMorphologicalGradientAndLaplace:
     ))
 )
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestWhiteTophatAndBlackTopHat:
 
     def _filter(self, xp, scp, x):

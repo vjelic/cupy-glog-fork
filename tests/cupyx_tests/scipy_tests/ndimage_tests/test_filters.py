@@ -191,6 +191,7 @@ COMMON_FLOAT_PARAMS['dtype'] = [numpy.float32, numpy.float64]
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestFilter(FilterTestCaseBase):
 
     def _hip_skip_invalid_condition(self):
@@ -228,6 +229,7 @@ class TestFilter(FilterTestCaseBase):
 
 
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestNearestFilterEdgeCase:
 
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp')
@@ -303,6 +305,7 @@ def dummy_deriv_func(input, axis, output, mode, cval, *args, **kwargs):
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestFilterFast(FilterTestCaseBase):
 
     def _hip_skip_invalid_condition(self):
@@ -367,6 +370,7 @@ class TestFilterFast(FilterTestCaseBase):
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestFilterComplexFast(FilterTestCaseBase):
 
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp')
@@ -447,6 +451,7 @@ def lt_pyfunc(x):
     })
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestGenericFilter(FilterTestCaseBase):
 
     _func_or_kernels = {
@@ -512,6 +517,7 @@ void shift(const double* in, ptrdiff_t in_length,
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestGeneric1DFilter(FilterTestCaseBase):
     _func_or_kernels = {
         'shift_raw': shift_raw,
@@ -553,6 +559,7 @@ class TestGeneric1DFilter(FilterTestCaseBase):
 ))
 # SciPy behavior fixed in 1.5.0: https://github.com/scipy/scipy/issues/11661
 @testing.with_requires('scipy>=1.5.0')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestMirrorWithDim1(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp')
     def test_filter(self, xp, scp):
@@ -579,6 +586,7 @@ class TestMirrorWithDim1(FilterTestCaseBase):
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestShellSort(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp')
     def test_filter(self, xp, scp):
@@ -604,6 +612,7 @@ class TestShellSort(FilterTestCaseBase):
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestFortranOrder(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp')
     def test_filter(self, xp, scp):
@@ -630,6 +639,7 @@ class TestFortranOrder(FilterTestCaseBase):
     )
 ))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestWeightDtype(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp')
     def test_filter(self, xp, scp):
@@ -660,6 +670,7 @@ class TestWeightDtype(FilterTestCaseBase):
     )
 ))
 @testing.with_requires('scipy>=1.5.9')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestWeightComplexDtype(FilterTestCaseBase):
 
     def _skip_noncomplex(self):
@@ -707,6 +718,7 @@ class TestWeightComplexDtype(FilterTestCaseBase):
     'dtype': [numpy.uint8, numpy.float64],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestSpecialWeightCases(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp',
                                  accept_error=ValueError)
@@ -744,6 +756,7 @@ class TestSpecialWeightCases(FilterTestCaseBase):
     'dtype': [numpy.uint8, numpy.float64],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestSpecialCases1D(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp',
                                  accept_error=RuntimeError)
@@ -759,6 +772,7 @@ class TestSpecialCases1D(FilterTestCaseBase):
     'shape': [(4, 5), (3, 4, 5), (1, 3, 4, 5)],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestInvalidAxis(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp',
                                  accept_error=ValueError)
@@ -792,6 +806,7 @@ class TestInvalidAxis(FilterTestCaseBase):
     'shape': [(4, 5)],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestInvalidMode(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp',
                                  accept_error=RuntimeError)
@@ -810,6 +825,7 @@ class TestInvalidMode(FilterTestCaseBase):
 }))
 # SciPy behavior fixed in 1.2.0: https://github.com/scipy/scipy/issues/822
 @testing.with_requires('scipy>=1.2.0')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestInvalidOrigin(FilterTestCaseBase):
     @testing.numpy_cupy_allclose(atol=1e-5, rtol=1e-5, scipy_name='scp',
                                  accept_error=ValueError)

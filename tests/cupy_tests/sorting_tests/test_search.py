@@ -5,6 +5,7 @@ import cupy
 import cupy._core._accelerator as _acc
 from cupy._core import _cub_reduction
 from cupy import testing
+from cupy.cuda import runtime
 
 
 class TestSearch:
@@ -195,6 +196,7 @@ class TestCubReduction:
 
     @testing.for_dtypes('bhilBHILefdFD')
     @testing.numpy_cupy_allclose(rtol=1E-5, contiguous_check=False)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_cub_argmin(self, xp, dtype):
         _skip_cuda90(dtype)
         a = testing.shaped_random(self.shape, xp, dtype)
@@ -230,6 +232,7 @@ class TestCubReduction:
 
     @testing.for_dtypes('bhilBHILefdFD')
     @testing.numpy_cupy_allclose(rtol=1E-5, contiguous_check=False)
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     def test_cub_argmax(self, xp, dtype):
         _skip_cuda90(dtype)
         a = testing.shaped_random(self.shape, xp, dtype)

@@ -477,7 +477,7 @@ struct _argsort {
                       #else
                       thrust::make_counting_iterator<size_t>(0),
                       thrust::make_counting_iterator<size_t>(size),
-                      thrust::make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
+		      thrust::make_constant_iterator<ptrdiff_t>(shape[ndim-1]),
                       #endif
                       dp_keys_first,
                       thrust::divides<size_t>());

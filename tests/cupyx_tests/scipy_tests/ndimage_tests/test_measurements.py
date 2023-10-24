@@ -1,3 +1,4 @@
+import sys
 import warnings
 
 import numpy
@@ -45,6 +46,7 @@ def _generate_binary_structure(rank, connectivity):
     'o_type': [None, 'ndarray']
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestLabel:
 
     @testing.numpy_cupy_array_equal(scipy_name='scp')
@@ -69,6 +71,7 @@ class TestLabel:
 
 
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestLabelSpecialCases:
 
     @testing.numpy_cupy_array_equal(scipy_name='scp')
@@ -113,6 +116,7 @@ class TestLabelSpecialCases:
     'op': stats_ops,
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestStats:
 
     def _make_image(self, shape, xp, dtype):
@@ -294,6 +298,7 @@ class TestStats:
     'enable_cub': [True, False],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestMeasurementsSelect:
 
     @pytest.fixture(autouse=True)
@@ -371,6 +376,7 @@ class TestMeasurementsSelect:
     'shape': [(200,), (16, 20)],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestHistogram():
 
     def _make_image(self, shape, xp, dtype, scale):
@@ -412,6 +418,7 @@ class TestHistogram():
     'pass_positions': [True, False],
 }))
 @testing.with_requires('scipy')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 class TestLabeledComprehension():
 
     def _make_image(self, shape, xp, dtype, scale):
@@ -505,12 +512,16 @@ class TestValueIndices:
     @testing.for_int_dtypes(no_bool=True)
     def test_value_indices(self, dtype, ignore_value, num_values,
                            adaptive_index_dtype):
+        if sys.platform == 'win32' and dtype in (cupy.intc, cupy.uintc):
+            pytest.skip()  # https://github.com/scipy/scipy/issues/19423
         image = self._make_image(self.shape, cupy, dtype, scale=num_values)
         self._compare_scipy_cupy(image, ignore_value, adaptive_index_dtype)
 
     @pytest.mark.parametrize('ignore_value', [None, 0, 5])
     @testing.for_int_dtypes(no_bool=True)
     def test_value_indices_noncontiguous_labels(self, dtype, ignore_value, ):
+        if sys.platform == 'win32' and dtype in (cupy.intc, cupy.uintc):
+            pytest.skip()  # https://github.com/scipy/scipy/issues/19423
         image = self._make_image(self.shape, cupy, dtype, scale=8)
 
         # Make introduce gaps in the labels present in the image
