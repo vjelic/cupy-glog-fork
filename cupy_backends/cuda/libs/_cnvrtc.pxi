@@ -76,43 +76,44 @@ cdef void _initialize() except *:
     _L = _get_softlink()
 
     global nvrtcGetErrorString
-    nvrtcGetErrorString = <F_nvrtcGetErrorString>_L.get('nvrtcGetErrorString')
+    nvrtcGetErrorString = <F_nvrtcGetErrorString>_L.get('GetErrorString')
     global nvrtcVersion
-    nvrtcVersion = <F_nvrtcVersion>_L.get('nvrtcVersion')
+    nvrtcVersion = <F_nvrtcVersion>_L.get('Version')
     global nvrtcCreateProgram
-    nvrtcCreateProgram = <F_nvrtcCreateProgram>_L.get('nvrtcCreateProgram')
+    nvrtcCreateProgram = <F_nvrtcCreateProgram>_L.get('CreateProgram')
     global nvrtcDestroyProgram
-    nvrtcDestroyProgram = <F_nvrtcDestroyProgram>_L.get('nvrtcDestroyProgram')
+    nvrtcDestroyProgram = <F_nvrtcDestroyProgram>_L.get('DestroyProgram')
     global nvrtcCompileProgram
-    nvrtcCompileProgram = <F_nvrtcCompileProgram>_L.get('nvrtcCompileProgram')
+    nvrtcCompileProgram = <F_nvrtcCompileProgram>_L.get('CompileProgram')
     global nvrtcGetPTXSize
-    nvrtcGetPTXSize = <F_nvrtcGetPTXSize>_L.get('nvrtcGetPTXSize')  # NOQA
+    nvrtcGetPTXSize = <F_nvrtcGetPTXSize>_L.get('GetPTXSize' if _L.prefix == 'nvrtc' else 'GetCodeSize')  # NOQA
     global nvrtcGetPTX
-    nvrtcGetPTX = <F_nvrtcGetPTX>_L.get('nvrtcGetPTX')  # NOQA
+    nvrtcGetPTX = <F_nvrtcGetPTX>_L.get('GetPTX' if _L.prefix == 'nvrtc' else 'GetCode')  # NOQA
     global nvrtcGetCUBINSize
-    nvrtcGetCUBINSize = <F_nvrtcGetCUBINSize>_L.get('nvrtcGetCUBINSize')
+    nvrtcGetCUBINSize = <F_nvrtcGetCUBINSize>_L.get('GetCUBINSize')
     global nvrtcGetCUBIN
-    nvrtcGetCUBIN = <F_nvrtcGetCUBIN>_L.get('nvrtcGetCUBIN')
+    nvrtcGetCUBIN = <F_nvrtcGetCUBIN>_L.get('GetCUBIN')
     global nvrtcGetProgramLogSize
-    nvrtcGetProgramLogSize = <F_nvrtcGetProgramLogSize>_L.get('nvrtcGetProgramLogSize')  # NOQA
+    nvrtcGetProgramLogSize = <F_nvrtcGetProgramLogSize>_L.get('GetProgramLogSize')  # NOQA
     global nvrtcGetProgramLog
-    nvrtcGetProgramLog = <F_nvrtcGetProgramLog>_L.get('nvrtcGetProgramLog')
+    nvrtcGetProgramLog = <F_nvrtcGetProgramLog>_L.get('GetProgramLog')
     global nvrtcAddNameExpression
-    nvrtcAddNameExpression = <F_nvrtcAddNameExpression>_L.get('nvrtcAddNameExpression')  # NOQA
+    nvrtcAddNameExpression = <F_nvrtcAddNameExpression>_L.get('AddNameExpression')  # NOQA
     global nvrtcGetLoweredName
-    nvrtcGetLoweredName = <F_nvrtcGetLoweredName>_L.get('nvrtcGetLoweredName')
+    nvrtcGetLoweredName = <F_nvrtcGetLoweredName>_L.get('GetLoweredName')
     global nvrtcGetNumSupportedArchs
-    nvrtcGetNumSupportedArchs = <F_nvrtcGetNumSupportedArchs>_L.get('nvrtcGetNumSupportedArchs')  # NOQA
+    nvrtcGetNumSupportedArchs = <F_nvrtcGetNumSupportedArchs>_L.get('GetNumSupportedArchs')  # NOQA
     global nvrtcGetSupportedArchs
-    nvrtcGetSupportedArchs = <F_nvrtcGetSupportedArchs>_L.get('nvrtcGetSupportedArchs')  # NOQA
+    nvrtcGetSupportedArchs = <F_nvrtcGetSupportedArchs>_L.get('GetSupportedArchs')  # NOQA
     global nvrtcGetNVVMSize
-    nvrtcGetNVVMSize = <F_nvrtcGetNVVMSize>_L.get('nvrtcGetNVVMSize')
+    nvrtcGetNVVMSize = <F_nvrtcGetNVVMSize>_L.get('GetNVVMSize')
     global nvrtcGetNVVM
-    nvrtcGetNVVM = <F_nvrtcGetNVVM>_L.get('nvrtcGetNVVM')
+    nvrtcGetNVVM = <F_nvrtcGetNVVM>_L.get('GetNVVM')
 
 
 cdef SoftLink _get_softlink():
     cdef int runtime_version
+    cdef str prefix = 'nvrtc'
     cdef object libname = None
 
     if CUPY_CUDA_VERSION != 0:
@@ -133,4 +134,4 @@ cdef SoftLink _get_softlink():
         runtime_version = runtime.runtimeGetVersion()
         libname = 'libamdhip64.so'
 
-    return SoftLink(libname, mandatory=True)
+    return SoftLink(libname, prefix, mandatory=True)
