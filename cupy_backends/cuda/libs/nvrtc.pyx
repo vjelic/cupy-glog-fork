@@ -28,10 +28,10 @@ ELSE:
         cdef inline void initialize():
             pass
     ELSE:
-        IF CUPY_CUDA_VERSION!=0:
-            include "_cnvrtc.pxi"
-        ELSE:
+        IF CUPY_HIP_VERSION!=0:
             include "_cnvrtc_hip.pxi"
+        ELSE:
+            include "_cnvrtc.pxi"
         pass
 
 
