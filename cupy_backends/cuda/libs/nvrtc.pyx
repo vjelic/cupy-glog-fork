@@ -22,16 +22,17 @@ from cupy_backends.cuda.api cimport runtime
 ###############################################################################
 IF CUPY_USE_GEN_HIP_CODE:
     from cupy_backends.cuda.libs.nvrtc_hip import *
-ELIF CUPY_USE_CUDA_PYTHON:
-    from cuda.cnvrtc cimport *
-    cdef inline void initialize():
+ELSE:
+    IF CUPY_USE_CUDA_PYTHON:
+        from cuda.cnvrtc cimport *
+        cdef inline void initialize():
+            pass
+    ELSE:
+        IF CUPY_HIP_VERSION!=0:
+            include "_cnvrtc_hip.pxi"
+        ELSE:
+            include "_cnvrtc.pxi"
         pass
-
-#if CUPY_CUDA_VERSION != 0
-   #include "_cnvrtc.pxi"
-#else
-   #include "_cnvrtc_hip.pxi"
-#endif
 
 
     ###############################################################################

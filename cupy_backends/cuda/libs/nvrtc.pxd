@@ -11,7 +11,7 @@ IF CUPY_USE_CUDA_PYTHON:
     # TODO(kmaehashi): Remove these aliases.
     ctypedef nvrtcProgram Program
 
-IF CUPY_HIP_VERSION != 0:
+IF CUPY_HIP_VERSION == 0:
     cpdef check_status(int status)
 
     cpdef tuple getVersion()
