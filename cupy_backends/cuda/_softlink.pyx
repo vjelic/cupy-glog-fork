@@ -40,7 +40,7 @@ cdef class SoftLink:
         if self._cdll is None:
             return <func_ptr>_fail_unsupported
         cudafuncname = f'{self.prefix}{name}'
-        IF CUPY_HIP_VERSION!=0:
+        IF CUPY_HIP_VERSION != 0:
             hipfuncname = get_hipfuncname(cudafuncname)
             cdef str funcname = f'{hipfuncname}'
         ELSE:

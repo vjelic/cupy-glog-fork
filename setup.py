@@ -17,9 +17,8 @@ cupy_builder.initialize(ctx)
 if not cupy_builder.preflight_check(ctx):
     sys.exit(1)
 
-# hipify cupy
-if True:
-#if get_rocm_version() > 0:
+# Note: Used for generating HIP equivalent .pyx .pxd .pxi files. Necessary for CUDA/Stub builds. 
+if get_rocm_version() > 0 or ctx.use_stub :
     # run hipify.
     from hipify_torch import hipify_python
     proj_dir = os.path.join(source_root, "cupy_backends", "cuda")
