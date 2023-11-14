@@ -18,7 +18,8 @@ if not cupy_builder.preflight_check(ctx):
     sys.exit(1)
 
 # hipify cupy
-if get_rocm_version() > 0:
+if True:
+#if get_rocm_version() > 0:
     # run hipify.
     from hipify_torch import hipify_python
     proj_dir = os.path.join(source_root, "cupy_backends", "cuda")
