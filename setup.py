@@ -17,8 +17,9 @@ cupy_builder.initialize(ctx)
 if not cupy_builder.preflight_check(ctx):
     sys.exit(1)
 
-# hipify cupy
-if get_rocm_version() > 0:
+# Used for generating HIP equivalent files.
+# Necessary for CUDA/Stub builds.
+if get_rocm_version() > 0 or ctx.use_stub:
     # run hipify.
     from hipify_torch import hipify_python
     proj_dir = os.path.join(source_root, "cupy_backends", "cuda")
@@ -29,7 +30,7 @@ if get_rocm_version() > 0:
             project_directory=proj_dir,
             output_directory=proj_dir,
             includes=['*'],
-            extra_extensions=(".pyx", ".pxd",".pxi"),
+            extra_extensions=(".pyx", ".pxd", ".pxi"),
             show_detailed=True,
             header_include_dirs=[],
             custom_map_list="install/amd_build/rocm_custom_mapping.json",
