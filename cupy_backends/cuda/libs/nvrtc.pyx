@@ -26,7 +26,7 @@ IF CUPY_USE_CUDA_PYTHON:
     cdef inline void initialize():
         pass
 ELIF CUPY_USE_GEN_HIP_CODE:
-      from cupy_backends.cuda.libs.nvrtc_hip import *
+    from cupy_backends.cuda.libs.nvrtc_hip import *
 ELSE:
     IF CUPY_HIP_VERSION != 0:
         include "_cnvrtc_hip.pxi"
@@ -38,6 +38,7 @@ ELSE:
 ###############################################################################
 # Error handling
 ###############################################################################
+
 
     class NVRTCError(RuntimeError):
 
