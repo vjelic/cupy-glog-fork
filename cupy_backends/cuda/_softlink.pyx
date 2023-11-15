@@ -4,6 +4,7 @@ import warnings
 from libc.stdint cimport intptr_t
 cimport cython
 
+
 def get_hipfuncname(cudafuncname):
     import hipify_torch
     from hipify_torch import cuda_to_hip_mappings
@@ -12,6 +13,7 @@ def get_hipfuncname(cudafuncname):
         if cudafuncname in cuda_to_hip_map:
             return cuda_to_hip_map[cudafuncname][0]
     return cudafuncname
+
 
 cdef class SoftLink:
     def __init__(self, object libname, str prefix, *, bint mandatory=False):
