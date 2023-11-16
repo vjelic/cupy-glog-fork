@@ -5,6 +5,16 @@ from libc.stdint cimport intptr_t
 cimport cython
 
 
+def get_hipfuncname(cudafuncname):
+    import hipify_torch
+    from hipify_torch import cuda_to_hip_mappings
+    cuda_to_hip_map_list = cuda_to_hip_mappings.CUDA_TO_HIP_MAPPINGS
+    for cuda_to_hip_map in cuda_to_hip_map_list:
+        if cudafuncname in cuda_to_hip_map:
+            return cuda_to_hip_map[cudafuncname][0]
+    return cudafuncname
+
+
 cdef class SoftLink:
     def __init__(self, object libname, str prefix, *, bint mandatory=False):
         self.error = None
@@ -31,7 +41,12 @@ cdef class SoftLink:
         """
         if self._cdll is None:
             return <func_ptr>_fail_unsupported
-        cdef str funcname = f'{self.prefix}{name}'
+        cudafuncname = f'{self.prefix}{name}'
+        IF CUPY_HIP_VERSION != 0:
+            hipfuncname = get_hipfuncname(cudafuncname)
+            cdef str funcname = f'{hipfuncname}'
+        ELSE:
+            cdef str funcname = f'{cudafuncname}'
         cdef object func = getattr(self._cdll, funcname, None)
         if func is None:
             return <func_ptr>_fail_not_found
