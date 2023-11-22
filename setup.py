@@ -51,7 +51,7 @@ if get_rocm_version() > 0 or ctx.use_stub:
         hipify_python.hipify(
             project_directory=proj_dir_third_party,
             output_directory=proj_dir_third_party,
-            includes=['*'],
+            includes=includes_third_party,
             extra_extensions=(".pyx", ".pxd", ".pxi"),
             show_detailed=True,
             header_include_dirs=[],
