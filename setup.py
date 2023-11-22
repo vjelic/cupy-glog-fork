@@ -37,7 +37,28 @@ if get_rocm_version() > 0 or ctx.use_stub:
             is_pytorch_extension=True,
             clean_ctx=clean_ctx,
         )
-
+        proj_dir_third_party = os.path.join(source_root, "third_party", "cccl", "cub", "cub", "detail")
+        includes_third_party = [ "cub/cub/detail/*", 
+            "cub/cub/*",
+            "thrust/thrust/system/cuda/*",
+            "thrust/thrust/system/cuda/detail/*", 
+            "cub/cub/device/dispatch/*",
+            "thrust/thrust/system/cuda/detail/core/*",
+        ]
+        includes_third_party = [os.path.join(source_root, "third_party", "cccl", include) for include in includes_third_party]
+    with hipify_python.GeneratedFileCleaner(keep_intermediates=True) as \
+            clean_ctx:
+        hipify_python.hipify(
+            project_directory=proj_dir_third_party,
+            output_directory=proj_dir_third_party,
+            includes=['*'],
+            extra_extensions=(".pyx", ".pxd", ".pxi"),
+            show_detailed=True,
+            header_include_dirs=[],
+            custom_map_list="install/amd_build/rocm_custom_mapping.json",
+            is_pytorch_extension=True,
+            clean_ctx=clean_ctx,
+        )
 # TODO(kmaehashi): migrate to pyproject.toml (see #4727, #4619)
 setup_requires = [
     'Cython>=0.29.22,<3',
