@@ -3,8 +3,7 @@
 set -uex
 
 apt-get -y update
-DEBIAN_FRONTEND=noninteractive apt-get -y install python3.9-dev python3-pip
-apt install git -y
+DEBIAN_FRONTEND=noninteractive apt-get -y install python3.9-dev python3-pip git
 
 hipconfig
 

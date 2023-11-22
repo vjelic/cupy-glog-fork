@@ -7,12 +7,19 @@ import warnings as _warnings
 import numpy as _numpy
 
 from cupy_backends.cuda.api cimport runtime
-from cupy_backends.cuda.libs cimport cusolver
-# due to a Cython bug (cython/cython#4000) we cannot just cimport the module
-from cupy_backends.cuda.libs.cusolver cimport (  # noqa
-    sgesvd_bufferSize, dgesvd_bufferSize, cgesvd_bufferSize, zgesvd_bufferSize,
-    sgeqrf_bufferSize, dgeqrf_bufferSize, cgeqrf_bufferSize, zgeqrf_bufferSize,
-    sorgqr_bufferSize, dorgqr_bufferSize, cungqr_bufferSize, zungqr_bufferSize)
+IF CUPY_HIP_VERSION != 0:
+    from cupy_backends.cuda.libs import cusolver_hip as cusolver
+    from cupy_backends.cuda.libs.cusolver import *
+ELSE:
+    from cupy_backends.cuda.libs cimport cusolver
+    # due to a Cython bug (cython/cython#4000) we cannot just
+    # cimport the module
+    from cupy_backends.cuda.libs.cusolver cimport (  # noqa
+        sgesvd_bufferSize, dgesvd_bufferSize, cgesvd_bufferSize,
+        zgesvd_bufferSize, sgeqrf_bufferSize, dgeqrf_bufferSize,
+        cgeqrf_bufferSize, zgeqrf_bufferSize, sorgqr_bufferSize,
+        dorgqr_bufferSize, cungqr_bufferSize, zungqr_bufferSize)
+
 
 from cupy.cuda cimport memory
 from cupy._core.core cimport _internal_ascontiguousarray
@@ -232,11 +239,7 @@ cpdef _gesvdj_batched(a, full_matrices, compute_uv, overwrite_a):
     handle = _device.get_cusolver_handle()
     batch_size, m, n = a.shape
     a = _cupy.array(a.swapaxes(-2, -1), order='C', copy=not overwrite_a)
-    if runtime._is_hip_environment:
-        # rocsolver_<t>gesvd_batched has a different signature...
-        ap = _linalg._mat_ptrs(a)
-    else:
-        ap = a
+    ap = a
     lda = m
     mn = min(m, n)
     s = _cupy.empty((batch_size, mn), dtype=s_dtype)
@@ -262,8 +265,6 @@ cpdef _gesvdj_batched(a, full_matrices, compute_uv, overwrite_a):
         gesvdj, info)
 
     _cusolver.destroyGesvdjInfo(params)
-    if runtime._is_hip_environment:
-        v = v.swapaxes(-1, -2).conj()
     if not full_matrices:
         u = u[..., :mn]
         v = v[..., :mn]
@@ -571,11 +572,7 @@ def _syevj_batched(a, UPLO, with_eigen_vector):
     a = a.reshape(batch_size, m, lda)
     v = _cupy.array(
         a.swapaxes(-2, -1), order='C', copy=True, dtype=dtype)
-    if runtime._is_hip_environment:
-        # the batched syev/heev has a different signature...
-        vp = _linalg._mat_ptrs(v)
-    else:
-        vp = v
+    vp = v
 
     w = _cupy.empty((batch_size, m), real_dtype).swapaxes(-2, -1)
     dev_info = _cupy.empty((batch_size,), _cupy.int32)
