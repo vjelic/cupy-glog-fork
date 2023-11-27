@@ -8,7 +8,6 @@ from cupy._core import internal
 from cupy.cuda import device
 from cupy.linalg import _decomposition
 from cupy.linalg import _util
-import cupyx
 
 
 def solve(a, b):
