@@ -240,6 +240,7 @@ def inv(a):
 
     .. seealso:: :func:`numpy.linalg.inv`
     """
+    from cupyx import lapack
     _util._assert_cupy_array(a)
     _util._assert_stacked_2d(a)
     _util._assert_stacked_square(a)
@@ -256,9 +257,9 @@ def inv(a):
     a = a.astype(dtype, copy=True, order=order)
     b = cupy.eye(a.shape[0], dtype=dtype, order=order)
     if order == 'F':
-        cupyx.lapack.gesv(a, b)
+        lapack.gesv(a, b)
     else:
-        cupyx.lapack.gesv(a.T, b.T)
+        lapack.gesv(a.T, b.T)
     return b.astype(out_dtype, copy=False)
 
 
