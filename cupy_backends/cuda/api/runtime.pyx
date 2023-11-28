@@ -715,7 +715,7 @@ cpdef PointerAttributes pointerGetAttributes(intptr_t ptr):
     cdef _PointerAttributes attrs
     status = cudaPointerGetAttributes(&attrs, <void*>ptr)
     check_status(status)
-    IF CUPY_CUDA_VERSION > 0:
+    IF CUPY_CUDA_VERSION > 0 or CUPY_HIP_VERSION > 60000000:
         return PointerAttributes(
             attrs.device,
             <intptr_t>attrs.devicePointer,
