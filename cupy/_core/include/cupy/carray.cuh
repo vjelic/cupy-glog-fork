@@ -231,8 +231,15 @@ __device__ int signbit(float16 x) {return x.signbit();}
 #include <thrust/pair.h>
 namespace STD = thrust;
 #else
+#if HIP_VERSION >= 40400000
+#include <cupy/swap.cuh>
+#include <cupy/tuple.cuh>
+#include <cupy/pair.cuh>
+namespace STD = thrust;
+#else
 #include <cupy/cuda_workaround.h>
 namespace STD = std;
+#endif  // HIP_VERSION
 #endif  // CUPY_JIT_NVCC
 #endif  // CUPY_JIT_MODE
 

@@ -8,7 +8,6 @@ from cupy._core import internal
 from cupy.cuda import device
 from cupy.linalg import _decomposition
 from cupy.linalg import _util
-import cupyx
 
 
 def solve(a, b):
@@ -35,6 +34,7 @@ def solve(a, b):
 
     .. seealso:: :func:`numpy.linalg.solve`
     """
+    from cupyx import lapack
     from cupy.cublas import batched_gesv, get_batched_gesv_limit
 
     if a.ndim > 2 and a.shape[-1] <= get_batched_gesv_limit():
@@ -64,7 +64,7 @@ def solve(a, b):
         # prevent 'a' and 'b' to be overwritten
         a = a.astype(dtype, copy=True, order='F')
         b = b.astype(dtype, copy=True, order='F')
-        cupyx.lapack.gesv(a, b)
+        lapack.gesv(a, b)
         return b.astype(out_dtype, copy=False)
 
     # prevent 'a' to be overwritten
@@ -75,7 +75,7 @@ def solve(a, b):
         index = numpy.unravel_index(i, shape)
         # prevent 'b' to be overwritten
         bi = b[index].astype(dtype, copy=True, order='F')
-        cupyx.lapack.gesv(a[index], bi)
+        lapack.gesv(a[index], bi)
         x[index] = bi
     return x
 
@@ -239,6 +239,7 @@ def inv(a):
 
     .. seealso:: :func:`numpy.linalg.inv`
     """
+    from cupyx import lapack
     _util._assert_cupy_array(a)
     _util._assert_stacked_2d(a)
     _util._assert_stacked_square(a)
@@ -255,9 +256,9 @@ def inv(a):
     a = a.astype(dtype, copy=True, order=order)
     b = cupy.eye(a.shape[0], dtype=dtype, order=order)
     if order == 'F':
-        cupyx.lapack.gesv(a, b)
+        lapack.gesv(a, b)
     else:
-        cupyx.lapack.gesv(a.T, b.T)
+        lapack.gesv(a.T, b.T)
     return b.astype(out_dtype, copy=False)
 
 
