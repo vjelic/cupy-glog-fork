@@ -759,7 +759,7 @@ class CuDNNError(RuntimeError):
 
     def __init__(self, int status):
         self.status = status
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             msg = miopenGetErrorString(<Status>status)
         else:
             msg = cudnnGetErrorString(<Status>status)
@@ -803,7 +803,7 @@ def get_build_version():
 ###############################################################################
 
 cpdef size_t getVersion() except? 0:
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         return miopenGetVersion()
     else:
         return cudnnGetVersion()
@@ -829,7 +829,7 @@ cpdef queryRuntimeError(intptr_t handle, int mode):
 cpdef intptr_t create() except? 0:
     cdef Handle handle
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenCreate(&handle)
         else:
             status = cudnnCreate(&handle)
@@ -839,7 +839,7 @@ cpdef intptr_t create() except? 0:
 
 cpdef destroy(intptr_t handle):
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenDestroy(<Handle>handle)
         else:
             status = cudnnDestroy(<Handle>handle)
@@ -849,11 +849,11 @@ cpdef destroy(intptr_t handle):
 cpdef setStream(intptr_t handle, size_t stream):
     # TODO(leofang): The support of stream capture is not mentioned at all in
     # the cuDNN docs (as of CUDA 11.5), so we disable this functionality.
-    if not runtime.hip_environment and runtime.streamIsCapturing(stream):
+    if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
         raise NotImplementedError(
             'calling cuDNN API during stream capture is currently '
             'unsupported')
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenSetStream(<Handle>handle, <driver.Stream>stream)
     else:
         status = cudnnSetStream(<Handle>handle, <driver.Stream>stream)
@@ -862,7 +862,7 @@ cpdef setStream(intptr_t handle, size_t stream):
 
 cpdef size_t getStream(intptr_t handle) except? 0:
     cdef driver.Stream stream
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = cudnnGetStream(<Handle>handle, &stream)
     else:
         status = miopenGetStream(<Handle>handle, &stream)
@@ -880,7 +880,7 @@ cdef _setStream(intptr_t handle):
 
 cpdef size_t createTensorDescriptor() except? 0:
     cdef TensorDescriptor descriptor
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateTensorDescriptor(&descriptor)
     else:
         status = cudnnCreateTensorDescriptor(&descriptor)
@@ -924,7 +924,7 @@ cpdef setTensorNdDescriptor(size_t tensorDesc, int dataType, int nbDims,
 
 
 cpdef destroyTensorDescriptor(size_t tensorDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
     else:
         status = cudnnDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
@@ -981,7 +981,7 @@ cpdef opTensor(intptr_t handle, size_t opTensorDesc, size_t alpha1,
                size_t B, size_t beta, size_t cDesc, size_t C):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenOpTensor(
                 <Handle>handle, <OpTensorDescriptor>opTensorDesc, <void*>alpha1,
                 <TensorDescriptor>aDesc, <void*>A, <void*>alpha2,
@@ -1002,7 +1002,7 @@ cpdef opTensor(intptr_t handle, size_t opTensorDesc, size_t alpha1,
 
 cpdef size_t createReduceTensorDescriptor() except? 0:
     cdef ReduceTensorDescriptor reduceTensorDesc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateReduceTensorDescriptor(&reduceTensorDesc)
     else:
         status = cudnnCreateReduceTensorDescriptor(&reduceTensorDesc)
@@ -1013,7 +1013,7 @@ cpdef setReduceTensorDescriptor(
         size_t reduceTensorDesc, int reduceTensorOp, int reduceTensorCompType,
         int reduceTensorNanOpt, int reduceTensorIndices,
         int reduceTensorIndicesType):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenSetReduceTensorDescriptor(
             <ReduceTensorDescriptor>reduceTensorDesc,
             <ReduceTensorOp>reduceTensorOp,
@@ -1036,7 +1036,7 @@ cpdef getReduceTensorDescriptor(size_t reduceTensorDesc):
     cdef NanPropagation redNanOpt
     cdef ReduceTensorIndices redIndices
     cdef IndicesType redIndicesType
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetReduceTensorDescriptor(
             <ReduceTensorDescriptor>reduceTensorDesc, &redOp,
             &redCompType, &redNanOpt, &redIndices, &redIndicesType)
@@ -1049,7 +1049,7 @@ cpdef getReduceTensorDescriptor(size_t reduceTensorDesc):
 
 
 cpdef destroyReduceTensorDescriptor(size_t reduceTensorDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyReduceTensorDescriptor(
             <ReduceTensorDescriptor>reduceTensorDesc)
     else:
@@ -1061,7 +1061,7 @@ cpdef destroyReduceTensorDescriptor(size_t reduceTensorDesc):
 cpdef size_t getReductionIndicesSize(intptr_t handle, size_t reduceTensorDesc,
                                      size_t aDesc, size_t cDesc) except? 0:
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetReductionIndicesSize(
             <Handle>handle, <ReduceTensorDescriptor>reduceTensorDesc,
             <TensorDescriptor>aDesc, <TensorDescriptor>cDesc, &sizeInBytes)
@@ -1077,7 +1077,7 @@ cpdef size_t getReductionWorkspaceSize(intptr_t handle,
                                        size_t reduceTensorDesc,
                                        size_t aDesc, size_t cDesc) except? 0:
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetReductionWorkspaceSize(
             <Handle>handle, <ReduceTensorDescriptor>reduceTensorDesc,
             <TensorDescriptor>aDesc, <TensorDescriptor>cDesc,
@@ -1097,7 +1097,7 @@ cpdef reduceTensor(intptr_t handle, size_t reduceTensorDesc, size_t indices,
                    size_t A, size_t beta, size_t cDesc, size_t C):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenReduceTensor(
                 <Handle>handle, <ReduceTensorDescriptor>reduceTensorDesc,
                 <void*>indices, indicesSizeInBytes, <void*>workspace,
@@ -1115,7 +1115,7 @@ cpdef reduceTensor(intptr_t handle, size_t reduceTensorDesc, size_t indices,
 cpdef setTensor(intptr_t handle, size_t yDesc, size_t y, size_t valuePtr):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenSetTensor(
                 <Handle>handle, <TensorDescriptor>yDesc, <void*>y,
                 <void*>valuePtr)
@@ -1129,7 +1129,7 @@ cpdef setTensor(intptr_t handle, size_t yDesc, size_t y, size_t valuePtr):
 cpdef scaleTensor(intptr_t handle, size_t yDesc, size_t y, size_t alpha):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenScaleTensor(
                 <Handle>handle, <TensorDescriptor>yDesc, <void*> y,
                 <void*>alpha)
@@ -1194,7 +1194,7 @@ cpdef destroyFilterDescriptor(size_t filterDesc):
 
 cpdef size_t createConvolutionDescriptor() except? 0:
     cdef ConvolutionDescriptor desc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateConvolutionDescriptor(&desc)
     else:
         status = cudnnCreateConvolutionDescriptor(&desc)
@@ -1216,7 +1216,7 @@ cpdef size_t getConvolutionMathType(size_t convDesc) except? 0:
 
 
 cpdef setConvolutionGroupCount(size_t convDesc, int groupCount):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenSetConvolutionGroupCount(
             <ConvolutionDescriptor>convDesc, groupCount)
     else:
@@ -1227,7 +1227,7 @@ cpdef setConvolutionGroupCount(size_t convDesc, int groupCount):
 
 cpdef int getConvolutionGroupCount(size_t convDesc) except? -1:
     cdef int groupCount
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetConvolutionGroupCount(
             <ConvolutionDescriptor>convDesc, &groupCount)
     else:
@@ -1265,7 +1265,7 @@ cpdef setConvolutionNdDescriptor_v3(
 
 
 cpdef destroyConvolutionDescriptor(size_t convDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyConvolutionDescriptor(
             <ConvolutionDescriptor>convDesc)
     else:
@@ -1378,7 +1378,7 @@ cpdef convolutionForward(
         size_t destDesc, size_t destData):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenConvolutionForward(<Handle>handle, <void*>alpha,
 				<TensorDescriptor>srcDesc, <void*>srcData,
 				<FilterDescriptor>filterDesc, <void*>filterData,
@@ -1401,7 +1401,7 @@ cpdef convolutionBackwardBias(
         size_t beta, size_t destDesc, size_t destData):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenConvolutionBackwardBias(
                 <Handle>handle, <void*>alpha,
                 <TensorDescriptor>srcDesc, <void*>srcData, <void*>beta,
@@ -1651,7 +1651,7 @@ cpdef convolutionBackwardData_v3(
 
 cpdef size_t createPoolingDescriptor() except? 0:
     cdef PoolingDescriptor desc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreatePoolingDescriptor(&desc)
     else:
         status = cudnnCreatePoolingDescriptor(&desc)
@@ -1681,7 +1681,7 @@ cpdef setPoolingNdDescriptor_v4(
 
 
 cpdef destroyPoolingDescriptor(size_t poolingDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyPoolingDescriptor(<PoolingDescriptor>poolingDesc)
     else:
         status = cudnnDestroyPoolingDescriptor(<PoolingDescriptor>poolingDesc)
@@ -1723,7 +1723,7 @@ CUDNN_BN_MIN_EPSILON = _CUDNN_BN_MIN_EPSILON
 
 cpdef deriveBNTensorDescriptor(
         size_t derivedBnDesc, size_t xDesc, int mode):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDeriveBNTensorDescriptor(
             <TensorDescriptor>derivedBnDesc, <TensorDescriptor>xDesc,
             <BatchNormMode> mode)
@@ -1744,7 +1744,7 @@ cpdef batchNormalizationForwardTraining(
         double epsilon, size_t resultSaveMean, size_t resultSaveInvVariance):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenBatchNormalizationForwardTraining(
                 <Handle>handle, <BatchNormMode> mode,
                 <void*>alpha, <void*>beta, <TensorDescriptor>xDesc,
@@ -1774,7 +1774,7 @@ cpdef batchNormalizationForwardInference(
         double epsilon):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenBatchNormalizationForwardInference(
                 <Handle>handle, <BatchNormMode> mode,
                 <void*>alpha, <void*>beta, <TensorDescriptor>xDesc,
@@ -1804,7 +1804,7 @@ cpdef batchNormalizationBackward(
         double epsilon, size_t savedMean, size_t savedInvVariance):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenBatchNormalizationBackward(
                 <Handle>handle, <BatchNormMode>mode,
                 <void*>alphaDataDiff, <void*>betaDataDiff,
@@ -1971,7 +1971,7 @@ cpdef size_t getBatchNormalizationTrainingExReserveSpaceSize(
 
 cpdef size_t createActivationDescriptor() except? 0:
     cdef ActivationDescriptor activationDesc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateActivationDescriptor(&activationDesc)
     else:
         status = cudnnCreateActivationDescriptor(&activationDesc)
@@ -1988,7 +1988,7 @@ cpdef setActivationDescriptor(
 
 
 cpdef destroyActivationDescriptor(size_t activationDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyActivationDescriptor(
             <ActivationDescriptor>activationDesc)
     else:
@@ -2002,7 +2002,7 @@ cpdef softmaxForward(
         size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenSoftmaxForward(
                 <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
                 <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
@@ -2021,7 +2021,7 @@ cpdef softmaxBackward(
         size_t destDiffDesc, size_t destDiffData):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenSoftmaxBackward(
                 <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
                 <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
@@ -2070,7 +2070,7 @@ cpdef activationBackward_v4(
 
 cpdef size_t createDropoutDescriptor() except? 0:
     cdef DropoutDescriptor desc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateDropoutDescriptor(&desc)
     else:
         status = cudnnCreateDropoutDescriptor(&desc)
@@ -2079,7 +2079,7 @@ cpdef size_t createDropoutDescriptor() except? 0:
 
 
 cpdef destroyDropoutDescriptor(size_t dropoutDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
     else:
         status = cudnnDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
@@ -2088,7 +2088,7 @@ cpdef destroyDropoutDescriptor(size_t dropoutDesc):
 
 cpdef Py_ssize_t dropoutGetStatesSize(intptr_t handle) except? -1:
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDropoutGetStatesSize(
             <Handle>handle, &sizeInBytes)
     else:
@@ -2109,7 +2109,7 @@ cpdef setDropoutDescriptor(
 
 cpdef size_t getDropoutReserveSpaceSize(size_t xDesc) except? 0:
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDropoutGetReserveSpaceSize(
             <TensorDescriptor>xDesc, &sizeInBytes)
     else:
@@ -2154,7 +2154,7 @@ cpdef dropoutBackward(
 ###############################################################################
 cpdef size_t createCTCLossDescriptor() except? 0:
     cdef CTCLossDescriptor desc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateCTCLossDescriptor(&desc)
     else:
         status = cudnnCreateCTCLossDescriptor(&desc)
@@ -2162,7 +2162,7 @@ cpdef size_t createCTCLossDescriptor() except? 0:
     return <size_t>desc
 
 cpdef destroyCTCLossDescriptor(size_t ctcLossDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyCTCLossDescriptor(<CTCLossDescriptor>ctcLossDesc)
     else:
         status = cudnnDestroyCTCLossDescriptor(<CTCLossDescriptor>ctcLossDesc)
@@ -2185,7 +2185,7 @@ cpdef size_t getCTCLossWorkspaceSize(
         size_t labels, size_t labelLengths, size_t inputLengths,
         int algo, size_t ctcLossDesc) except? 0:
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetCTCLossWorkspaceSize(
             <Handle>handle, <TensorDescriptor>probsDesc,
             <TensorDescriptor>gradientsDesc,
@@ -2206,7 +2206,7 @@ cpdef CTCLoss(
         size_t costs, size_t gradientsDesc, size_t gradients,
         int algo, size_t ctcLossDesc,
         size_t workspace, size_t workSpaceSizeInBytes):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCTCLoss(
             <Handle>handle, <TensorDescriptor>probsDesc, <void*>probs,
             <int*>labels, <int*>labelLengths, <int*>inputLengths,
@@ -2229,7 +2229,7 @@ cpdef CTCLoss(
 
 cpdef size_t createRNNDescriptor() except? 0:
     cdef RNNDescriptor desc
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenCreateRNNDescriptor(&desc)
     else:
         status = cudnnCreateRNNDescriptor(&desc)
@@ -2238,7 +2238,7 @@ cpdef size_t createRNNDescriptor() except? 0:
 
 
 cpdef destroyRNNDescriptor(size_t rnnDesc):
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenDestroyRNNDescriptor(<RNNDescriptor>rnnDesc)
     else:
         status = cudnnDestroyRNNDescriptor(<RNNDescriptor>rnnDesc)
@@ -2343,7 +2343,7 @@ cpdef getRNNDataDescriptor(
 cpdef getRNNWorkspaceSize(
         intptr_t handle, size_t rnnDesc, int seqLength, size_t xDesc):
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetRNNWorkspaceSize(
             <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
             <TensorDescriptor*>xDesc, &sizeInBytes)
@@ -2358,7 +2358,7 @@ cpdef getRNNWorkspaceSize(
 cpdef getRNNTrainingReserveSize(
         intptr_t handle, size_t rnnDesc, int seqLength, size_t xDesc):
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetRNNTrainingReserveSize(
             <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
             <TensorDescriptor*>xDesc, &sizeInBytes)
@@ -2373,7 +2373,7 @@ cpdef getRNNTrainingReserveSize(
 cpdef getRNNParamsSize(
         intptr_t handle, size_t rnnDesc, size_t xDesc, int dataType):
     cdef size_t sizeInBytes
-    if runtime.hip_environment:
+    if runtime._is_hip_environment:
         status = miopenGetRNNParamsSize(
             <Handle>handle, <RNNDescriptor>rnnDesc, <TensorDescriptor>xDesc,
             &sizeInBytes, <DataType>dataType)
@@ -2414,7 +2414,7 @@ cpdef RNNForwardInference(
         size_t cy, size_t workspace, size_t workSpaceSizeInBytes):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenRNNForwardInference(
                 <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
                 <TensorDescriptor*>xDesc, <void*>x,
@@ -2448,7 +2448,7 @@ cpdef RNNForwardTraining(
         size_t reserveSpaceSizeInBytes):
     _setStream(handle)
     with nogil:
-        if runtime.hip_environment:
+        if runtime._is_hip_environment:
             status = miopenRNNForwardTraining(
                 <Handle>handle, <RNNDescriptor>rnnDesc, seqLength,
                 <TensorDescriptor*>xDesc, <void*>x,
