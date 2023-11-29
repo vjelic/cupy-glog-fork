@@ -1378,8 +1378,8 @@ cpdef convolutionForward(
         size_t destDesc, size_t destData):
     _setStream(handle)
     with nogil:
-	if runtime.hip_environment:
-		status = miopenConvolutionForward(<Handle>handle, <void*>alpha,
+        if runtime.hip_environment:
+            status = miopenConvolutionForward(<Handle>handle, <void*>alpha,
 				<TensorDescriptor>srcDesc, <void*>srcData,
 				<FilterDescriptor>filterDesc, <void*>filterData,
 				<ConvolutionDescriptor>convDesc, <ConvolutionFwdAlgo>algo,
@@ -1681,7 +1681,7 @@ cpdef setPoolingNdDescriptor_v4(
 
 
 cpdef destroyPoolingDescriptor(size_t poolingDesc):
-	if runtime.hip_environment:
+    if runtime.hip_environment:
         status = miopenDestroyPoolingDescriptor(<PoolingDescriptor>poolingDesc)
     else:
         status = cudnnDestroyPoolingDescriptor(<PoolingDescriptor>poolingDesc)
