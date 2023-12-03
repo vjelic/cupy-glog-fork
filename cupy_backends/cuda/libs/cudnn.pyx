@@ -6,10 +6,124 @@ cimport cython  # NOQA
 from libcpp cimport vector
 
 from cupy_backends.cuda.api cimport driver
-from cupy_backends.cuda.api cimport runtime
+from cupy_backends.cuda.api import runtime
 from cupy_backends.cuda cimport stream as stream_module
 IF CUPY_USE_GEN_HIP_CODE:
     from cupy_backends.cuda.libs.miopen import *
+    cdef extern from '../../cupy_cudnn.h' nogil:
+        # Types
+        ctypedef int ActivationMode 'miopenActivationMode_t'
+        ctypedef int AddMode 'cudnnAddMode_t'
+        ctypedef int BatchNormMode 'miopenBatchNormMode_t'
+        ctypedef int BatchNormOps 'cudnnBatchNormOps_t'
+        ctypedef int ConvolutionBwdDataAlgo 'miopenBwdDataAlgorithm_t'
+        ctypedef int ConvolutionBwdDataPreference \
+            'cudnnConvolutionBwdDataPreference_t'
+        ctypedef struct ConvolutionBwdDataAlgoPerf \
+            'cudnnConvolutionBwdDataAlgoPerf_t':  # NOQA: E125
+            int algo
+            int status
+            float time
+            size_t memory
+        ctypedef struct ConvolutionBwdDataAlgoPerf_v7 \
+            'cudnnConvolutionBwdDataAlgoPerf_v7_t':  # NOQA: E125
+            int algo
+            int status
+            float time
+            size_t memory
+            int determinism
+            int mathType
+        ctypedef int ConvolutionBwdFilterAlgo 'miopenConvBwdWeightsAlgorithm_t'
+        ctypedef int ConvolutionBwdFilterPreference \
+            'cudnnConvolutionBwdFilterPreference_t'
+        ctypedef struct ConvolutionBwdFilterAlgoPerf \
+            'cudnnConvolutionBwdFilterAlgoPerf_t':  # NOQA: E125
+            int algo
+            int status
+            float time
+            size_t memory
+        ctypedef struct ConvolutionBwdFilterAlgoPerf_v7 \
+            'cudnnConvolutionBwdFilterAlgoPerf_v7_t':  # NOQA: E125
+            int algo
+            int status
+            float time
+            size_t memory
+            int determinism
+            int mathType
+        ctypedef int ConvolutionFwdAlgo 'miopenConvolutionFwdAlgorithm_t'
+        ctypedef int ConvolutionFwdPreference 'cudnnConvolutionFwdPreference_t'
+        ctypedef struct ConvolutionFwdAlgoPerf 'cudnnConvolutionFwdAlgoPerf_t':
+            int algo
+            int status
+            float time
+            size_t memory
+        ctypedef struct ConvolutionFwdAlgoPerf_v7 \
+            'cudnnConvolutionFwdAlgoPerf_v7_t':  # NOQA: E125
+            int algo
+            int status
+            float time
+            size_t memory
+            int determinism
+            int mathType
+        ctypedef int ConvolutionMode 'miopenConvolutionMode_t'
+        ctypedef int DataType 'miopenDataType_t'
+        ctypedef int MathType 'cudnnMathType_t'
+        ctypedef int DirectionMode 'miopenRNNDirectionMode_t'
+        ctypedef int NanPropagation 'miopenNanPropagation_t'
+        ctypedef int PoolingMode 'miopenPoolingMode_t'
+        ctypedef int RNNInputMode 'miopenRNNInputMode_t'
+        ctypedef int CTCLossAlgo 'miopenCTCLossAlgo_t'
+        ctypedef int RNNMode 'miopenRNNMode_t'
+        ctypedef int RNNAlgo 'miopenRNNAlgo_t'
+        ctypedef int RNNDataLayout 'cudnnRNNDataLayout_t'
+        ctypedef int RNNPaddingMode 'cudnnRNNPaddingMode_t'
+        ctypedef int SoftmaxAlgorithm 'miopenSoftmaxAlgorithm_t'
+        ctypedef int SoftmaxMode 'miopenSoftmaxMode_t'
+        ctypedef int Status 'miopenStatus_t'
+        ctypedef int TensorFormat 'cudnnTensorFormat_t'
+        ctypedef int OpTensorOp 'miopenTensorOp_t'
+	    
+        ctypedef int ReduceTensorOp 'miopenReduceTensorOp_t'
+        ctypedef int ReduceTensorIndices 'miopenReduceTensorIndices_t'
+        ctypedef int IndicesType 'miopenIndicesType_t'
+        ctypedef int ErrQueryMode 'cudnnErrQueryMode_t'
+        ctypedef int FusedOps 'cudnnFusedOps_t'
+        ctypedef int FusedOpsConstParamLabel 'cudnnFusedOpsConstParamLabel_t'
+        ctypedef int FusedOpsPointerPlaceHolder 'cudnnFusedOpsPointerPlaceHolder_t'
+        ctypedef int FusedOpsVariantParamLabel 'cudnnFusedOpsVariantParamLabel_t'
+        ctypedef struct RuntimeTag 'cudnnRuntimeTag_t'
+	    
+        ctypedef void* ActivationDescriptor 'miopenActivationDescriptor_t'
+        ctypedef void* ConvolutionDescriptor 'miopenConvolutionDescriptor_t'
+        ctypedef void* DropoutDescriptor 'miopenDropoutDescriptor_t'
+        ctypedef void* FilterDescriptor 'cudnnFilterDescriptor_t'
+        ctypedef void* Handle 'miopenHandle_t'
+        #cdef void* Handle 'miopenHandle_t'
+        ctypedef void* PoolingDescriptor 'miopenPoolingDescriptor_t'
+        ctypedef void* CTCLossDescriptor 'miopenCTCLossDescriptor_t'
+        ctypedef void* RNNDescriptor 'miopenRNNDescriptor_t'
+        ctypedef void* RNNDataDescriptor 'miopenRNNDataDescriptor_t'
+        ctypedef void* PersistentRNNPlan 'cudnnPersistentRNNPlan_t'
+        ctypedef void* TensorDescriptor 'miopenTensorDescriptor_t'
+        ctypedef void* OpTensorDescriptor 'miopenTensorDescriptor_t'
+        ctypedef void* ReduceTensorDescriptor 'miopenReduceTensorDescriptor_t'
+        ctypedef void* SpatialTransformerDescriptor \
+            'cudnnSpatialTransformerDescriptor_t'
+        ctypedef void* SamplerType 'cudnnSamplerType_t'
+        ctypedef void* FusedOpsConstParamPack 'cudnnFusedOpsConstParamPack_t'
+        ctypedef void* FusedOpsVariantParamPack 'cudnnFusedOpsVariantParamPack_t'
+        ctypedef void* FusedOpsPlan 'cudnnFusedOpsPlan_t'
+        # Error handling
+        const char* miopenGetErrorString(Status status)
+        # Version
+        size_t miopenGetVersion()
+        # Runtime error checking
+        int cudnnQueryRuntimeError(Handle handle, Status *rstatus,
+                               ErrQueryMode mode, RuntimeTag *tag)
+        # Initialization and CUDA cooperation
+        int miopenCreate(Handle* handle)
+        int miopenDestroy(Handle handle)
+
 ELSE:
     ###############################################################################
     # Extern
@@ -760,7 +874,7 @@ class CuDNNError(RuntimeError):
 
     def __init__(self, int status):
         self.status = status
-        if runtime._is_hip_environment:
+        if runtime._is_hip:
             msg = miopenGetErrorString(<Status>status)
         else:
             msg = cudnnGetErrorString(<Status>status)
@@ -804,8 +918,8 @@ def get_build_version():
 ###############################################################################
 
 cpdef size_t getVersion() except? 0:
-    if runtime._is_hip_environment:
-        return miopen.miopenGetVersion()
+    if runtime._is_hip:
+        return miopenGetVersion()
     else:
         return cudnnGetVersion()
 
@@ -830,8 +944,8 @@ cpdef queryRuntimeError(intptr_t handle, int mode):
 cpdef intptr_t create() except? 0:
     cdef Handle handle
     with nogil:
-        if runtime._is_hip_environment:
-            status = miopen.miopenCreate(&handle)
+        if runtime._is_hip:
+            status = miopenCreate(&handle)
         else:
             status = cudnnCreate(&handle)
     check_status(status)
@@ -840,8 +954,8 @@ cpdef intptr_t create() except? 0:
 
 cpdef destroy(intptr_t handle):
     with nogil:
-        if runtime._is_hip_environment:
-            status = miopen.miopenDestroy(<Handle>handle)
+        if runtime._is_hip:
+            status = miopenDestroy(<Handle>handle)
         else:
             status = cudnnDestroy(<Handle>handle)
     check_status(status)
