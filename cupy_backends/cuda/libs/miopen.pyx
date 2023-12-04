@@ -54,7 +54,7 @@ cdef extern from '../../cupy_miopen.h' nogil:
     const char* miopenGetErrorString(Status status)
 
     # Version
-    size_t miopenGetVersion()
+    size_t miopenGetVersion(size_t major,size_t minor, size_t patch)
 
     # Runtime error checking
     #int cudnnQueryRuntimeError(Handle handle, Status *rstatus,
@@ -300,15 +300,15 @@ cpdef inline check_status(int status):
 ###############################################################################
 
 def get_build_version():
-    return HIP_VERSION
+    return CUPY_HIP_VERSION
 
 
 ###############################################################################
 # Version
 ###############################################################################
 
-cpdef size_t getVersion() except? 0:
-    return miopenGetVersion()
+cpdef size_t miopen_getVersion(size_t major, size_t minor, size_t patch) except? 0:
+    return miopenGetVersion(major, minor, patch)
 
 
 ###############################################################################

@@ -5,7 +5,7 @@
 #define INCLUDE_GUARD_CUPY_CUDNN_H
 #if CUPY_USE_HIP
 
-#include "miopen/miopen.h"
+#include <miopen/miopen.h>
 
 #elif !defined(CUPY_NO_CUDA)
 
@@ -18,3 +18,4 @@
 
 
 #endif // #ifdef CUPY_NO_CUDA
+#endif // #ifndef INCLUDE_GUARD_CUPY_CUDNN_H
