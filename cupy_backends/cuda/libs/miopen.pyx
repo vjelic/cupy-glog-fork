@@ -342,4 +342,27 @@ cpdef destroy(intptr_t handle):
     check_status(status)
 
 
+cpdef size_t createDropoutDescriptor() except? 0:
+    cdef DropoutDescriptor desc
+    status = miopen.miopenCreateDropoutDescriptor(&desc)
+    check_status(status)
+    return <size_t>desc
 
+cpdef destroyDropoutDescriptor(size_t dropoutDesc):
+    status = miopen.miopenDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
+    check_status(status)
+
+
+cpdef Py_ssize_t dropoutGetStatesSize(intptr_t handle) except? -1:
+    cdef size_t sizeInBytes
+    status = miopen.miopenDropoutGetStatesSize(
+        <Handle>handle, &sizeInBytes)
+    check_status(status)
+    return <Py_ssize_t>sizeInBytes
+	
+cpdef size_t getDropoutReserveSpaceSize(size_t xDesc) except? 0:
+    cdef size_t sizeInBytes
+    status = miopen.miopenDropoutGetReserveSpaceSize(
+        <TensorDescriptor>xDesc, &sizeInBytes)
+    check_status(status)
+    return sizeInBytes
