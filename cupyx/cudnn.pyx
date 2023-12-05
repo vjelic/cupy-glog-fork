@@ -15,7 +15,11 @@ from cupy._core.core cimport _ndarray_base
 from cupy._core cimport internal
 from cupy.cuda cimport device
 from cupy.cuda cimport memory as _memory
-from cupy_backends.cuda.libs cimport cudnn
+IF CUPY_HIP_VERSION != 0:
+    from cupy_backends.cuda.libs import miopen as cudnn
+    #from cupy_backends.cuda.libs.cudnn import *
+ELSE:
+    from cupy_backends.cuda.libs cimport cudnn
 
 from cupy._core._ufuncs import elementwise_copy as _elementwise_copy
 from cupy import _util
@@ -1356,7 +1360,7 @@ cpdef _warn_algorithm_fwd(
         .format(x.shape, W.shape, y.shape, conv_param[0], conv_param[1]),
         _util.PerformanceWarning)
 
-
+"""
 cpdef _Algorithm _find_algorithm_fwd(
         _ndarray_base x, _ndarray_base W, _ndarray_base y, tuple conv_param,
         size_t handle, size_t x_desc, size_t filter_desc, size_t conv_desc,
@@ -1639,7 +1643,7 @@ cpdef _Algorithm _get_algorithm_bwd_data(
     _get_algorithm_bwd_data_cache[key] = algo
     return algo
 
-
+"""
 cpdef bint _should_use_tensor_core(
         tensor_core_mode, object dtype) except *:
     if tensor_core_mode == 'auto':
