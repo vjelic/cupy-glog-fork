@@ -1643,7 +1643,6 @@ cpdef _Algorithm _get_algorithm_bwd_data(
     _get_algorithm_bwd_data_cache[key] = algo
     return algo
 
-"""
 cpdef bint _should_use_tensor_core(
         tensor_core_mode, object dtype) except *:
     if tensor_core_mode == 'auto':
@@ -1974,7 +1973,7 @@ def convolution_backward_data(
         cudnn.destroyFilterDescriptor(filter_desc)
         cudnn.destroyConvolutionDescriptor(conv_desc)
 
-
+"""
 def pooling_forward(
         _ndarray_base x, _ndarray_base y,
         tuple ksize, tuple stride, tuple pad, int mode):
