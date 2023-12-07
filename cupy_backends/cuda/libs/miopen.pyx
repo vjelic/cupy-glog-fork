@@ -17,9 +17,9 @@ cdef extern from '../../cupy_miopen.h' nogil:
     # Types
     ctypedef int ActivationMode 'miopenActivationMode_t'
     ctypedef int BatchNormMode 'miopenBatchNormMode_t'
-    ctypedef int ConvolutionBwdDataAlgo 'miopenBwdDataAlgorithm_t'
+    ctypedef int ConvolutionBwdDataAlgo 'miopenConvBwdDataAlgorithm_t'
     ctypedef int ConvolutionBwdFilterAlgo 'miopenConvBwdWeightsAlgorithm_t'
-    ctypedef int ConvolutionFwdAlgo 'miopenConvolutionFwdAlgorithm_t'
+    ctypedef int ConvolutionFwdAlgo 'miopenConvFwdAlgorithm_t'
     ctypedef int ConvolutionMode 'miopenConvolutionMode_t'
     ctypedef int DataType 'miopenDataType_t'
     ctypedef int DirectionMode 'miopenRNNDirectionMode_t'
@@ -29,6 +29,9 @@ cdef extern from '../../cupy_miopen.h' nogil:
     ctypedef int CTCLossAlgo 'miopenCTCLossAlgo_t'
     ctypedef int RNNMode 'miopenRNNMode_t'
     ctypedef int RNNAlgo 'miopenRNNAlgo_t'
+    #ctypedef int RNNDataLayout 'miopenRNNBaseLayout_t'
+    ctypedef int RNNPaddingMode 'miopenRNNPaddingMode_t'
+    ctypedef int RNNInputMode 'miopenRNNInputMode_t'
     ctypedef int SoftmaxAlgorithm 'miopenSoftmaxAlgorithm_t'
     ctypedef int SoftmaxMode 'miopenSoftmaxMode_t'
     ctypedef int Status 'miopenStatus_t'
@@ -247,7 +250,7 @@ cdef extern from '../../cupy_miopen.h' nogil:
 
     # Constants
     double _EPSILON 'EPSILON'
-
+"""
 cdef class CuDNNAlgoPerf:
 
     def __init__(self, algo, status, time, memory, determinism, mathType):
@@ -257,7 +260,7 @@ cdef class CuDNNAlgoPerf:
         self.memory = memory
         self.determinism = determinism
         self.mathType = mathType
-
+"""
 
 ###############################################################################
 # Error handling
@@ -307,7 +310,7 @@ def get_build_version():
 # Version
 ###############################################################################
 
-cpdef size_t miopen_getVersion() except? 0:
+cpdef size_t getVersion() except? 0:
     return CUPY_HIP_VERSION
 
 
@@ -344,25 +347,25 @@ cpdef destroy(intptr_t handle):
 
 cpdef size_t createDropoutDescriptor() except? 0:
     cdef DropoutDescriptor desc
-    status = miopen.miopenCreateDropoutDescriptor(&desc)
+    status = miopenCreateDropoutDescriptor(&desc)
     check_status(status)
     return <size_t>desc
 
 cpdef destroyDropoutDescriptor(size_t dropoutDesc):
-    status = miopen.miopenDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
+    status = miopenDestroyDropoutDescriptor(<DropoutDescriptor>dropoutDesc)
     check_status(status)
 
 
 cpdef Py_ssize_t dropoutGetStatesSize(intptr_t handle) except? -1:
     cdef size_t sizeInBytes
-    status = miopen.miopenDropoutGetStatesSize(
+    status = miopenDropoutGetStatesSize(
         <Handle>handle, &sizeInBytes)
     check_status(status)
     return <Py_ssize_t>sizeInBytes
 	
 cpdef size_t getDropoutReserveSpaceSize(size_t xDesc) except? 0:
     cdef size_t sizeInBytes
-    status = miopen.miopenDropoutGetReserveSpaceSize(
+    status = miopenDropoutGetReserveSpaceSize(
         <TensorDescriptor>xDesc, &sizeInBytes)
     check_status(status)
     return sizeInBytes
