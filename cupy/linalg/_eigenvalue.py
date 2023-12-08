@@ -141,7 +141,7 @@ def eigh(a, UPLO='L'):
         v = cupy.empty(a.shape, v_dtype)
         return w, v
 
-    if a.ndim > 2 or runtime.is_hip:
+    if a.ndim > 2:
         w, v = cupyx.cusolver.syevj(a, UPLO, True)
         return w, v
     else:
