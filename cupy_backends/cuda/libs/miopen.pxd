@@ -6,7 +6,6 @@ from libc.stdint cimport intptr_t
 ###############################################################################
 IF CUPY_HIP_VERSION != 0:
     cpdef enum:
-    cpdef enum:
         miopenFloat = 1
         miopenDouble = 6
         miopenHalf  = 0
@@ -33,7 +32,10 @@ IF CUPY_HIP_VERSION != 0:
 		
         MIOPEN_NOT_PROPAGATE_NAN = 0
         MIOPEN_PROPAGATE_NAN = 1
-	    
+
+        miopenTensorNCHW = 0
+        miopenTensorNHWC = 1
+
         miopenTensorOpAdd = 0
         miopenTensorOpMul = 1
         miopenTensorOpMin = 2

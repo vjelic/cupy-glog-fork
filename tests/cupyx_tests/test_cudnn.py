@@ -13,7 +13,6 @@ cudnn_enabled = libcudnn.available
 
 if cudnn_enabled:
     modes = [
-        libcudnn.CUDNN_ACTIVATION_SIGMOID,
         libcudnn.CUDNN_ACTIVATION_RELU,
         libcudnn.CUDNN_ACTIVATION_TANH,
     ]
