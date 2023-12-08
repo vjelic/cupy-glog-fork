@@ -1553,7 +1553,7 @@ ELSE:
             int batchCount, int computeType, int algo):
         _setStream(handle)
         with nogil:
-            if computeType >= CUBLAS_COMPUTE_16F:
+            if computeType >= CUBLAS_COMPUTE_16F and CUPY_HIP_VERSION==0:
                 status = cublasGemmStridedBatchedEx_v11(
                     <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
                     <const void*>alpha,
