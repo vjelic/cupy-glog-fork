@@ -89,6 +89,8 @@ IF CUPY_HIP_VERSION != 0:
 	    
         miopenStatusSuccess  = 0
 
+        MIOPEN_RNG_PSEUDO_XORWOW = 0
+
 IF CUPY_HIP_VERSION == 0:
     ###############################################################################
     # Class

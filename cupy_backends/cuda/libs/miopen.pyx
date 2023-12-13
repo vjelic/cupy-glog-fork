@@ -4,11 +4,11 @@
 # NOTE: This wrapper does not cover all APIs of cuDNN v4.
 cimport cython  # NOQA
 from libcpp cimport vector
-
+from libcpp cimport bool
 from cupy_backends.cuda.api cimport driver
 from cupy_backends.cuda.api cimport runtime
 from cupy_backends.cuda cimport stream as stream_module
-
+from cupy_backends.cuda.libs cimport miopen
 ###############################################################################
 # Extern
 ###############################################################################
@@ -36,7 +36,7 @@ cdef extern from '../../cupy_miopen.h' nogil:
     ctypedef int Status 'miopenStatus_t'
     ctypedef int TensorFormat 'miopenTensorLayout_t'
     ctypedef int OpTensorOp 'miopenTensorOp_t'
-	
+    ctypedef int RNGType_t 'miopenRNGType_t' 
     ctypedef int ReduceTensorOp 'miopenReduceTensorOp_t'
     ctypedef int ReduceTensorIndices 'miopenReduceTensorIndices_t'
     ctypedef int IndicesType 'miopenIndicesType_t'
@@ -52,7 +52,7 @@ cdef extern from '../../cupy_miopen.h' nogil:
     ctypedef void* FilterDescriptor 'miopenTensorDescriptor_t'
     ctypedef void* OpTensorDescriptor 'miopenTensorDescriptor_t'
     ctypedef void* ReduceTensorDescriptor 'miopenReduceTensorDescriptor_t'
-
+    ctypedef void* Stream 'miopenAcceleratorQueue_t'
     # Error handling
     const char* miopenGetErrorString(Status status)
 
@@ -202,7 +202,15 @@ cdef extern from '../../cupy_miopen.h' nogil:
     int miopenDropoutGetStatesSize(Handle handle, size_t* sizeInBytes)
     int miopenDropoutGetReserveSpaceSize(
         TensorDescriptor xDesc, size_t* sizeInBytes)
-
+    int miopenSetDropoutDescriptor(
+        DropoutDescriptor dropoutDesc, Handle handle, float dropout,
+        void* states, size_t stateSizeInBytes, unsigned long long seed, 
+        bool use_mask, bool state_evo, RNGType_t rng_mode)
+    int miopenDropoutForward(
+        Handle handle, DropoutDescriptor dropoutDesc, TensorDescriptor noise_shape,
+        TensorDescriptor srcDesc, void* srcData,
+        TensorDescriptor dstDesc, void* dstData,
+        void* reserveSpace, size_t reserveSpaceSizeInBytes)    
     # CTC
     int miopenCreateCTCLossDescriptor(CTCLossDescriptor* ctcLossDesc)
     int miopenDestroyCTCLossDescriptor(CTCLossDescriptor ctcLossDesc)
@@ -345,6 +353,39 @@ cpdef destroy(intptr_t handle):
     check_status(status)
 
 
+cpdef setStream(intptr_t handle, size_t stream):
+    # TODO(leofang): The support of stream capture is not mentioned at all in
+    # the cuDNN docs (as of CUDA 11.5), so we disable this functionality.
+    if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
+        raise NotImplementedError(
+            'calling cuDNN API during stream capture is currently '
+            'unsupported')
+    status = miopenSetStream(<Handle>handle, <Stream>stream)
+    check_status(status)
+
+
+cpdef size_t getStream(intptr_t handle) except? 0:
+    cdef Stream stream
+    status = miopenGetStream(<Handle>handle, &stream)
+    check_status(status)
+    return <size_t>stream
+
+
+cdef _setStream(intptr_t handle):
+    """Set current stream"""
+    setStream(handle, stream_module.get_current_stream_ptr())
+
+cpdef size_t createTensorDescriptor() except? 0:
+    cdef TensorDescriptor descriptor
+    status = miopenCreateTensorDescriptor(&descriptor)
+    check_status(status)
+    return <size_t>descriptor
+
+cpdef destroyTensorDescriptor(size_t tensorDesc):
+    status = miopenDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
+    check_status(status)
+
+
 cpdef size_t createDropoutDescriptor() except? 0:
     cdef DropoutDescriptor desc
     status = miopenCreateDropoutDescriptor(&desc)
@@ -369,3 +410,28 @@ cpdef size_t getDropoutReserveSpaceSize(size_t xDesc) except? 0:
         <TensorDescriptor>xDesc, &sizeInBytes)
     check_status(status)
     return sizeInBytes
+
+cpdef setDropoutDescriptor(
+        size_t dropoutDesc, intptr_t handle, float dropout,
+        size_t states, size_t stateSizeInBytes, unsigned long long seed):
+    #cdef miopen.RNGType_t rngtype = miopen.MIOPEN_RNG_PSEUDO_XORWOW
+    cdef int rngtype = miopen.MIOPEN_RNG_PSEUDO_XORWOW 
+    status = miopenSetDropoutDescriptor(
+        <DropoutDescriptor>dropoutDesc, <Handle>handle, dropout,
+        <void*>states, stateSizeInBytes, seed, False, False, <RNGType_t>rngtype)
+    check_status(status)
+
+cpdef dropoutForward(
+        intptr_t handle, size_t dropoutDesc,
+        size_t srcDesc, size_t srcData,
+        size_t dstDesc, size_t dstData,
+        size_t reserveSpace, size_t reserveSpaceSizeInBytes):
+    _setStream(handle)
+    with nogil:
+        status = miopenDropoutForward(
+            <Handle>handle, <DropoutDescriptor>dropoutDesc, <TensorDescriptor>srcDesc,
+            <TensorDescriptor>srcDesc, <void*>srcData,
+            <TensorDescriptor>dstDesc, <void*>dstData,
+            <void*>reserveSpace, reserveSpaceSizeInBytes)
+    check_status(status)
+
