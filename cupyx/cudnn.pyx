@@ -114,11 +114,11 @@ cdef class Descriptor:
 cpdef int get_data_type(dtype) except? -1:
     cdef char t = ord(dtype.char)
     if t == b'f':
-        return cudnn.CUDNN_DATA_FLOAT
+        return _cudnn.CUDNN_DATA_FLOAT
     elif t == b'd':
-        return cudnn.CUDNN_DATA_DOUBLE
+        return _cudnn.CUDNN_DATA_DOUBLE
     elif t == b'e':
-        return cudnn.CUDNN_DATA_HALF
+        return _cudnn.CUDNN_DATA_HALF
     else:
         raise TypeError('Dtype {} is not supported in cuDNN'.format(dtype))
 
@@ -158,8 +158,7 @@ cpdef _create_tensor_nd_descriptor(
         desc, data_type, arr._shape.size(), <size_t>c_shape.data(),
         <size_t>c_strides.data())
 
-
-cpdef _create_tensor_descriptor(size_t desc, _ndarray_base arr,int format=_cudnn.CUDNN_TENSOR_NCHW):
+cpdef _create_tensor_descriptor(size_t desc, _ndarray_base arr,int format=cudnn.miopenTensorNCHW):
     if not arr._c_contiguous:
         raise ValueError('cupyx.cudnn supports c-contiguous arrays only')
     if arr._shape.size() == 4:
@@ -184,7 +183,7 @@ cpdef _create_tensor_descriptor_as4darray(size_t desc,
     if arr._shape.size() > 0:
         dim1 = arr._shape[0]
     dim2 = arr.size // dim1
-    cudnn.setTensor4dDescriptor(desc, cudnn.CUDNN_TENSOR_NCHW, data_type,
+    cudnn.setTensor4dDescriptor(desc, _cudnn.CUDNN_TENSOR_NCHW, data_type,
                                 dim1, dim2, 1, 1)
 
 
@@ -649,7 +648,7 @@ def activation_forward(_ndarray_base x, int mode, double coef=0.0):
     try:
         _create_tensor_descriptor_as4darray(desc, x)
         cudnn.setActivationDescriptor(
-            act_desc, mode, cudnn.CUDNN_NOT_PROPAGATE_NAN, coef)
+            act_desc, mode, _cudnn.CUDNN_NOT_PROPAGATE_NAN, coef)
         cudnn.activationForward_v4(
             handle, act_desc, one, desc, x.data.ptr,
             zero, desc, y.data.ptr)
@@ -777,13 +776,13 @@ def create_dropout_descriptor(
     desc = Descriptor(cudnn.createDropoutDescriptor(),
                       _py_cudnn.destroyDropoutDescriptor)
     cudnn.setDropoutDescriptor(desc.value, handle, dropout,
-                               states, state_size_in_bytes, seed)
+                               states, state_size_in_bytes, seed, False, False, 0)
     return desc
 
 
 def set_dropout_descriptor(desc, handle, dropout):
     # When the fourth argument is NULL, random state is not updated.
-    cudnn.setDropoutDescriptor(desc.value, handle, dropout, 0, 0, 0)
+    cudnn.setDropoutDescriptor(desc.value, handle, dropout, 0, 0, 0, False, False, 0)
 
 
 def _create_ctc_loss_descriptor(data_type):

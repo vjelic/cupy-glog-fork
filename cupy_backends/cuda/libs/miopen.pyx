@@ -181,9 +181,10 @@ cdef extern from '../../cupy_miopen.h' nogil:
     # Activation
     int miopenCreateActivationDescriptor(
         ActivationDescriptor* activationDesc)
-    int cudnnSetActivationDescriptor(
-        ActivationDescriptor activationDesc, ActivationMode mode,
-        NanPropagation reluNanOpt, double reluCeiling)
+    int miopenSetActivationDescriptor(
+        ActivationDescriptor activationDesc, ActivationMode mode, double activAlpha,
+        double activBeta,
+        double activGamma)
     int miopenDestroyActivationDescriptor(
         ActivationDescriptor activationDesc)
     int miopenSoftmaxForward(
@@ -195,6 +196,17 @@ cdef extern from '../../cupy_miopen.h' nogil:
         void* alpha, TensorDescriptor srcDesc, void* srcData,
         TensorDescriptor srcDiffDesc, void* srcDiffData, void* beta,
         TensorDescriptor destDiffDesc, void* destDiffData)
+    int miopenActivationForward(
+        Handle handle, ActivationDescriptor activationDesc, void* alpha,
+        TensorDescriptor srcDesc, void* srcData, void* beta,
+        TensorDescriptor dstDesc, void* dstData)
+    int miopenActivationBackward(
+        Handle handle, ActivationDescriptor activationDesc, void* alpha,
+        TensorDescriptor srcDesc, void* srcData,
+        TensorDescriptor srcDiffDesc, void* srcDiffData,
+        TensorDescriptor destDesc, void* destData, void* beta,
+        TensorDescriptor destDiffDesc, void* destDiffData)
+
 
     # Dropout
     int miopenCreateDropoutDescriptor(DropoutDescriptor* desc)
@@ -375,11 +387,22 @@ cdef _setStream(intptr_t handle):
     """Set current stream"""
     setStream(handle, stream_module.get_current_stream_ptr())
 
+###############################################################################
+# Tensor manipulation
+###############################################################################
+
 cpdef size_t createTensorDescriptor() except? 0:
     cdef TensorDescriptor descriptor
     status = miopenCreateTensorDescriptor(&descriptor)
     check_status(status)
     return <size_t>descriptor
+
+cpdef setTensor4dDescriptor(size_t tensorDesc, int format, int dataType,
+                            int n, int c, int h, int w):
+    status = miopenSet4dTensorDescriptor(
+        <TensorDescriptor>tensorDesc, 
+        <DataType>dataType, n, c, h, w)
+    check_status(status)
 
 cpdef destroyTensorDescriptor(size_t tensorDesc):
     status = miopenDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
@@ -413,12 +436,10 @@ cpdef size_t getDropoutReserveSpaceSize(size_t xDesc) except? 0:
 
 cpdef setDropoutDescriptor(
         size_t dropoutDesc, intptr_t handle, float dropout,
-        size_t states, size_t stateSizeInBytes, unsigned long long seed):
-    #cdef miopen.RNGType_t rngtype = miopen.MIOPEN_RNG_PSEUDO_XORWOW
-    cdef int rngtype = miopen.MIOPEN_RNG_PSEUDO_XORWOW 
+        size_t states, size_t stateSizeInBytes, unsigned long long seed, bool use_mask, bool state_evo, int rngtype):
     status = miopenSetDropoutDescriptor(
         <DropoutDescriptor>dropoutDesc, <Handle>handle, dropout,
-        <void*>states, stateSizeInBytes, seed, False, False, <RNGType_t>rngtype)
+        <void*>states, stateSizeInBytes, seed, use_mask, state_evo, <RNGType_t>rngtype)
     check_status(status)
 
 cpdef dropoutForward(
@@ -435,3 +456,61 @@ cpdef dropoutForward(
             <void*>reserveSpace, reserveSpaceSizeInBytes)
     check_status(status)
 
+###############################################################################
+# Activation
+###############################################################################
+
+cpdef size_t createActivationDescriptor() except? 0:
+    cdef ActivationDescriptor activationDesc
+    status = miopenCreateActivationDescriptor(&activationDesc)
+    check_status(status)
+    return <size_t>activationDesc
+
+
+cpdef setActivationDescriptor(
+        size_t activationDesc, int mode, int reluNanOpt, double reluCeiling):
+    status = miopenSetActivationDescriptor(
+        <ActivationDescriptor>activationDesc, <ActivationMode>mode, 1.0, 0.0, 0.0)
+    check_status(status)
+
+
+cpdef destroyActivationDescriptor(size_t activationDesc):
+    status = miopenDestroyActivationDescriptor(
+        <ActivationDescriptor>activationDesc)
+    check_status(status)
+
+
+cpdef softmaxForward(
+        intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
+    _setStream(handle)
+    with nogil:
+        status = miopenSoftmaxForward(
+            <Handle>handle, <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
+            <void*>beta, <TensorDescriptor>dstDesc, <void*>dstData)
+    check_status(status)
+
+
+cpdef softmaxBackward(
+        intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t srcDiffDesc, size_t srcDiffData, size_t beta,
+        size_t destDiffDesc, size_t destDiffData):
+    _setStream(handle)
+    with nogil:
+        status = miopenSoftmaxBackward(
+            <Handle>handle, <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
+            <TensorDescriptor>srcDiffDesc, <void*>srcDiffData, <void*>beta,
+            <TensorDescriptor>destDiffDesc, <void*>destDiffData)
+    check_status(status)
+
+
+cpdef activationForward_v4(
+        intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
+    _setStream(handle)
+    with nogil:
+        status = miopenActivationForward(
+            <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
+            <TensorDescriptor>srcDesc, <void*>srcData, <void*>beta,
+            <TensorDescriptor>dstDesc, <void*>dstData)
+    check_status(status)
