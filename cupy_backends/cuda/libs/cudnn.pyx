@@ -994,129 +994,24 @@ ELSE:
         # Constants
         double _CUDNN_BN_MIN_EPSILON 'CUDNN_BN_MIN_EPSILON'
     
-   
+    cdef class CuDNNAlgoPerf:
     
-    ###############################################################################
-    # Error handling
-    ###############################################################################
-    
-    class CuDNNError(RuntimeError):
-    
-        def __init__(self, int status):
+        def __init__(self, algo, status, time, memory, determinism, mathType):
+            self.algo = algo
             self.status = status
-            IF CUPY_HIP_VERSION != 0:
-                msg = miopenGetErrorString(<Status>status)
-            ELSE:
-                msg = cudnnGetErrorString(<Status>status)
-            super(CuDNNError, self).__init__(
-                'cuDNN Error: {}'.format(msg.decode()))
-            self._infos = []
+            self.time = time
+            self.memory = memory
+            self.determinism = determinism
+            self.mathType = mathType   
     
-        def add_info(self, info):
-            assert isinstance(info, str)
-            self._infos.append(info)
-    
-        def add_infos(self, infos):
-            assert isinstance(infos, list)
-            self._infos.extend(infos)
-    
-        def __str__(self):
-            base = super(CuDNNError, self).__str__()
-            return base + ''.join(
-                '\n  ' + info for info in self._infos)
-    
-        def __reduce__(self):
-            return (type(self), (self.status,))
-    
-    
-    @cython.profile(False)
-    cpdef inline check_status(int status):
-        if status != 0:
-            raise CuDNNError(status)
-    
-    
-    ###############################################################################
-    # Build-time version
-    ###############################################################################
-    
-    def get_build_version():
-        IF CUPY_HIP_VERSION != 0:
-            return CUPY_HIP_VERSION
-        ELSE:
-            return CUDNN_VERSION
-    
-    
-    ###############################################################################
-    # Version
-    ###############################################################################
-    
-    cpdef size_t getVersion() except? 0:
-        IF CUPY_HIP_VERSION != 0:
-            return CUPY_HIP_VERSION
-        ELSE:
-            return cudnnGetVersion()
-        
-    
-    IF CUPY_HIP_VERSION == 0:
-        ###############################################################################
-        # Runtime error checking
-        ###############################################################################
-        
-        cpdef queryRuntimeError(intptr_t handle, int mode):
-            cdef Status rstatus
-            with nogil:
-                status = cudnnQueryRuntimeError(<Handle>handle, &rstatus,
-                                                <ErrQueryMode>mode, <RuntimeTag*>0)
-            check_status(status)
-            return rstatus
-    
-    
-    ###############################################################################
-    # Initialization and CUDA cooperation
-    ###############################################################################
-    
-    cpdef intptr_t create() except? 0:
-        cdef Handle handle
+    cpdef queryRuntimeError(intptr_t handle, int mode):
+        cdef Status rstatus
         with nogil:
-            IF CUPY_HIP_VERSION != 0:
-                status = miopenCreate(&handle)
-            ELSE:
-                status = cudnnCreate(&handle)
+            status = cudnnQueryRuntimeError(<Handle>handle, &rstatus,
+                                            <ErrQueryMode>mode, <RuntimeTag*>0)
         check_status(status)
-        return <intptr_t>handle
+        return rstatus
     
-    
-    cpdef destroy(intptr_t handle):
-        with nogil:
-            IF CUPY_HIP_VERSION != 0:
-                status = miopenDestroy(<Handle>handle)
-            ELSE:
-                status = cudnnDestroy(<Handle>handle)
-        check_status(status)
-    
-    
-    cpdef setStream(intptr_t handle, size_t stream):
-        # TODO(leofang): The support of stream capture is not mentioned at all in
-        # the cuDNN docs (as of CUDA 11.5), so we disable this functionality.
-        if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
-            raise NotImplementedError(
-                'calling cuDNN API during stream capture is currently '
-                'unsupported')
-    
-        status = cudnnSetStream(<Handle>handle, <driver.Stream>stream)
-        check_status(status)
-    
-    
-    cpdef size_t getStream(intptr_t handle) except? 0:
-        cdef driver.Stream stream
-        status = cudnnGetStream(<Handle>handle, &stream)
-        check_status(status)
-        return <size_t>stream
-    
-    
-    cdef _setStream(intptr_t handle):
-        """Set current stream"""
-        setStream(handle, stream_module.get_current_stream_ptr())
     
     ###############################################################################
     # Tensor manipulation
@@ -2801,3 +2696,101 @@ ELSE:
             status = cudnnFusedOpsExecute(<Handle>handle, <const FusedOpsPlan>plan,
                                           <FusedOpsVariantParamPack>varPack)
         check_status(status)
+
+############################################################################
+# Error handling
+###############################################################################
+
+class CuDNNError(RuntimeError):
+
+    def __init__(self, int status):
+        self.status = status
+        IF CUPY_HIP_VERSION != 0:
+            msg = miopenGetErrorString(<Status>status)
+        ELSE:
+            msg = cudnnGetErrorString(<Status>status)
+        super(CuDNNError, self).__init__(
+            'cuDNN Error: {}'.format(msg.decode()))
+        self._infos = []
+
+    def add_info(self, info):
+        assert isinstance(info, str)
+        self._infos.append(info)
+
+    def add_infos(self, infos):
+        assert isinstance(infos, list)
+        self._infos.extend(infos)
+
+    def __str__(self):
+        base = super(CuDNNError, self).__str__()
+        return base + ''.join(
+            '\n  ' + info for info in self._infos)
+
+    def __reduce__(self):
+        return (type(self), (self.status,))
+
+
+@cython.profile(False)
+cpdef inline check_status(int status):
+    if status != 0:
+        raise CuDNNError(status)
+
+
+###############################################################################
+# Build-time version
+###############################################################################
+
+def get_build_version():
+    IF CUPY_HIP_VERSION != 0:
+        return CUPY_HIP_VERSION
+    ELSE:
+        return CUDNN_VERSION
+
+
+###############################################################################
+# Version
+###############################################################################
+
+cpdef size_t getVersion() except? 0:
+    IF CUPY_HIP_VERSION != 0:
+        return CUPY_HIP_VERSION
+    ELSE:
+        return cudnnGetVersion()
+    
+
+IF CUPY_HIP_VERSION == 0:
+    ###############################################################################
+    # Runtime error checking
+    ###############################################################################
+    
+    cpdef queryRuntimeError(intptr_t handle, int mode):
+        cdef Status rstatus
+        with nogil:
+            status = cudnnQueryRuntimeError(<Handle>handle, &rstatus,
+                                            <ErrQueryMode>mode, <RuntimeTag*>0)
+        check_status(status)
+        return rstatus
+
+
+###############################################################################
+# Initialization and CUDA cooperation
+###############################################################################
+
+cpdef intptr_t create() except? 0:
+    cdef Handle handle
+    with nogil:
+        IF CUPY_HIP_VERSION != 0:
+            status = miopenCreate(&handle)
+        ELSE:
+            status = cudnnCreate(&handle)
+    check_status(status)
+    return <intptr_t>handle
+
+
+cpdef destroy(intptr_t handle):
+    with nogil:
+        IF CUPY_HIP_VERSION != 0:
+            status = miopenDestroy(<Handle>handle)
+        ELSE:
+            status = cudnnDestroy(<Handle>handle)
+    check_status(status)
