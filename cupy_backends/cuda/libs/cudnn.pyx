@@ -1016,41 +1016,7 @@ ELSE:
     ###############################################################################
     # Tensor manipulation
     ###############################################################################
-    
-    cpdef size_t createTensorDescriptor() except? 0:
-        cdef TensorDescriptor descriptor
-        status = cudnnCreateTensorDescriptor(&descriptor)
-        check_status(status)
-        return <size_t>descriptor
-    
-    
-    cpdef setTensor4dDescriptor(size_t tensorDesc, int format, int dataType,
-                                int n, int c, int h, int w):
-        status = cudnnSetTensor4dDescriptor(
-            <TensorDescriptor>tensorDesc, <TensorFormat>format,
-            <DataType>dataType, n, c, h, w)
-        check_status(status)
-    
-    
-    cpdef setTensor4dDescriptorEx(size_t tensorDesc, int dataType,
-                                  int n, int c, int h, int w, int nStride,
-                                  int cStride, int hStride, int wStride):
-        status = cudnnSetTensor4dDescriptorEx(
-            <TensorDescriptor>tensorDesc, <DataType>dataType, n, c, h, w,
-            nStride, cStride, hStride, wStride)
-        check_status(status)
-    
-    
-    cpdef tuple getTensor4dDescriptor(size_t tensorDesc):
-        cdef DataType dataType
-        cdef int n, c, h, w, nStride, cStride, hStride, wStride
-        status = cudnnGetTensor4dDescriptor(
-            <TensorDescriptor>tensorDesc, &dataType,
-            &n, &c, &h, &w, &nStride, &cStride, &hStride, &wStride)
-        check_status(status)
-        return dataType, n, c, h, w, nStride, cStride, hStride, wStride
-    
-    
+    #TODO miopenSetNdTensorDescriptorWithLayout 
     cpdef setTensorNdDescriptor(size_t tensorDesc, int dataType, int nbDims,
                                 size_t dimA, size_t strideA):
         status = cudnnSetTensorNdDescriptor(
@@ -1058,12 +1024,7 @@ ELSE:
             <int*>dimA, <int*>strideA)
         check_status(status)
     
-    
-    cpdef destroyTensorDescriptor(size_t tensorDesc):
-        status = cudnnDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
-        check_status(status)
-    
-    
+    #TODO miopenOpTensor 
     cpdef addTensor_v3(intptr_t handle, size_t alpha, size_t bDesc,
                        size_t b, size_t beta, size_t yDesc, size_t y):
         _setStream(handle)
@@ -1964,85 +1925,6 @@ ELSE:
     
     
     ###############################################################################
-    # Activation
-    ###############################################################################
-    
-    cpdef size_t createActivationDescriptor() except? 0:
-        cdef ActivationDescriptor activationDesc
-        status = cudnnCreateActivationDescriptor(&activationDesc)
-        check_status(status)
-        return <size_t>activationDesc
-    
-    
-    cpdef setActivationDescriptor(
-            size_t activationDesc, int mode, int reluNanOpt, double reluCeiling):
-        status = cudnnSetActivationDescriptor(
-            <ActivationDescriptor>activationDesc, <ActivationMode>mode,
-            <NanPropagation>reluNanOpt, reluCeiling)
-        check_status(status)
-    
-    
-    cpdef destroyActivationDescriptor(size_t activationDesc):
-        status = cudnnDestroyActivationDescriptor(
-            <ActivationDescriptor>activationDesc)
-        check_status(status)
-    
-    
-    cpdef softmaxForward(
-            intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
-            size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
-        _setStream(handle)
-        with nogil:
-            status = cudnnSoftmaxForward(
-                <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
-                <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
-                <void*>beta, <TensorDescriptor>dstDesc, <void*>dstData)
-        check_status(status)
-    
-    
-    cpdef softmaxBackward(
-            intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
-            size_t srcData, size_t srcDiffDesc, size_t srcDiffData, size_t beta,
-            size_t destDiffDesc, size_t destDiffData):
-        _setStream(handle)
-        with nogil:
-            status = cudnnSoftmaxBackward(
-                <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
-                <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
-                <TensorDescriptor>srcDiffDesc, <void*>srcDiffData, <void*>beta,
-                <TensorDescriptor>destDiffDesc, <void*>destDiffData)
-        check_status(status)
-    
-    
-    cpdef activationForward_v4(
-            intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
-            size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
-        _setStream(handle)
-        with nogil:
-            status = cudnnActivationForward_v4(
-                <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
-                <TensorDescriptor>srcDesc, <void*>srcData, <void*>beta,
-                <TensorDescriptor>dstDesc, <void*>dstData)
-        check_status(status)
-    
-    
-    cpdef activationBackward_v4(
-            intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
-            size_t srcData, size_t srcDiffDesc, size_t srcDiffData,
-            size_t destDesc, size_t destData, size_t beta, size_t destDiffDesc,
-            size_t destDiffData):
-        _setStream(handle)
-        with nogil:
-            status = cudnnActivationBackward_v4(
-                <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
-                <TensorDescriptor>srcDesc, <void*>srcData,
-                <TensorDescriptor>srcDiffDesc, <void*>srcDiffData,
-                <TensorDescriptor>destDesc, <void*>destData, <void*>beta,
-                <TensorDescriptor>destDiffDesc, <void*>destDiffData)
-        check_status(status)
-    
-    
-    ###############################################################################
     # Dropout
     ###############################################################################
     
@@ -2822,3 +2704,181 @@ cpdef size_t getStream(intptr_t handle) except? 0:
 cdef _setStream(intptr_t handle):
     """Set current stream"""
     setStream(handle, stream_module.get_current_stream_ptr())
+
+
+###############################################################################
+# Tensor manipulation
+###############################################################################
+
+cpdef size_t createTensorDescriptor() except? 0:
+    cdef TensorDescriptor descriptor
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenCreateTensorDescriptor(&descriptor)
+    ELSE:
+        status = cudnnCreateTensorDescriptor(&descriptor)
+    check_status(status)
+    return <size_t>descriptor
+
+
+cpdef setTensor4dDescriptor(size_t tensorDesc, int format, int dataType,
+                            int n, int c, int h, int w):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenSet4dTensorDescriptor(
+            <TensorDescriptor>tensorDesc,
+            <DataType>dataType, n, c, h, w)
+    ELSE:
+        status = cudnnSetTensor4dDescriptor(
+            <TensorDescriptor>tensorDesc, <TensorFormat>format,
+            <DataType>dataType, n, c, h, w)
+    check_status(status)
+
+
+cpdef setTensor4dDescriptorEx(size_t tensorDesc, int dataType,
+                              int n, int c, int h, int w, int nStride,
+                              int cStride, int hStride, int wStride):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenSet4dTensorDescriptorEx(
+            <TensorDescriptor>tensorDesc, <DataType>dataType, n, c, h, w,
+            nStride, cStride, hStride, wStride)
+    ELSE:
+        status = cudnnSetTensor4dDescriptorEx(
+            <TensorDescriptor>tensorDesc, <DataType>dataType, n, c, h, w,
+            nStride, cStride, hStride, wStride)
+    check_status(status)
+
+
+cpdef tuple getTensor4dDescriptor(size_t tensorDesc):
+    cdef DataType dataType
+    cdef int n, c, h, w, nStride, cStride, hStride, wStride
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenGet4dTensorDescriptor(
+            <TensorDescriptor>tensorDesc, &dataType,
+            &n, &c, &h, &w, &nStride, &cStride, &hStride, &wStride)
+    ELSE:
+        status = cudnnGetTensor4dDescriptor(
+            <TensorDescriptor>tensorDesc, &dataType,
+            &n, &c, &h, &w, &nStride, &cStride, &hStride, &wStride)
+    check_status(status)
+    return dataType, n, c, h, w, nStride, cStride, hStride, wStride
+
+
+cpdef destroyTensorDescriptor(size_t tensorDesc):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
+    ELSE:
+        status = cudnnDestroyTensorDescriptor(<TensorDescriptor>tensorDesc)
+    check_status(status)
+
+###############################################################################
+# Activation
+###############################################################################
+
+cpdef size_t createActivationDescriptor() except? 0:
+    cdef ActivationDescriptor activationDesc
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenCreateActivationDescriptor(&activationDesc)
+    ELSE:
+        status = cudnnCreateActivationDescriptor(&activationDesc)
+    check_status(status)
+    return <size_t>activationDesc
+
+
+cpdef setActivationDescriptor(
+        size_t activationDesc, int mode, int reluNanOpt, double reluCeiling):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenSetActivationDescriptor(
+            <ActivationDescriptor>activationDesc, <ActivationMode>mode, 1.0, 0.0, 0.0)
+    ELSE:
+        status = cudnnSetActivationDescriptor(
+            <ActivationDescriptor>activationDesc, <ActivationMode>mode,
+            <NanPropagation>reluNanOpt, reluCeiling)
+    check_status(status)
+
+
+cpdef destroyActivationDescriptor(size_t activationDesc):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenDestroyActivationDescriptor(
+            <ActivationDescriptor>activationDesc)
+    ELSE:    
+        status = cudnnDestroyActivationDescriptor(
+            <ActivationDescriptor>activationDesc)
+    check_status(status)
+
+
+cpdef softmaxForward(
+        intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
+    _setStream(handle)
+    with nogil:
+        IF CUPY_HIP_VERSION != 0:
+            status = miopenSoftmaxForward(
+                <Handle>handle, <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
+                <void*>beta, <TensorDescriptor>dstDesc, <void*>dstData)
+        ELSE:
+            status = cudnnSoftmaxForward(
+                <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
+                <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
+                <void*>beta, <TensorDescriptor>dstDesc, <void*>dstData)
+    check_status(status)
+
+
+cpdef softmaxBackward(
+        intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t srcDiffDesc, size_t srcDiffData, size_t beta,
+        size_t destDiffDesc, size_t destDiffData):
+    _setStream(handle)
+    with nogil:
+        IF CUPY_HIP_VERSION != 0:
+            status = miopenSoftmaxBackward(
+                <Handle>handle, <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
+                <TensorDescriptor>srcDiffDesc, <void*>srcDiffData, <void*>beta,
+                <TensorDescriptor>destDiffDesc, <void*>destDiffData)
+        ELSE:
+            status = cudnnSoftmaxBackward(
+                <Handle>handle, <SoftmaxAlgorithm>algorithm, <SoftmaxMode>mode,
+                <void*>alpha, <TensorDescriptor>srcDesc, <void*>srcData,
+                <TensorDescriptor>srcDiffDesc, <void*>srcDiffData, <void*>beta,
+                <TensorDescriptor>destDiffDesc, <void*>destDiffData)
+    check_status(status)
+
+
+cpdef activationForward_v4(
+        intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t beta, size_t dstDesc, size_t dstData):
+    _setStream(handle)
+    with nogil:
+        IF CUPY_HIP_VERSION != 0:
+            status = miopenActivationForward(
+                <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
+                <TensorDescriptor>srcDesc, <void*>srcData, <void*>beta,
+                <TensorDescriptor>dstDesc, <void*>dstData)
+        ELSE:
+            status = cudnnActivationForward_v4(
+                <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
+                <TensorDescriptor>srcDesc, <void*>srcData, <void*>beta,
+                <TensorDescriptor>dstDesc, <void*>dstData)
+    check_status(status)
+
+
+cpdef activationBackward_v4(
+        intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
+        size_t srcData, size_t srcDiffDesc, size_t srcDiffData,
+        size_t destDesc, size_t destData, size_t beta, size_t destDiffDesc,
+        size_t destDiffData):
+    _setStream(handle)
+    with nogil:
+        IF CUPY_HIP_VERSION != 0:
+            status = miopenActivationBackward(
+                <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
+                <TensorDescriptor>srcDesc, <void*>srcData,
+                <TensorDescriptor>srcDiffDesc, <void*>srcDiffData,
+                <TensorDescriptor>destDesc, <void*>destData, <void*>beta,
+                <TensorDescriptor>destDiffDesc, <void*>destDiffData)
+        ELSE:
+            status = cudnnActivationBackward_v4(
+                <Handle>handle, <ActivationDescriptor>activationDesc, <void*>alpha,
+                <TensorDescriptor>srcDesc, <void*>srcData,
+                <TensorDescriptor>srcDiffDesc, <void*>srcDiffData,
+                <TensorDescriptor>destDesc, <void*>destData, <void*>beta,
+                <TensorDescriptor>destDiffDesc, <void*>destDiffData)
+    check_status(status)
