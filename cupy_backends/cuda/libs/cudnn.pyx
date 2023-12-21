@@ -1353,7 +1353,7 @@ ELSE:
         perfResults.resize(returnedAlgoCount)
         return perfResults
     
-    """    
+        
     cpdef list findConvolutionForwardAlgorithmEx(
             intptr_t handle, size_t xDesc, size_t x, size_t wDesc, size_t w,
             size_t convDesc, size_t yDesc, size_t y, int requestedAlgoCount,
@@ -1391,7 +1391,6 @@ ELSE:
         return [CuDNNAlgoPerf(p.algo, p.status, p.time, p.memory,
                               p.determinism, p.mathType)
                 for p in perfResults]
-    """    
     
     cpdef int getConvolutionForwardAlgorithm_v6(
             intptr_t handle, size_t srcDesc, size_t filterDesc, size_t convDesc,
@@ -1405,7 +1404,6 @@ ELSE:
         check_status(status)
         return algo
     
-    """    
     cpdef list getConvolutionForwardAlgorithm_v7(
             intptr_t handle, size_t srcDesc, size_t filterDesc, size_t convDesc,
             size_t destDesc, int requestedAlgoCount):
@@ -1422,7 +1420,6 @@ ELSE:
         return [CuDNNAlgoPerf(p.algo, p.status, p.time, p.memory,
                               p.determinism, p.mathType)
                 for p in perfResults]
-    """    
     
     cpdef Py_ssize_t getConvolutionForwardWorkspaceSize(
             intptr_t handle, size_t srcDesc, size_t filterDesc, size_t convDesc,
@@ -1479,7 +1476,6 @@ ELSE:
         perfResults.resize(returnedAlgoCount)
         return perfResults
     
-    """    
     cpdef list findConvolutionBackwardFilterAlgorithmEx(
             intptr_t handle, size_t xDesc, size_t x, size_t dyDesc, size_t dy,
             size_t convDesc, size_t dwDesc, size_t dw, int requestedAlgoCount,
@@ -1517,7 +1513,6 @@ ELSE:
         return [CuDNNAlgoPerf(p.algo, p.status, p.time, p.memory,
                               p.determinism, p.mathType)
                 for p in perfResults]
-    """    
     
     cpdef int getConvolutionBackwardFilterAlgorithm_v6(
             intptr_t handle, size_t srcDesc, size_t diffDesc, size_t convDesc,
@@ -1533,7 +1528,6 @@ ELSE:
         check_status(status)
         return algo
     
-    """    
     cpdef list getConvolutionBackwardFilterAlgorithm_v7(
             intptr_t handle, size_t srcDesc, size_t diffDesc, size_t convDesc,
             size_t gradDesc, int requestedAlgoCount):
@@ -1549,7 +1543,6 @@ ELSE:
         return [CuDNNAlgoPerf(p.algo, p.status, p.time, p.memory,
                               p.determinism, p.mathType)
                 for p in perfResults]
-    """    
     
     cpdef Py_ssize_t getConvolutionBackwardFilterWorkspaceSize(
             intptr_t handle, size_t srcDesc, size_t diffDesc, size_t convDesc,
@@ -1595,7 +1588,6 @@ ELSE:
         perfResults.resize(returnedAlgoCount)
         return perfResults
     
-    """    
     cpdef list findConvolutionBackwardDataAlgorithmEx(
             intptr_t handle, size_t wDesc, size_t w, size_t dyDesc, size_t dy,
             size_t convDesc, size_t dxDesc, size_t dx,
@@ -1633,7 +1625,6 @@ ELSE:
         return [CuDNNAlgoPerf(p.algo, p.status, p.time, p.memory,
                               p.determinism, p.mathType)
                 for p in perfResults]
-    """    
     
     cpdef int getConvolutionBackwardDataAlgorithm_v6(
             intptr_t handle, size_t filterDesc, size_t diffDesc, size_t convDesc,
@@ -1648,7 +1639,6 @@ ELSE:
         check_status(status)
         return algo
     
-    """    
     cpdef list getConvolutionBackwardDataAlgorithm_v7(
             intptr_t handle, size_t filterDesc, size_t diffDesc, size_t convDesc,
             size_t gradDesc, int requestedAlgoCount):
@@ -1665,7 +1655,6 @@ ELSE:
         return [CuDNNAlgoPerf(p.algo, p.status, p.time, p.memory,
                               p.determinism, p.mathType)
                 for p in perfResults]
-    """    
     
     cpdef Py_ssize_t getConvolutionBackwardDataWorkspaceSize(
             intptr_t handle, size_t filterDesc, size_t diffDesc, size_t convDesc,
@@ -2697,6 +2686,15 @@ ELSE:
                                           <FusedOpsVariantParamPack>varPack)
         check_status(status)
 
+cdef class CuDNNAlgoPerf:
+
+    def __init__(self, algo, status, time, memory, determinism, mathType):
+        self.algo = algo
+        self.status = status
+        self.time = time
+        self.memory = memory
+        self.determinism = determinism
+        self.mathType = mathType
 ############################################################################
 # Error handling
 ###############################################################################
@@ -2794,3 +2792,33 @@ cpdef destroy(intptr_t handle):
         ELSE:
             status = cudnnDestroy(<Handle>handle)
     check_status(status)
+    
+
+cpdef setStream(intptr_t handle, size_t stream):
+    # TODO(leofang): The support of stream capture is not mentioned at all in
+    # the cuDNN docs (as of CUDA 11.5), so we disable this functionality.
+    if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
+        raise NotImplementedError(
+            'calling cuDNN API during stream capture is currently '
+            'unsupported')
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenSetStream(<Handle>handle, <Stream>stream)
+    ELSE:
+        status = cudnnSetStream(<Handle>handle, <driver.Stream>stream)
+    check_status(status)
+
+
+cpdef size_t getStream(intptr_t handle) except? 0:
+    IF CUPY_HIP_VERSION != 0:
+        cdef Stream stream
+        status = miopenGetStream(<Handle>handle, &stream)  
+    ELSE:        
+        cdef driver.Stream stream
+        status = cudnnGetStream(<Handle>handle, &stream)
+    check_status(status)
+    return <size_t>stream
+
+
+cdef _setStream(intptr_t handle):
+    """Set current stream"""
+    setStream(handle, stream_module.get_current_stream_ptr())
