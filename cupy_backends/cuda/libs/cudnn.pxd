@@ -306,6 +306,44 @@ cpdef destroy(intptr_t handle)
 cpdef setStream(intptr_t handle, size_t stream)
 cpdef size_t getStream(intptr_t handle) except? 0
 
+###############################################################################
+# Tensor manipulation
+###############################################################################
+
+cpdef size_t createTensorDescriptor() except? 0
+cpdef setTensor4dDescriptor(size_t tensorDesc, int format, int dataType,
+                            int n, int c, int h, int w)
+cpdef setTensor4dDescriptorEx(size_t tensorDesc, int dataType,
+                              int n, int c, int h, int w, int nStride,
+                              int cStride, int hStride, int wStride)
+cpdef tuple getTensor4dDescriptor(size_t tensorDesc)
+cpdef destroyTensorDescriptor(size_t tensorDesc)
+
+###############################################################################
+# Activation
+###############################################################################
+
+cpdef size_t createActivationDescriptor() except? 0
+cpdef setActivationDescriptor(
+    size_t activationDesc, int mode, int reluNanOpt, double reluCeiling)
+cpdef destroyActivationDescriptor(size_t activationDesc)
+cpdef softmaxForward(
+    intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
+    size_t srcData, size_t beta, size_t dstDesc, size_t dstData)
+cpdef softmaxBackward(
+    intptr_t handle, int algorithm, int mode, size_t alpha, size_t srcDesc,
+    size_t srcData, size_t srcDiffDesc, size_t srcDiffData, size_t beta,
+    size_t destDiffDesc, size_t destDiffData)
+cpdef activationForward_v4(
+    intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
+    size_t srcData, size_t beta, size_t dstDesc, size_t dstData)
+cpdef activationBackward_v4(
+    intptr_t handle, size_t activationDesc, size_t alpha, size_t srcDesc,
+    size_t srcData, size_t srcDiffDesc, size_t srcDiffData,
+    size_t destDesc, size_t destData, size_t beta, size_t destDiffDesc,
+    size_t destDiffData)
+
+
 IF CUPY_HIP_VERSION == 0:
     ###############################################################################
     # Runtime error checking

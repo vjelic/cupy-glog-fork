@@ -6,8 +6,7 @@
 
 #include "miopen/miopen.h"
 
-#endif // #if CUPY_USE_HIP
-#ifndef CUPY_NO_CUDA
+#elif !defined(CUPY_NO_CUDA)
 
 #include <cudnn.h>
 
@@ -16,8 +15,8 @@
 #include "stub/cupy_cuda_common.h"
 #include "stub/cupy_cudnn.h"
 
-#endif // #ifdef CUPY_NO_CUDA
 
+#endif // #ifdef CUPY_USE_HIP
 
 ///////////////////////////////////////////////////////////////////////////////
 // Definitions are for compatibility with cuDNN v5 and v6.
@@ -25,7 +24,7 @@
 
 extern "C" {
 
-#if defined(CUPY_NO_CUDA) || (CUDNN_VERSION < 6000)
+#if (defined(CUPY_NO_CUDA) || (CUDNN_VERSION < 6000)) && !CUPY_USE_HIP
 
 typedef enum {} cudnnRNNAlgo_t;
 typedef enum {} cudnnReduceTensorOp_t;
@@ -84,7 +83,7 @@ cudnnStatus_t cudnnReduceTensor(...) {
 #endif // #if defined(CUPY_NO_CUDA) || (CUDNN_VERSION < 6000)
 
 
-#if !defined(CUPY_NO_CUDA)
+#if !defined(CUPY_NO_CUDA) && !CUPY_USE_HIP
 // Some functions are renamed in cuDNN v5.
 // Following definitions are for compatibility with cuDNN v5 and higher.
 
@@ -95,14 +94,14 @@ cudnnStatus_t cudnnReduceTensor(...) {
 
 #endif // #if !defined(CUPY_NO_CUDA)
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 6000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 6000) && !CUPY_USE_HIP
 
 #define cudnnSetConvolution2dDescriptor_v4 cudnnSetConvolution2dDescriptor
 
 #endif // #if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 6000)
 
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION >= 6000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION >= 6000) && !CUPY_USE_HIP
 // Some functions are renamed in cuDNN v6.
 // Following definitions are for compatibility with cuDNN v6 and higher.
 
@@ -117,7 +116,7 @@ cudnnStatus_t cudnnReduceTensor(...) {
 #endif // #if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION >= 6000)
 
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000) && !CUPY_USE_HIP
 
 #define cudnnSetRNNDescriptor_v5 cudnnSetRNNDescriptor
 
@@ -188,14 +187,14 @@ cudnnStatus_t cudnnSetConvolution2dDescriptor_v4(...) {
 #endif // #if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION >= 7000)
 
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 6000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 6000) && !CUPY_USE_HIP
 
 typedef enum {} cudnnDeterminism_t;
 
 #endif // #if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 6000)
 
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000) && !CUPY_USE_HIP
 
 cudnnStatus_t cudnnFindConvolutionForwardAlgorithmEx_v7(...) {
     return CUDNN_STATUS_NOT_SUPPORTED;
@@ -253,7 +252,7 @@ typedef struct {
 #endif // #if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION >= 7000)
 
 
-#if defined(CUPY_NO_CUDA) || (CUDNN_VERSION < 7200)
+#if defined(CUPY_NO_CUDA) || (CUDNN_VERSION < 7200) && !CUPY_USE_HIP
 
 typedef void* cudnnRNNDataDescriptor_t;
 
@@ -302,7 +301,7 @@ cudnnStatus_t cudnnRNNBackwardWeightsEx(...) {
 
 #endif // defined(CUPY_NO_CUDA) || (CUDNN_VERSION < 7200)
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 8000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 8000) && !CUPY_USE_HIP
 // TODO: check function names when cuDNN 8 is released.
 
 #define cudnnGetConvolutionForwardAlgorithm_v6 cudnnGetConvolutionForwardAlgorithm
@@ -312,7 +311,7 @@ cudnnStatus_t cudnnRNNBackwardWeightsEx(...) {
 #endif // #if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 8000)
 
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000) && !CUPY_USE_HIP
 
 typedef enum {} cudnnErrQueryMode_t;
 typedef struct cudnnRuntimeTag_t cudnnRuntimeTag_t;
@@ -323,7 +322,7 @@ cudnnStatus_t cudnnQueryRuntimeError(...) {
 
 #endif // !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7000)
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7400)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7400) && !CUPY_USE_HIP
 
 typedef enum {} cudnnBatchNormOps_t;
 
@@ -349,7 +348,7 @@ cudnnStatus_t cudnnGetBatchNormalizationTrainingExReserveSpaceSize(...) {
 
 #endif // !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7400)
 
-#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7600)
+#if !defined(CUPY_NO_CUDA) && (CUDNN_VERSION < 7600) && !CUPY_USE_HIP
 
 // fused ops
 typedef void* cudnnFusedOpsConstParamPack_t;
