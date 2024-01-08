@@ -467,10 +467,10 @@ cpdef inline tuple _mat_to_cublas_contiguous(
         lda = a._strides[1] // a.itemsize
         if lda < a._shape[0]:
             lda = a._shape[0]
-        return a, trans, lda
+        return a, 111 + trans if runtime._is_hip_environment else trans, lda
     if not a._c_contiguous:
         a = a.copy()
-    return a, 1 - trans, a._strides[0] // a.itemsize
+    return a, 112 - trans if runtime._is_hip_environment else 1-trans, a._strides[0] // a.itemsize
 
 
 cpdef _ndarray_base dot(
@@ -612,10 +612,10 @@ cpdef _ndarray_base tensordot_core(
         c.shape = (n, m)
 
     if dtype not in 'efdFD':
-        if transa:
+        if (runtime._is_hip_environment and transa==112) or (not runtime._is_hip_environment and transa):
             a = a.T
             a = _internal_ascontiguousarray(a)
-        if transb:
+        if (runtime._is_hip_environment and transb==112) or (not runtime._is_hip_environment and transb):
             b = _internal_ascontiguousarray(b)
         _integral_tensordot_core(b, a, c, m, n, k, dtype, ret_shape)
         if copy_to_out is not None:
@@ -643,6 +643,13 @@ cpdef _ndarray_base tensordot_core(
         coef_dtype = dtype
     one = numpy.array(1.0, dtype=coef_dtype)
     zero = numpy.array(0.0, dtype=coef_dtype)
+    
+    IF CUPY_HIP_VERSION>0:
+        cdef int runtime_R_16F = runtime.HIPBLAS_R_16F
+        cdef int runtime_R_32F = runtime.HIPBLAS_R_32F
+    ELSE:
+        cdef int runtime_R_16F = runtime.CUDA_R_16F
+        cdef int runtime_R_32F = runtime.CUDA_R_32F
 
     if dtype == 'e':
         use_tensor_core = (not runtime._is_hip_environment and
@@ -656,13 +663,13 @@ cpdef _ndarray_base tensordot_core(
                 cublas.setMathMode(handle, cublas.CUBLAS_TENSOR_OP_MATH)
                 algo = cublas.CUBLAS_GEMM_DEFAULT_TENSOR_OP
             else:
-                algo = cublas.CUBLAS_GEMM_DEFAULT
+                algo = cublas.HIPBLAS_GEMM_DEFAULT if runtime._is_hip_environment else cublas.CUBLAS_GEMM_DEFAULT
 
             cublas.gemmEx(
                 handle, <int>transb, <int> transa, <int>m, <int>n, <int>k,
-                one.ctypes.data, b.data.ptr, runtime.CUDA_R_16F, <int>ldb,
-                a.data.ptr, runtime.CUDA_R_16F, <int>lda, zero.ctypes.data,
-                c.data.ptr, runtime.CUDA_R_16F, <int>m, runtime.CUDA_R_32F,
+                one.ctypes.data, b.data.ptr, runtime_R_16F, <int>ldb,
+                a.data.ptr, runtime_R_16F, <int>lda, zero.ctypes.data,
+                c.data.ptr, runtime_R_16F, <int>m, runtime_R_32F,
                 algo)
 
             if can_opt_in_tensorcore:
@@ -670,15 +677,15 @@ cpdef _ndarray_base tensordot_core(
         else:
             cublas.sgemmEx(
                 handle, <int>transb, <int> transa, <int>m, <int>n, <int>k,
-                one.ctypes.data, b.data.ptr, runtime.CUDA_R_16F, <int>ldb,
-                a.data.ptr, runtime.CUDA_R_16F, <int>lda, zero.ctypes.data,
-                c.data.ptr, runtime.CUDA_R_16F, <int>m)
+                one.ctypes.data, b.data.ptr, runtime_R_16F, <int>ldb,
+                a.data.ptr, runtime_R_16F, <int>lda, zero.ctypes.data,
+                c.data.ptr, runtime_R_16F, <int>m)
     elif dtype == 'f':
         cublas.sgemmEx(
             handle, <int>transb, <int> transa, <int>m, <int>n, <int>k,
-            one.ctypes.data, b.data.ptr, runtime.CUDA_R_32F, <int>ldb,
-            a.data.ptr, runtime.CUDA_R_32F, <int>lda, zero.ctypes.data,
-            c.data.ptr, runtime.CUDA_R_32F, <int>m)
+            one.ctypes.data, b.data.ptr, runtime_R_32F, <int>ldb,
+            a.data.ptr, runtime_R_32F, <int>lda, zero.ctypes.data,
+            c.data.ptr, runtime_R_32F, <int>m)
     elif dtype == 'd':
         cublas.dgemm(
             handle, <int>transb, <int>transa, <int>m, <int>n, <int>k,
@@ -1003,7 +1010,14 @@ cpdef _ndarray_base matmul(
 
     cdef intptr_t handle = device.get_cublas_handle()
     cdef int cuda_dtype = to_cuda_dtype(dtype)
-    cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
+    IF CUPY_HIP_VERSION>0:
+        cdef int algo = cublas.HIPBLAS_GEMM_DEFAULT
+        cdef int transa = 111
+        cdef int transb = 111
+    ELSE:
+        cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
+        cdef int transa = 0
+        cdef int transb = 0
 
     one = numpy.array(1, dtype=dtype)
     zero = numpy.array(0, dtype=dtype)
@@ -1014,8 +1028,8 @@ cpdef _ndarray_base matmul(
         if dtype.char in 'fFdD':
             cublas.gemmStridedBatchedEx(
                 handle,
-                0,  # transa
-                0,  # transb
+                transa,
+                transb,
                 n, m, ka, one.ctypes.data,
                 a.data.ptr, cuda_dtype, lda, strideA,
                 b.data.ptr, cuda_dtype, ldb, strideB,
@@ -1031,8 +1045,8 @@ cpdef _ndarray_base matmul(
         if dtype == numpy.float32:
             cublas.sgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                transa,
+                transb,
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1040,8 +1054,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.float64:
             cublas.dgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                transa,
+                transb,
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1049,8 +1063,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.complex64:
             cublas.cgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                transa,
+                transb,
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1058,8 +1072,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.complex128:
             cublas.zgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                transa,
+                transb,
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,

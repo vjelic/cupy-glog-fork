@@ -69,23 +69,39 @@ cpdef int to_cuda_dtype(dtype, bint is_half_allowed=False) except -1:
         dtype_char = dtype.char
     except AttributeError:
         dtype_char = dtype
-
-    if dtype_char == 'e' and is_half_allowed:
-        return runtime.CUDA_R_16F
-    elif dtype_char == 'f':
-        return runtime.CUDA_R_32F
-    elif dtype_char == 'd':
-        return runtime.CUDA_R_64F
-    elif dtype_char == 'F':
-        return runtime.CUDA_C_32F
-    elif dtype_char == 'D':
-        return runtime.CUDA_C_64F
-    elif dtype_char == 'E' and is_half_allowed:
-        # complex32, not supported in NumPy
-        return runtime.CUDA_C_16F
-    else:
-        raise TypeError('dtype is not supported: {}'.format(dtype))
-
+    
+    IF CUPY_HIP_VERSION>0:
+        if dtype_char == 'e' and is_half_allowed:
+            return runtime.HIPBLAS_R_16F
+        elif dtype_char == 'f':
+            return runtime.HIPBLAS_R_32F
+        elif dtype_char == 'd':
+            return runtime.HIPBLAS_R_64F
+        elif dtype_char == 'F':
+            return runtime.HIPBLAS_C_32F
+        elif dtype_char == 'D':
+            return runtime.HIPBLAS_C_64F
+        elif dtype_char == 'E' and is_half_allowed:
+            # complex32, not supported in NumPy
+            return runtime.HIPBLAS_C_16F
+        else:
+            raise TypeError('dtype is not supported: {}'.format(dtype))
+    ELSE:
+        if dtype_char == 'e' and is_half_allowed:
+            return runtime.CUDA_R_16F
+        elif dtype_char == 'f':
+            return runtime.CUDA_R_32F
+        elif dtype_char == 'd':
+            return runtime.CUDA_R_64F
+        elif dtype_char == 'F':
+            return runtime.CUDA_C_32F
+        elif dtype_char == 'D':
+            return runtime.CUDA_C_64F
+        elif dtype_char == 'E' and is_half_allowed:
+            # complex32, not supported in NumPy
+            return runtime.CUDA_C_16F
+        else:
+            raise TypeError('dtype is not supported: {}'.format(dtype))
 
 cdef _numpy_can_cast = numpy.can_cast
 
