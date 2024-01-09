@@ -78,6 +78,12 @@ IF CUPY_HIP_VERSION != 0:
             TensorDescriptor tensorDesc, DataType dataType,
             int n, int c, int h, int w,
             int nStride, int cStride, int hStride, int wStride)
+        int miopenSetTensorDescriptor(
+            TensorDescriptor tensorDesc, DataType dataType,
+            int nbDims, const int filterDimA[], const int* stride)
+        int miopenGetTensorDescriptor(
+            FilterDescriptor wDesc, DataType* dataType,
+            int* nbDims, int filterDimA[], int* stride)
         int miopenGet4dTensorDescriptor(
             TensorDescriptor tensorDesc, DataType* dataType,
             int* n, int* c, int* h, int* w,
@@ -2881,4 +2887,72 @@ cpdef activationBackward_v4(
                 <TensorDescriptor>srcDiffDesc, <void*>srcDiffData,
                 <TensorDescriptor>destDesc, <void*>destData, <void*>beta,
                 <TensorDescriptor>destDiffDesc, <void*>destDiffData)
+    check_status(status)
+
+###############################################################################
+# Filter manipulation
+###############################################################################
+
+cpdef size_t createFilterDescriptor() except? 0:
+    IF CUPY_HIP_VERSION != 0:
+        cdef TensorDescriptor desc
+        status = miopenCreateTensorDescriptor(&desc)
+    ELSE:
+        cdef FilterDescriptor desc
+        status = cudnnCreateFilterDescriptor(&desc)
+    check_status(status)
+    return <size_t>desc
+
+
+cpdef setFilter4dDescriptor_v4(
+        size_t filterDesc, int dataType,
+        int format, int k, int c, int h, int w):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenSet4dTensorDescriptor(
+                <TensorDescriptor>filterDesc, <DataType> dataType,
+                 k, c, h, w)
+    ELSE:
+        status = cudnnSetFilter4dDescriptor_v4(
+                <FilterDescriptor>filterDesc, <DataType> dataType,
+                <TensorFormat> format, k, c, h, w)
+    check_status(status)
+
+
+cpdef setFilterNdDescriptor_v4(
+        size_t filterDesc, int dataType,
+        int format, int nbDims, size_t filterDimA):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenSetTensorDescriptor(
+                <TensorDescriptor>filterDesc, <DataType>dataType,
+                nbDims, <int*>filterDimA, NULL) #TODO miopenSetTensorDescriptor takes stride as input now set to NULL, confirm the value of stride 
+    ELSE:
+        status = cudnnSetFilterNdDescriptor_v4(
+                <FilterDescriptor>filterDesc, <DataType>dataType,
+                <TensorFormat>format, nbDims, <int*>filterDimA)
+    check_status(status)
+
+"""
+cpdef getFilterNdDescriptor(size_t wDesc, int nbDimsRequested):
+    cdef DataType dataType
+    cdef TensorFormat format
+    cdef int nbDims
+    cdef vector.vector[int] filterDimA
+    filterDimA.resize(nbDimsRequested)
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenGetTensorDescriptor(
+                <TensorDescriptor>wDesc, &dataType,
+                &nbDims, filterDimA.data(), NULL)
+    ELSE:
+        status = cudnnGetFilterNdDescriptor_v4(
+                <FilterDescriptor>wDesc, nbDimsRequested, &dataType,
+                &format, &nbDims, filterDimA.data())
+    check_status(status)
+    return dataType, format, nbDims, tuple(filterDimA)
+"""
+
+cpdef destroyFilterDescriptor(size_t filterDesc):
+    IF CUPY_HIP_VERSION != 0:
+        status = miopenDestroyTensorDescriptor(<TensorDescriptor>filterDesc)
+    ELSE:
+        status = cudnnDestroyFilterDescriptor(<FilterDescriptor>filterDesc)
     check_status(status)

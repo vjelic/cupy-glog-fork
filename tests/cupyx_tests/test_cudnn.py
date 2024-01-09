@@ -59,7 +59,6 @@ class TestCudnnActivation:
     'dtype': [numpy.float32, numpy.float64],
     'mode': coef_modes,
 }))
-@pytest.mark.skipif(not cudnn_enabled, reason='cuDNN is not available')
 class TestCudnnActivationCoef:
 
     @pytest.fixture(autouse=True)
