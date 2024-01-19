@@ -15,15 +15,25 @@ ELSE:
     ###############################################################################
 
     cdef extern from '../../cupy_complex.h':
-        ctypedef struct cuComplex 'cuComplex':
-            float x, y
+        IF 0 < CUPY_HIP_VERSION < 60000000:
+            ctypedef struct cuComplex 'hipblasComplex':
+                float x, y
 
-        ctypedef struct cuDoubleComplex 'cuDoubleComplex':
-            double x, y
+            ctypedef struct cuDoubleComplex 'hipblasDoubleComplex':
+                double x, y
+        ELSE:
+            ctypedef struct cuComplex 'cuComplex':
+                float x, y
+
+            ctypedef struct cuDoubleComplex 'cuDoubleComplex':
+                double x, y
 
     cdef extern from '../../cupy_blas.h' nogil:
         ctypedef void* Stream 'cudaStream_t'
-        ctypedef int DataType 'cudaDataType'
+        IF 0 < CUPY_HIP_VERSION < 60000000:
+            ctypedef int DataType 'hipblasDatatype_t'
+        ELSE:
+            ctypedef int DataType 'cudaDataType'
 
         # Context
         int cublasCreate(Handle* handle)
