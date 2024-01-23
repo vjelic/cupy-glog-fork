@@ -128,6 +128,48 @@ cpdef int _get_byte_size(int data_type) except -1:
     else:
         raise TypeError('Invalid cuDNN data type: {}'.format(data_type))
 
+cpdef _create_tensor_nd_descriptor(
+        size_t desc, _ndarray_base arr, int data_type=-1):
+    cdef vector.vector[int] c_shape, c_strides
+    cdef Py_ssize_t itemsize, s
+    cdef int next_stride, i
+    if data_type == -1:  # `-1` is used instead of `None`
+        data_type = get_data_type(arr.dtype)
+    itemsize = arr.itemsize
+    for s in arr._strides:
+        c_strides.push_back(s // itemsize)
+    for s in arr._shape:
+        c_shape.push_back(s)
+    # Use "c-contiguous stride" with the next axis, if ambiguous
+    next_stride = 1
+    for i in reversed(range(c_shape.size())):
+        if c_shape[i] <= 1:
+            c_strides[i] = next_stride
+        else:
+            next_stride = c_shape[i] * c_strides[i]
+
+    cudnn.setTensorNdDescriptor(
+        desc, data_type, arr._shape.size(), <size_t>c_shape.data(),
+        <size_t>c_strides.data())
+
+
+cpdef _create_tensor_descriptor(size_t desc, _ndarray_base arr,
+                                int format=cudnn.CUDNN_TENSOR_NCHW):
+    if not arr._c_contiguous:
+        raise ValueError('cupyx.cudnn supports c-contiguous arrays only')
+    if arr._shape.size() == 4:
+        data_type = get_data_type(arr.dtype)
+        if format == cudnn.CUDNN_TENSOR_NCHW:
+            n, c, h, w = arr._shape
+        elif format == cudnn.CUDNN_TENSOR_NHWC:
+            n, h, w, c = arr._shape
+        else:
+            raise ValueError('unknown cudnnTensorFormat: {}'.format(format))
+        cudnn.setTensor4dDescriptor(desc, format, data_type, n, c, h, w)
+    else:
+        _create_tensor_nd_descriptor(desc, arr)
+
+
 cpdef _create_tensor_descriptor_as4darray(size_t desc,
                                           _ndarray_base arr):
     cdef Py_ssize_t dim1, dim2
@@ -139,6 +181,134 @@ cpdef _create_tensor_descriptor_as4darray(size_t desc,
     dim2 = arr.size // dim1
     cudnn.setTensor4dDescriptor(desc, cudnn.CUDNN_TENSOR_NCHW, data_type,
                                 dim1, dim2, 1, 1)
+
+cpdef _create_filter_descriptor(
+        size_t desc, _ndarray_base arr, int format=cudnn.CUDNN_TENSOR_NCHW):
+    cdef vector.vector[int] c_shape
+    cdef Py_ssize_t s, ndim = arr._shape.size()
+    data_type = get_data_type(arr.dtype)
+    if ndim == 4:
+        if format == cudnn.CUDNN_TENSOR_NCHW:
+            k, c, h, w = arr._shape
+        elif format == cudnn.CUDNN_TENSOR_NHWC:
+            k, h, w, c = arr._shape
+        else:
+            raise ValueError('unknown cudnnTensorFormat: {}'.format(format))
+        cudnn.setFilter4dDescriptor_v4(
+            desc, data_type, format, k, c, h, w)
+    else:
+        for s in arr._shape:
+            c_shape.push_back(s)
+        cudnn.setFilterNdDescriptor_v4(
+            desc, data_type, format, ndim, <size_t>c_shape.data())
+
+
+cpdef _create_convolution_descriptor(
+        size_t desc, tuple pad, tuple stride, tuple dilation, int groups,
+        object dtype, int mode, bint use_tensor_core):
+    cdef int d0, d1, p0, p1, s0, s1
+    cdef vector.vector[int] c_pad, c_stride, c_dilation
+    ndim = len(pad)
+    if ndim != len(stride):
+        raise ValueError('pad and stride must be of same length')
+
+    compute_type = get_data_type(dtype)
+    # TODO(takagi) Temporarily use computing precision of FP32 for
+    #     storing precision of FP16.
+    if compute_type == cudnn.CUDNN_DATA_HALF:
+        compute_type = cudnn.CUDNN_DATA_FLOAT
+
+    if ndim != 2:
+        c_pad = pad
+        c_stride = stride
+        if dilation is None:
+            c_dilation.assign(ndim, 1)
+        else:
+            c_dilation = dilation
+            if cudnn_version() < 6000:
+                for i in c_dilation:
+                    if i != 1:
+                        raise ValueError(
+                            'dilation must be one when cuDNN < 6.0')
+        cudnn.setConvolutionNdDescriptor_v3(
+            desc, ndim, <size_t>c_pad.data(), <size_t>c_stride.data(),
+            <size_t>c_dilation.data(), mode, compute_type)
+    else:
+        if dilation is None:
+            d0 = d1 = 1
+        else:
+            d0, d1 = dilation
+            if cudnn_version() < 6000 and (d0 != 1 or d1 != 1):
+                raise ValueError('dilation must be one when cuDNN < 6.0')
+        p0, p1 = pad
+        s0, s1 = stride
+        cudnn.setConvolution2dDescriptor_v5(
+            desc, p0, p1, s0, s1, d0, d1, mode, compute_type)
+    if cudnn_version() >= 7000:
+        if use_tensor_core:
+            math_type = cudnn.CUDNN_TENSOR_OP_MATH
+            cudnn.setConvolutionMathType(desc, math_type)
+        if groups > 1:
+            cudnn.setConvolutionGroupCount(desc, groups)
+    elif groups > 1:
+        raise ValueError('groups must be one when cuDNN < 7.0')
+
+def create_tensor_descriptor(arr, format=cudnn.CUDNN_TENSOR_NCHW):
+    desc = Descriptor(cudnn.createTensorDescriptor(),
+                      _py_cudnn.destroyTensorDescriptor)
+    _create_tensor_descriptor(desc.value, arr, format)
+    return desc
+
+
+def create_uninitialized_tensor_descriptor():
+    """Create uninitialized tensor descriptor.
+
+    Create a cudnnCreateTensorDescriptor_t that is not yet initialized.
+    This is used by the batch normalization functions.
+    """
+    return Descriptor(cudnn.createTensorDescriptor(),
+                      _py_cudnn.destroyTensorDescriptor)
+
+
+def create_tensor_nd_descriptor(_ndarray_base arr):
+    cdef dict cache
+    if arr.size == 0:
+        return Descriptor(0, None)
+    if not arr.flags.c_contiguous:
+        raise ValueError('cupyx.cudnn supports c-contiguous arrays only')
+    data_type = get_data_type(arr.dtype)
+    key = (data_type, tuple(arr._shape))
+    cache = _get_nd_tensor_cache()
+    if key in cache:
+        return cache[key]
+
+    # numpy's stride is defined in bytes, but cudnn's stride is defined in
+    # size of element
+    desc = Descriptor(cudnn.createTensorDescriptor(),
+                      _py_cudnn.destroyTensorDescriptor)
+    _create_tensor_nd_descriptor(desc.value, arr, data_type)
+    cache[key] = desc
+    return desc
+
+
+def create_filter_descriptor(arr, format=cudnn.CUDNN_TENSOR_NCHW):
+    desc = Descriptor(cudnn.createFilterDescriptor(),
+                      _py_cudnn.destroyFilterDescriptor)
+    _create_filter_descriptor(desc.value, arr, format)
+    return desc
+
+
+def create_convolution_descriptor(pad, stride, dtype,
+                                  mode=cudnn.CUDNN_CROSS_CORRELATION,
+                                  dilation=None,
+                                  use_tensor_core=False,
+                                  groups=1):
+    desc = Descriptor(cudnn.createConvolutionDescriptor(),
+                      _py_cudnn.destroyConvolutionDescriptor)
+    _create_convolution_descriptor(
+        desc.value, pad, stride, dilation, groups,
+        dtype, mode, use_tensor_core)
+    return desc
 
 def create_activation_descriptor(mode, nan_prop_mode=cudnn.CUDNN_PROPAGATE_NAN,
                                  coef=0.0):

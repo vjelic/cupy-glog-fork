@@ -134,7 +134,6 @@ class TestCudnnDropout:
     'bias': [True, False],
     'layout': layouts,
 })))
-@pytest.mark.skipif(not cudnn_enabled, reason='cuDNN is not available')
 class TestConvolutionForward:
 
     @pytest.fixture(autouse=True)

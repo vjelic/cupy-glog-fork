@@ -3002,7 +3002,7 @@ cpdef setConvolutionGroupCount(size_t convDesc, int groupCount):
             <ConvolutionDescriptor>convDesc, groupCount)
     check_status(status)
 
-
+"""
 cpdef int getConvolutionGroupCount(size_t convDesc) except? -1:
     cdef int groupCount
     IF CUPY_HIP_VERSION != 0:
@@ -3013,7 +3013,7 @@ cpdef int getConvolutionGroupCount(size_t convDesc) except? -1:
             <ConvolutionDescriptor>convDesc, &groupCount)
     check_status(status)
     return groupCount
-
+"""
 
 cpdef setConvolution2dDescriptor_v4(
         size_t convDesc, int pad_h, int pad_w, int u, int v, int dilation_h,
