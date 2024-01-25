@@ -28,7 +28,7 @@ from cupy._core cimport _routines_math as _math
 from cupy.cuda cimport device
 from cupy_backends.cuda.api cimport runtime
 
-IF CUPY_HIP_VERSION>=60000000:
+IF CUPY_HIP_VERSION >= 60000000:
     from cupy._core._dtype cimport to_hip_computetype
 
 cdef extern from '../../cupy_backends/cupy_complex.h':
@@ -646,7 +646,7 @@ cpdef _ndarray_base tensordot_core(
     one = numpy.array(1.0, dtype=coef_dtype)
     zero = numpy.array(0.0, dtype=coef_dtype)
     
-    IF CUPY_HIP_VERSION>0:
+    IF CUPY_HIP_VERSION > 0:
         cdef int runtime_R_16F = runtime.HIPBLAS_R_16F
         cdef int runtime_R_32F = runtime.HIPBLAS_R_32F
     ELSE:
@@ -654,7 +654,7 @@ cpdef _ndarray_base tensordot_core(
         cdef int runtime_R_32F = runtime.CUDA_R_32F
 
     cdef int compute_32F = runtime_R_32F
-    IF CUPY_HIP_VERSION>=60000000:
+    IF CUPY_HIP_VERSION >= 60000000:
         compute_32F = runtime.HIPBLAS_COMPUTE_32F
 
     if dtype == 'e':
@@ -1017,13 +1017,13 @@ cpdef _ndarray_base matmul(
     cdef intptr_t handle = device.get_cublas_handle()
     cdef int cuda_dtype = to_cuda_dtype(dtype)
     cdef int cuda_computetype = cuda_dtype
-    IF CUPY_HIP_VERSION>0:
+    IF CUPY_HIP_VERSION > 0:
         cdef int algo = cublas.HIPBLAS_GEMM_DEFAULT
         cdef int transa = 111
         cdef int transb = 111
         # For rocm > 6.0, hipblas supports hipblasComputeType_t
         # convert to compute type accordingly
-        IF CUPY_HIP_VERSION>=60000000:
+        IF CUPY_HIP_VERSION >= 60000000:
             cuda_computetype = to_hip_computetype(dtype)
     ELSE:
         cdef int algo = cublas.CUBLAS_GEMM_DEFAULT

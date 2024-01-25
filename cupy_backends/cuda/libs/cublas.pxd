@@ -27,7 +27,7 @@ cdef extern from *:
 ###############################################################################
 # Enum
 ###############################################################################
-IF CUPY_HIP_VERSION!=0:
+IF CUPY_HIP_VERSION != 0:
     cpdef enum:
         # need to revisit this when cython supports C++ enums (in 3.0)
         # https://stackoverflow.com/a/67138945

@@ -62,7 +62,7 @@ cpdef tuple get_dtype_with_itemsize(t):
         return t, t.itemsize
     return ret
 
-IF CUPY_HIP_VERSION>=60000000:
+IF CUPY_HIP_VERSION >= 60000000:
     cpdef int to_hip_computetype(dtype, bint is_half_allowed=False) except -1:
         cdef str dtype_char
         try:
@@ -93,7 +93,7 @@ cpdef int to_cuda_dtype(dtype, bint is_half_allowed=False) except -1:
     except AttributeError:
         dtype_char = dtype
     
-    IF CUPY_HIP_VERSION>0:
+    IF CUPY_HIP_VERSION > 0:
         if dtype_char == 'e' and is_half_allowed:
             return runtime.HIPBLAS_R_16F
         elif dtype_char == 'f':

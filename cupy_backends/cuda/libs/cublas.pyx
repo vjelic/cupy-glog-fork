@@ -315,7 +315,7 @@ ELSE:
             Handle handle, int n, cuDoubleComplex **Aarray, int lda,
             int *PivotArray, int *infoArray, int batchSize)
 
-        IF CUPY_HIP_VERSION!=0:
+        IF CUPY_HIP_VERSION != 0:
             int cublasSgetrsBatched(
                 Handle handle, Operation trans, int n, int nrhs,
                 float **Aarray, int lda, const int *devIpiv,
@@ -1387,7 +1387,7 @@ ELSE:
                             size_t Barray, int ldb, size_t info, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasSgetrsBatched(
                     <Handle>handle, <Operation>trans, n, nrhs,
                     <float**>Aarray, lda, <const int*>devIpiv,
@@ -1404,7 +1404,7 @@ ELSE:
                             size_t Barray, int ldb, size_t info, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasDgetrsBatched(
                     <Handle>handle, <Operation>trans, n, nrhs,
                     <double**>Aarray, lda, <const int*>devIpiv,
@@ -1421,7 +1421,7 @@ ELSE:
                             size_t Barray, int ldb, size_t info, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasCgetrsBatched(
                     <Handle>handle, <Operation>trans, n, nrhs,
                     <cuComplex**>Aarray, lda, <const int*>devIpiv,
@@ -1438,7 +1438,7 @@ ELSE:
                             size_t Barray, int ldb, size_t info, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasZgetrsBatched(
                     <Handle>handle, <Operation>trans, n, nrhs,
                     <cuDoubleComplex**>Aarray, lda, <const int*>devIpiv,
@@ -1456,7 +1456,7 @@ ELSE:
             size_t Carray, int ldc, size_t infoArray, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasSgetriBatched(
                     <Handle>handle, n, <float**>Aarray, lda, <int*>PivotArray,
                     <float**>Carray, ldc, <int*>infoArray, batchSize)
@@ -1473,7 +1473,7 @@ ELSE:
             size_t Carray, int ldc, size_t infoArray, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasDgetriBatched(
                     <Handle>handle, n, <double**>Aarray, lda, <int*>PivotArray,
                     <double**>Carray, ldc, <int*>infoArray, batchSize)
@@ -1490,7 +1490,7 @@ ELSE:
             size_t Carray, int ldc, size_t infoArray, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasCgetriBatched(
                     <Handle>handle, n, <cuComplex**>Aarray, lda,
                     <int*>PivotArray,
@@ -1509,7 +1509,7 @@ ELSE:
             size_t Carray, int ldc, size_t infoArray, int batchSize):
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION!=0:
+            IF CUPY_HIP_VERSION != 0:
                 status = cublasZgetriBatched(
                     <Handle>handle, n, <cuDoubleComplex**>Aarray, lda,
                     <int*>PivotArray,
@@ -1583,7 +1583,7 @@ ELSE:
             int batchCount, int computeType, int algo):
         _setStream(handle)
         with nogil:
-            if computeType >= CUBLAS_COMPUTE_16F and CUPY_HIP_VERSION==0:
+            if computeType >= CUBLAS_COMPUTE_16F and CUPY_HIP_VERSION == 0:
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmStridedBatchedEx_v11(
                         <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
