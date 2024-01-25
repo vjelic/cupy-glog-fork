@@ -62,28 +62,29 @@ cpdef tuple get_dtype_with_itemsize(t):
         return t, t.itemsize
     return ret
 
-cpdef int to_hip_computetype(dtype, bint is_half_allowed=False) except -1:
-    cdef str dtype_char
-    try:
-        dtype_char = dtype.char
-    except AttributeError:
-        dtype_char = dtype
+IF CUPY_HIP_VERSION>=60000000:
+    cpdef int to_hip_computetype(dtype, bint is_half_allowed=False) except -1:
+        cdef str dtype_char
+        try:
+            dtype_char = dtype.char
+        except AttributeError:
+            dtype_char = dtype
 
-    if dtype_char == 'e' and is_half_allowed:
-        return runtime.HIPBLAS_COMPUTE_16F
-    elif dtype_char == 'f':
-        return runtime.HIPBLAS_COMPUTE_32F
-    elif dtype_char == 'd':
-        return runtime.HIPBLAS_COMPUTE_64F
-    elif dtype_char == 'F':
-        return runtime.HIPBLAS_COMPUTE_32F
-    elif dtype_char == 'D':
-        return runtime.HIPBLAS_COMPUTE_64F
-    elif dtype_char == 'E' and is_half_allowed:
-        # complex32, not supported in NumPy
-        return runtime.HIPBLAS_COMPUTE_16F
-    else:
-        raise TypeError('dtype is not supported: {}'.format(dtype))
+        if dtype_char == 'e' and is_half_allowed:
+            return runtime.HIPBLAS_COMPUTE_16F
+        elif dtype_char == 'f':
+            return runtime.HIPBLAS_COMPUTE_32F
+        elif dtype_char == 'd':
+            return runtime.HIPBLAS_COMPUTE_64F
+        elif dtype_char == 'F':
+            return runtime.HIPBLAS_COMPUTE_32F
+        elif dtype_char == 'D':
+            return runtime.HIPBLAS_COMPUTE_64F
+        elif dtype_char == 'E' and is_half_allowed:
+            # complex32, not supported in NumPy
+            return runtime.HIPBLAS_COMPUTE_16F
+        else:
+            raise TypeError('dtype is not supported: {}'.format(dtype))
 
 cpdef int to_cuda_dtype(dtype, bint is_half_allowed=False) except -1:
     cdef str dtype_char

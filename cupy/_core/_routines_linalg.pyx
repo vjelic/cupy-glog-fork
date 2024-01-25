@@ -17,7 +17,6 @@ from libc.stdint cimport intptr_t
 from cupy._core cimport _accelerator
 from cupy._core._carray cimport shape_t
 from cupy._core._dtype cimport to_cuda_dtype
-from cupy._core._dtype cimport to_hip_computetype
 from cupy._core._scalar cimport get_typename
 from cupy._core.core cimport _internal_ascontiguousarray
 from cupy._core.core cimport _ndarray_init
@@ -1023,6 +1022,7 @@ cpdef _ndarray_base matmul(
         # For rocm > 6.0, hipblas supports hipblasComputeType_t
         # convert to compute type accordingly
         IF CUPY_HIP_VERSION>=60000000:
+            from cupy._core._dtype cimport to_hip_computetype
             cuda_computetype = to_hip_computetype(dtype)
     ELSE:
         cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
