@@ -1533,14 +1533,24 @@ ELSE:
                 not runtime._is_hip_environment and
                 computeType >= CUBLAS_COMPUTE_16F
             ):
-                status = cublasGemmEx_v11(
-                    <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                    <const void*>alpha,
-                    <const void*>A, <DataType>Atype, lda,
-                    <const void*>B, <DataType>Btype, ldb,
-                    <const void*>beta,
-                    <void*>C, <DataType>Ctype, ldc,
-                    <ComputeType>computeType, <GemmAlgo>algo)
+                IF 0 < CUPY_HIP_VERSION < 60000000:
+                    status = cublasGemmEx_v11(
+                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
+                        <const void*>alpha,
+                        <const void*>A, <DataType>Atype, lda,
+                        <const void*>B, <DataType>Btype, ldb,
+                        <const void*>beta,
+                        <void*>C, <DataType>Ctype, ldc,
+                        <DataType>computeType, <GemmAlgo>algo)
+                ELSE:
+                    status = cublasGemmEx_v11(
+                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
+                        <const void*>alpha,
+                        <const void*>A, <DataType>Atype, lda,
+                        <const void*>B, <DataType>Btype, ldb,
+                        <const void*>beta,
+                        <void*>C, <DataType>Ctype, ldc,
+                        <ComputeType>computeType, <GemmAlgo>algo)
             else:
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmEx(
@@ -1574,14 +1584,24 @@ ELSE:
         _setStream(handle)
         with nogil:
             if computeType >= CUBLAS_COMPUTE_16F and CUPY_HIP_VERSION==0:
-                status = cublasGemmStridedBatchedEx_v11(
-                    <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                    <const void*>alpha,
-                    <const void*>A, <DataType>Atype, lda, <long long>strideA,
-                    <const void*>B, <DataType>Btype, ldb, <long long>strideB,
-                    <const void*>beta,
-                    <void*>C, <DataType>Ctype, ldc, <long long>strideC,
-                    batchCount, <ComputeType>computeType, <GemmAlgo>algo)
+                IF 0 < CUPY_HIP_VERSION < 60000000:
+                    status = cublasGemmStridedBatchedEx_v11(
+                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
+                        <const void*>alpha,
+                        <const void*>A, <DataType>Atype, lda, <long long>strideA,
+                        <const void*>B, <DataType>Btype, ldb, <long long>strideB,
+                        <const void*>beta,
+                        <void*>C, <DataType>Ctype, ldc, <long long>strideC,
+                        batchCount, <DataType>computeType, <GemmAlgo>algo)
+                ELSE:
+                    status = cublasGemmStridedBatchedEx_v11(
+                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
+                        <const void*>alpha,
+                        <const void*>A, <DataType>Atype, lda, <long long>strideA,
+                        <const void*>B, <DataType>Btype, ldb, <long long>strideB,
+                        <const void*>beta,
+                        <void*>C, <DataType>Ctype, ldc, <long long>strideC,
+                        batchCount, <ComputeType>computeType, <GemmAlgo>algo)
             else:
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmStridedBatchedEx(
