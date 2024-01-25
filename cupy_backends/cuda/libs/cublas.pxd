@@ -21,7 +21,8 @@ cdef extern from *:
     ctypedef int SideMode 'cublasSideMode_t'
     ctypedef int GemmAlgo 'cublasGemmAlgo_t'
     ctypedef int Math 'cublasMath_t'
-    ctypedef int ComputeType 'cublasComputeType_t'
+    IF CUPY_HIP_VERSION >= 60000000 or CUPY_HIP_VERSION == 0:
+        ctypedef int ComputeType 'cublasComputeType_t'
 
 
 ###############################################################################

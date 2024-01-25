@@ -17,6 +17,7 @@ from libc.stdint cimport intptr_t
 from cupy._core cimport _accelerator
 from cupy._core._carray cimport shape_t
 from cupy._core._dtype cimport to_cuda_dtype
+from cupy._core._dtype cimport to_hip_computetype
 from cupy._core._scalar cimport get_typename
 from cupy._core.core cimport _internal_ascontiguousarray
 from cupy._core.core cimport _ndarray_init
@@ -651,6 +652,10 @@ cpdef _ndarray_base tensordot_core(
         cdef int runtime_R_16F = runtime.CUDA_R_16F
         cdef int runtime_R_32F = runtime.CUDA_R_32F
 
+    cdef int compute_32F = runtime_R_32F
+    IF CUPY_HIP_VERSION>=60000000:
+        compute_32F = runtime.HIPBLAS_COMPUTE_32F
+
     if dtype == 'e':
         use_tensor_core = (not runtime._is_hip_environment and
                            _cuda_runtime_version >= 9000 and
@@ -669,7 +674,7 @@ cpdef _ndarray_base tensordot_core(
                 handle, <int>transb, <int> transa, <int>m, <int>n, <int>k,
                 one.ctypes.data, b.data.ptr, runtime_R_16F, <int>ldb,
                 a.data.ptr, runtime_R_16F, <int>lda, zero.ctypes.data,
-                c.data.ptr, runtime_R_16F, <int>m, runtime_R_32F,
+                c.data.ptr, runtime_R_16F, <int>m, compute_32F,
                 algo)
 
             if can_opt_in_tensorcore:
@@ -1010,10 +1015,15 @@ cpdef _ndarray_base matmul(
 
     cdef intptr_t handle = device.get_cublas_handle()
     cdef int cuda_dtype = to_cuda_dtype(dtype)
+    cdef int cuda_computetype = cuda_dtype
     IF CUPY_HIP_VERSION>0:
         cdef int algo = cublas.HIPBLAS_GEMM_DEFAULT
         cdef int transa = 111
         cdef int transb = 111
+        # For rocm > 6.0, hipblas supports hipblasComputeType_t
+        # convert to compute type accordingly
+        IF CUPY_HIP_VERSION>=60000000:
+            cuda_computetype = to_hip_computetype(dtype)
     ELSE:
         cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
         cdef int transa = 0
@@ -1035,7 +1045,7 @@ cpdef _ndarray_base matmul(
                 b.data.ptr, cuda_dtype, ldb, strideB,
                 zero.ctypes.data,
                 c_view.data.ptr, cuda_dtype, ldc, strideC,
-                batchCount, cuda_dtype, algo)
+                batchCount, cuda_computetype, algo)
         else:
             raise TypeError(dtype, a.dtype, b.dtype)
     else:
