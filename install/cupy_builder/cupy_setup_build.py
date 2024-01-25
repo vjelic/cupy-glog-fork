@@ -13,7 +13,7 @@ import cupy_builder.install_build as build
 from cupy_builder._context import Context
 from cupy_builder.install_build import PLATFORM_LINUX
 from cupy_builder.install_build import PLATFORM_WIN32
-
+from cupy_builder.install_utils import get_rocm_version
 
 def ensure_module_file(file):
     if isinstance(file, tuple):
@@ -312,6 +312,8 @@ def make_extensions(ctx: Context, compiler, use_cython):
         settings['define_macros'].append(('__HIP_PLATFORM_AMD__', '1'))
         # deprecated since ROCm 4.2.0
         settings['define_macros'].append(('__HIP_PLATFORM_HCC__', '1'))
+        if get_rocm_version() >= 600:
+            settings['define_macros'].append(('HIPBLAS_V2', '1'))
 
     available_modules = []
     if no_cuda:
