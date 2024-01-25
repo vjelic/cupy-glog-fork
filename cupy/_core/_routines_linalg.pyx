@@ -28,6 +28,8 @@ from cupy._core cimport _routines_math as _math
 from cupy.cuda cimport device
 from cupy_backends.cuda.api cimport runtime
 
+IF CUPY_HIP_VERSION>=60000000:
+    from cupy._core._dtype cimport to_hip_computetype
 
 cdef extern from '../../cupy_backends/cupy_complex.h':
     ctypedef struct cuComplex 'cuComplex':
@@ -1022,7 +1024,6 @@ cpdef _ndarray_base matmul(
         # For rocm > 6.0, hipblas supports hipblasComputeType_t
         # convert to compute type accordingly
         IF CUPY_HIP_VERSION>=60000000:
-            from cupy._core._dtype cimport to_hip_computetype
             cuda_computetype = to_hip_computetype(dtype)
     ELSE:
         cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
