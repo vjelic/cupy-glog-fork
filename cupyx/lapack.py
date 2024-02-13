@@ -3,7 +3,6 @@ import numpy as _numpy
 import cupy as _cupy
 from cupy_backends.cuda.libs import cublas as _cublas
 from cupy.cuda import device as _device
-from cupy_backends.cuda.api import runtime
 
 
 def gesv(a, b):
@@ -53,9 +52,9 @@ def gesv(a, b):
     n = b.shape[0]
     nrhs = b.shape[1] if b.ndim == 2 else 1
     if a._f_contiguous:
-        trans = _cublas.HIPBLAS_OP_N if runtime.is_hip else _cublas.CUBLAS_OP_N
+        trans = _cublas.CUBLAS_OP_N
     elif a._c_contiguous:
-        trans = _cublas.HIPBLAS_OP_T if runtime.is_hip else _cublas.CUBLAS_OP_T
+        trans = _cublas.CUBLAS_OP_T
     else:
         raise ValueError('a must be F-contiguous or C-contiguous.')
     if not b._f_contiguous:

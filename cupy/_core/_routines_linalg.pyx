@@ -669,7 +669,7 @@ cpdef _ndarray_base tensordot_core(
                 cublas.setMathMode(handle, cublas.CUBLAS_TENSOR_OP_MATH)
                 algo = cublas.CUBLAS_GEMM_DEFAULT_TENSOR_OP
             else:
-                algo = cublas.HIPBLAS_GEMM_DEFAULT if runtime._is_hip_environment else cublas.CUBLAS_GEMM_DEFAULT
+                algo = cublas.CUBLAS_GEMM_DEFAULT
 
             cublas.gemmEx(
                 handle, <int>transb, <int> transa, <int>m, <int>n, <int>k,
@@ -1017,18 +1017,11 @@ cpdef _ndarray_base matmul(
     cdef intptr_t handle = device.get_cublas_handle()
     cdef int cuda_dtype = to_cuda_dtype(dtype)
     cdef int cuda_computetype = cuda_dtype
-    IF CUPY_HIP_VERSION > 0:
-        cdef int algo = cublas.HIPBLAS_GEMM_DEFAULT
-        cdef int transa = 111
-        cdef int transb = 111
-        # For rocm > 6.0, hipblas supports hipblasComputeType_t
-        # convert to compute type accordingly
-        IF CUPY_HIP_VERSION >= 60000000:
-            cuda_computetype = to_hip_computetype(dtype)
-    ELSE:
-        cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
-        cdef int transa = 0
-        cdef int transb = 0
+    cdef int algo = cublas.CUBLAS_GEMM_DEFAULT
+    # For rocm > 6.0, hipblas supports hipblasComputeType_t
+    # convert to compute type accordingly
+    IF CUPY_HIP_VERSION >= 60000000:
+        cuda_computetype = to_hip_computetype(dtype)
 
     one = numpy.array(1, dtype=dtype)
     zero = numpy.array(0, dtype=dtype)
@@ -1039,8 +1032,8 @@ cpdef _ndarray_base matmul(
         if dtype.char in 'fFdD':
             cublas.gemmStridedBatchedEx(
                 handle,
-                transa,
-                transb,
+                cublas.CUBLAS_OP_N, # transa
+                cublas.CUBLAS_OP_N, # transb
                 n, m, ka, one.ctypes.data,
                 a.data.ptr, cuda_dtype, lda, strideA,
                 b.data.ptr, cuda_dtype, ldb, strideB,
@@ -1056,8 +1049,8 @@ cpdef _ndarray_base matmul(
         if dtype == numpy.float32:
             cublas.sgemmBatched(
                 handle,
-                transa,
-                transb,
+                cublas.CUBLAS_OP_N, # transa
+                cublas.CUBLAS_OP_N, # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1065,8 +1058,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.float64:
             cublas.dgemmBatched(
                 handle,
-                transa,
-                transb,
+                cublas.CUBLAS_OP_N, # transa
+                cublas.CUBLAS_OP_N, # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1074,8 +1067,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.complex64:
             cublas.cgemmBatched(
                 handle,
-                transa,
-                transb,
+                cublas.CUBLAS_OP_N, # transa
+                cublas.CUBLAS_OP_N, # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1083,8 +1076,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.complex128:
             cublas.zgemmBatched(
                 handle,
-                transa,
-                transb,
+                cublas.CUBLAS_OP_N, # transa
+                cublas.CUBLAS_OP_N, # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,

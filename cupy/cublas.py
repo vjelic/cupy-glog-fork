@@ -655,42 +655,27 @@ def sbmv(k, alpha, a, x, beta, y, lower=False):
 
 
 def _trans_to_cublas_op(trans):
-    if not runtime.is_hip:
-        if trans == 'N' or trans == cublas.CUBLAS_OP_N:
-            trans = cublas.CUBLAS_OP_N
-        elif trans == 'T' or trans == cublas.CUBLAS_OP_T:
-            trans = cublas.CUBLAS_OP_T
-        elif trans == 'H' or trans == cublas.CUBLAS_OP_C:
-            trans = cublas.CUBLAS_OP_C
-        else:
-            raise TypeError('invalid trans (actual: {})'.format(trans))
+    if trans == 'N' or trans == cublas.CUBLAS_OP_N:
+        trans = cublas.CUBLAS_OP_N
+    elif trans == 'T' or trans == cublas.CUBLAS_OP_T:
+        trans = cublas.CUBLAS_OP_T
+    elif trans == 'H' or trans == cublas.CUBLAS_OP_C:
+        trans = cublas.CUBLAS_OP_C
     else:
-        if trans == 'N' or trans == cublas.HIPBLAS_OP_N:
-            trans = cublas.HIPBLAS_OP_N
-        elif trans == 'T' or trans == cublas.HIPBLAS_OP_T:
-            trans = cublas.HIPBLAS_OP_T
-        elif trans == 'H' or trans == cublas.HIPBLAS_OP_C:
-            trans = cublas.HIPBLAS_OP_C
-        else:
-            raise TypeError('invalid trans (actual: {})'.format(trans))
+        raise TypeError('invalid trans (actual: {})'.format(trans))
     return trans
 
 
 def _decide_ld_and_trans(a, trans):
     ld = None
-    if not runtime.is_hip:
-        if trans in (cublas.CUBLAS_OP_N, cublas.CUBLAS_OP_T):
-            if a._f_contiguous:
-                ld = a.shape[0]
-            elif a._c_contiguous:
-                ld = a.shape[1]
+    if trans in (cublas.CUBLAS_OP_N, cublas.CUBLAS_OP_T):
+        if a._f_contiguous:
+            ld = a.shape[0]
+        elif a._c_contiguous:
+            ld = a.shape[1]
+            if not runtime.is_hip:
                 trans = 1 - trans
-    else:
-        if trans in (cublas.HIPBLAS_OP_N, cublas.HIPBLAS_OP_T):
-            if a._f_contiguous:
-                ld = a.shape[0]
-            elif a._c_contiguous:
-                ld = a.shape[1]
+            else:
                 trans = 111 ^ 112 ^ trans
     return ld, trans
 
@@ -820,12 +805,11 @@ def geam(transa, transb, alpha, a, beta, b, out=None):
 
     transa = _trans_to_cublas_op(transa)
     transb = _trans_to_cublas_op(transb)
-    cublas_op_n = cublas.CUBLAS_OP_N if not runtime.is_hip else cublas.HIPBLAS_OP_N
-    if transa == cublas_op_n:
+    if transa == cublas.CUBLAS_OP_N:
         m, n = a.shape
     else:
         n, m = a.shape
-    if transb == cublas_op_n:
+    if transb == cublas.CUBLAS_OP_N:
         assert b.shape == (m, n)
     else:
         assert b.shape == (n, m)
@@ -847,11 +831,9 @@ def geam(transa, transb, alpha, a, beta, b, out=None):
         if not isinstance(beta, cupy.ndarray):
             beta = cupy.array(beta)
             beta_ptr = beta.data.ptr
-        cublas.setPointerMode(handle, cublas.CUBLAS_POINTER_MODE_DEVICE if not runtime.is_hip \
-                else cublas.HIPBLAS_POINTER_MODE_DEVICE)
+        cublas.setPointerMode(handle, cublas.CUBLAS_POINTER_MODE_DEVICE)
     else:
-        cublas.setPointerMode(handle, cublas.CUBLAS_POINTER_MODE_HOST if not runtime.is_hip \
-                else cublas.HIPBLAS_POINTER_MODE_HOST)
+        cublas.setPointerMode(handle, cublas.CUBLAS_POINTER_MODE_HOST)
 
     lda, transa = _decide_ld_and_trans(a, transa)
     ldb, transb = _decide_ld_and_trans(b, transb)
@@ -910,18 +892,14 @@ def dgmm(side, a, x, out=None, incx=1):
         func = cublas.zdgmm
     else:
         raise TypeError('invalid dtype')
-    cublas_side_left = cublas.CUBLAS_SIDE_LEFT if not runtime.is_hip \
-            else cublas.HIPBLAS_SIDE_LEFT
-    cublas_side_right = cublas.CUBLAS_SIDE_RIGHT if not runtime.is_hip \
-            else cublas.HIPBLAS_SIDE_RIGHT
-    if side == 'L' or side == cublas_side_left:
-        side = cublas_side_left
-    elif side == 'R' or side == cublas_side_right:
-        side = cublas_side_right
+    if side == 'L' or side == cublas.CUBLAS_SIDE_LEFT:
+        side = cublas.CUBLAS_SIDE_LEFT
+    elif side == 'R' or side == cublas.CUBLAS_SIDE_RIGHT:
+        side = cublas.CUBLAS_SIDE_RIGHT
     else:
         raise ValueError('invalid side (actual: {})'.format(side))
     m, n = a.shape
-    if side == cublas_side_left:
+    if side == cublas.CUBLAS_SIDE_LEFT:
         assert x.size >= (m - 1) * abs(incx) + 1
     else:
         assert x.size >= (n - 1) * abs(incx) + 1
