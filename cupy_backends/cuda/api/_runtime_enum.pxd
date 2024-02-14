@@ -18,6 +18,17 @@ cpdef enum:
     cudaMemAdviseSetAccessedBy = 5
     cudaMemAdviseUnsetAccessedBy = 6
 
+    CUDA_R_32F = 0  # 32 bit real
+    CUDA_R_64F = 1  # 64 bit real
+    CUDA_R_16F = 2  # 16 bit real
+    CUDA_R_8I = 3  # 8 bit real as a signed integer
+    CUDA_C_32F = 4  # 32 bit complex
+    CUDA_C_64F = 5  # 64 bit complex
+    CUDA_C_16F = 6  # 16 bit complex
+    CUDA_C_8I = 7  # 8 bit complex as a pair of signed integers
+    CUDA_R_8U = 8  # 8 bit real as a signed integer
+    CUDA_C_8U = 9  # 8 bit complex as a pair of signed integers
+    
     # CUDA Limits
     cudaLimitStackSize = 0x00
     cudaLimitPrintfFifoSize = 0x01
@@ -214,69 +225,9 @@ IF CUPY_HIP_VERSION > 0:
 
             cudaDevAttrPageableMemoryAccess
             cudaDevAttrPageableMemoryAccessUsesHostPageTables
-
-    IF CUPY_HIP_VERSION >= 60000000:
-        cpdef enum:
-            HIPBLAS_R_16F = 2
-            HIPBLAS_R_32F = 0
-            HIPBLAS_R_64F = 1
-            HIPBLAS_C_16F = 6
-            HIPBLAS_C_32F = 4
-            HIPBLAS_C_64F = 5
-            HIPBLAS_R_8I = 3
-            HIPBLAS_R_8U = 8
-            HIPBLAS_R_32I = 10
-            HIPBLAS_R_32U = 12
-            HIPBLAS_C_8I = 7
-            HIPBLAS_C_8U = 9
-            HIPBLAS_C_32I = 11
-            HIPBLAS_C_32U = 13
-            HIPBLAS_R_16B = 14
-            HIPBLAS_C_16B = 15
-
-            HIPBLAS_COMPUTE_16F = 0
-            HIPBLAS_COMPUTE_16F_PEDANTIC = 1
-            HIPBLAS_COMPUTE_32F = 2
-            HIPBLAS_COMPUTE_32F_PEDANTIC = 3
-            HIPBLAS_COMPUTE_32F_FAST_16F = 4
-            HIPBLAS_COMPUTE_32F_FAST_16BF = 5
-            HIPBLAS_COMPUTE_32F_FAST_TF32 = 6
-            HIPBLAS_COMPUTE_64F = 7
-            HIPBLAS_COMPUTE_64F_PEDANTIC = 8
-            HIPBLAS_COMPUTE_32I = 9
-            HIPBLAS_COMPUTE_32I_PEDANTIC = 10
-    ELSE:
-       cpdef enum:
-            HIPBLAS_R_16F = 150
-            HIPBLAS_R_32F = 151
-            HIPBLAS_R_64F = 152
-            HIPBLAS_C_16F = 153
-            HIPBLAS_C_32F = 154
-            HIPBLAS_C_64F = 155
-            HIPBLAS_R_8I = 160
-            HIPBLAS_R_8U = 161
-            HIPBLAS_R_32I = 162
-            HIPBLAS_R_32U = 163
-            HIPBLAS_C_8I = 164
-            HIPBLAS_C_8U = 165
-            HIPBLAS_C_32I = 166
-            HIPBLAS_C_32U = 167
-            HIPBLAS_R_16B = 168
-            HIPBLAS_C_16B = 169
 ELSE:
     # For CUDA/RTD
     cpdef enum:
-        CUDA_R_32F = 0  # 32 bit real
-        CUDA_R_64F = 1  # 64 bit real
-        CUDA_R_16F = 2  # 16 bit real
-        CUDA_R_8I = 3  # 8 bit real as a signed integer
-        CUDA_C_32F = 4  # 32 bit complex
-        CUDA_C_64F = 5  # 64 bit complex
-        CUDA_C_16F = 6  # 16 bit complex
-        CUDA_C_8I = 7  # 8 bit complex as a pair of signed integers
-        CUDA_R_8U = 8  # 8 bit real as a signed integer
-        CUDA_C_8U = 9  # 8 bit complex as a pair of signed integers
-    
         cudaDevAttrMaxThreadsPerBlock = 1
         cudaDevAttrMaxBlockDimX
         cudaDevAttrMaxBlockDimY
