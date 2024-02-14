@@ -255,6 +255,7 @@ class TestSVD(unittest.TestCase):
         return result
 
     @_condition.repeat(3, 10)
+    @pytest.mark.skipif(cupy.cuda.runtime.is_hip, reason="hipblasSgemmEx not implemented")
     def test_svd_rank2(self):
         self.check_usv((3, 7))
         self.check_usv((2, 2))
@@ -267,6 +268,7 @@ class TestSVD(unittest.TestCase):
         self.check_singular((7, 3))
 
     @testing.with_requires('numpy>=1.16')
+    @pytest.mark.skipif(cupy.cuda.runtime.is_hip, reason="hipblasSgemmEx not implemented")
     def test_svd_rank2_empty_array(self):
         self.check_usv((0, 3))
         self.check_usv((3, 0))
