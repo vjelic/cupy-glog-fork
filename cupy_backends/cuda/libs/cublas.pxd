@@ -112,4 +112,3 @@ ELSE:
         CUBLAS_COMPUTE_64F_PEDANTIC = 71   # double - pedantic
         CUBLAS_COMPUTE_32I = 72            # signed 32-bit int - default
         CUBLAS_COMPUTE_32I_PEDANTIC = 73   # signed 32-bit int - pedantic
-

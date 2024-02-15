@@ -10,9 +10,9 @@ from cupy_backends.cuda cimport stream as stream_module
 IF CUPY_USE_GEN_HIP_CODE:
     from cupy_backends.cuda.libs.cublas_hip import *
 ELSE:
-    ###############################################################################
+    ###########################################################################
     # Extern
-    ###############################################################################
+    ###########################################################################
 
     cdef extern from '../../cupy_complex.h':
         IF 0 < CUPY_HIP_VERSION < 60000000:
@@ -72,9 +72,9 @@ ELSE:
         int cublasDasum(Handle handle, int n, double* x, int incx,
                         double* result)
         int cublasScasum(Handle handle, int n, cuComplex* x, int incx,
-                        float* result)
+                         float* result)
         int cublasDzasum(Handle handle, int n, cuDoubleComplex* x, int incx,
-                        double* result)
+                         double* result)
         int cublasSaxpy(Handle handle, int n, float* alpha, float* x,
                         int incx, float* y, int incy)
         int cublasDaxpy(Handle handle, int n, double* alpha, double* x,
@@ -82,7 +82,8 @@ ELSE:
         int cublasCaxpy(Handle handle, int n, cuComplex* alpha, cuComplex* x,
                         int incx, cuComplex* y, int incy)
         int cublasZaxpy(Handle handle, int n, cuDoubleComplex* alpha,
-                        cuDoubleComplex* x, int incx, cuDoubleComplex* y, int incy)
+                        cuDoubleComplex* x, int incx,
+                        cuDoubleComplex* y, int incy)
         int cublasSdot(Handle handle, int n, float* x, int incx,
                        float* y, int incy, float* result)
         int cublasDdot(Handle handle, int n, double* x, int incx,
@@ -97,14 +98,18 @@ ELSE:
         int cublasZdotc(Handle handle, int n, cuDoubleComplex* x, int incx,
                         cuDoubleComplex* y, int incy,
                         cuDoubleComplex* result)
-        int cublasSnrm2(Handle handle, int n, float* x, int incx, float* result)
-        int cublasDnrm2(Handle handle, int n, double* x, int incx, double* result)
+        int cublasSnrm2(Handle handle, int n, float* x,
+                        int incx, float* result)
+        int cublasDnrm2(Handle handle, int n, double* x,
+                        int incx, double* result)
         int cublasScnrm2(Handle handle, int n, cuComplex* x, int incx,
                          float* result)
         int cublasDznrm2(Handle handle, int n, cuDoubleComplex* x, int incx,
                          double* result)
-        int cublasSscal(Handle handle, int n, float* alpha, float* x, int incx)
-        int cublasDscal(Handle handle, int n, double* alpha, double* x, int incx)
+        int cublasSscal(Handle handle, int n, float* alpha,
+                        float* x, int incx)
+        int cublasDscal(Handle handle, int n, double* alpha,
+                        double* x, int incx)
         int cublasCscal(Handle handle, int n, cuComplex* alpha,
                         cuComplex* x, int incx)
         int cublasCsscal(Handle handle, int n, float* alpha,
@@ -128,9 +133,10 @@ ELSE:
             cuComplex* A, int lda, cuComplex* x, int incx, cuComplex* beta,
             cuComplex* y, int incy)
         int cublasZgemv(
-            Handle handle, Operation trans, int m, int n, cuDoubleComplex* alpha,
-            cuDoubleComplex* A, int lda, cuDoubleComplex* x, int incx,
-            cuDoubleComplex* beta, cuDoubleComplex* y, int incy)
+            Handle handle, Operation trans, int m, int n,
+            cuDoubleComplex* alpha, cuDoubleComplex* A, int lda,
+            cuDoubleComplex* x, int incx, cuDoubleComplex* beta,
+            cuDoubleComplex* y, int incy)
         int cublasSger(
             Handle handle, int m, int n, float* alpha, float* x, int incx,
             float* y, int incy, float* A, int lda)
@@ -284,18 +290,20 @@ ELSE:
             const cuDoubleComplex* beta, const cuDoubleComplex* B, int ldb,
             cuDoubleComplex* C, int ldc)
         int cublasSdgmm(
-            Handle handle, SideMode mode, int m, int n, const float* A, int lda,
-            const float* x, int incx, float* C, int ldc)
+            Handle handle, SideMode mode, int m, int n,
+            const float* A, int lda, const float* x,
+            int incx, float* C, int ldc)
         int cublasDdgmm(
-            Handle handle, SideMode mode, int m, int n, const double* A, int lda,
-            const double* x, int incx, double* C, int ldc)
+            Handle handle, SideMode mode, int m, int n,
+            const double* A, int lda, const double* x,
+            int incx, double* C, int ldc)
         int cublasCdgmm(
             Handle handle, SideMode mode, int m, int n, const cuComplex* A,
             int lda, const cuComplex* x, int incx, cuComplex* C, int ldc)
         int cublasZdgmm(
-            Handle handle, SideMode mode, int m, int n, const cuDoubleComplex* A,
-            int lda, const cuDoubleComplex* x, int incx, cuDoubleComplex* C,
-            int ldc)
+            Handle handle, SideMode mode, int m, int n,
+            const cuDoubleComplex* A, int lda, const cuDoubleComplex* x,
+            int incx, cuDoubleComplex* C, int ldc)
         int cublasSgemmEx(
             Handle handle, Operation transa,
             Operation transb, int m, int n, int k,
@@ -347,8 +355,8 @@ ELSE:
                 int batchSize)
             int cublasZgetriBatched(
                 Handle handle, int n, cuDoubleComplex **Aarray, int lda,
-                int *PivotArray, cuDoubleComplex *Carray[], int ldc, int *infoArray,
-                int batchSize)
+                int *PivotArray, cuDoubleComplex *Carray[],
+                int ldc, int *infoArray, int batchSize)
         ELSE:
             int cublasSgetrsBatched(
                 Handle handle, Operation trans, int n, int nrhs,
@@ -381,8 +389,8 @@ ELSE:
                 int batchSize)
             int cublasZgetriBatched(
                 Handle handle, int n, const cuDoubleComplex **Aarray, int lda,
-                int *PivotArray, cuDoubleComplex *Carray[], int ldc, int *infoArray,
-                int batchSize)
+                int *PivotArray, cuDoubleComplex *Carray[],
+                int ldc, int *infoArray, int batchSize)
         int cublasGemmEx(
             Handle handle, Operation transa, Operation transb,
             int m, int n, int k,
@@ -432,10 +440,9 @@ ELSE:
             Handle handle, FillMode uplo, int n, const double *A, int lda,
             double *AP)
 
-
-    ###############################################################################
+    ###########################################################################
     # Error handling
-    ###############################################################################
+    ###########################################################################
 
     cdef dict STATUS = {
         0: 'CUBLAS_STATUS_SUCCESS',
@@ -449,7 +456,6 @@ ELSE:
         15: 'CUBLAS_STATUS_NOT_SUPPORTED',
         16: 'CUBLAS_STATUS_LICENSE_ERROR',
     }
-
 
     cdef dict HIP_STATUS = {
         0: 'HIPBLAS_STATUS_SUCCESS',
@@ -466,7 +472,6 @@ ELSE:
         11: 'HIPBLAS_STATUS_UNKNOWN',
     }
 
-
     class CUBLASError(RuntimeError):
 
         def __init__(self, status):
@@ -481,53 +486,52 @@ ELSE:
         def __reduce__(self):
             return (type(self), (self.status,))
 
-
     @cython.profile(False)
     cpdef inline check_status(int status):
         if status != 0:
             raise CUBLASError(status)
 
-    ###############################################################################
+    ##########################################################################
     # Enum Conversion
-    ###############################################################################
+    ##########################################################################
     cpdef int convert_blas_dtype(int dtype) nogil:
         IF CUPY_HIP_VERSION < 60000000:
-            if dtype == 0:   # CUDA_R_32F
-                return 151   # HIPBLAS_R_32F
-            elif dtype == 1: # CUDA_R_64F
-                return 152   # HIPBLAS_R_64F
-            elif dtype == 2: # CUDA_R_16F
-                return 150   # HIPBLAS_R_16F
-            elif dtype == 3: # CUDA_R_8I
-                return 160   # HIPBLAS_R_8I
-            elif dtype == 4: # CUDA_C_32F
-                return 154   # HIPBLAS_C_32F
-            elif dtype == 5: # CUDA_C_64F
-                return 155   # HIPBLAS_C_64F
-            elif dtype == 6: # CUDA_C_16F
-                return 153   # HIPBLAS_C_16F
+            if dtype == 0:    # CUDA_R_32F
+                return 151    # HIPBLAS_R_32F
+            elif dtype == 1:  # CUDA_R_64F
+                return 152    # HIPBLAS_R_64F
+            elif dtype == 2:  # CUDA_R_16F
+                return 150    # HIPBLAS_R_16F
+            elif dtype == 3:  # CUDA_R_8I
+                return 160    # HIPBLAS_R_8I
+            elif dtype == 4:  # CUDA_C_32F
+                return 154    # HIPBLAS_C_32F
+            elif dtype == 5:  # CUDA_C_64F
+                return 155    # HIPBLAS_C_64F
+            elif dtype == 6:  # CUDA_C_16F
+                return 153    # HIPBLAS_C_16F
         return dtype
 
     cpdef int convert_blas_computetype(int ctype) nogil:
         # hipblasComputeType_t is supported in V2 API
         IF CUPY_HIP_VERSION >= 60000000:
-            if ctype == 2:   # CUDA_R_16F
-                return 0     # HIPBLAS_COMPUTE_16F
-            elif ctype == 0: # CUDA_R_32F
-                return 2     # HIPBLAS_COMPUTE_32F
-            elif ctype == 1: # CUDA_R_64F
-                return 7     # HIPBLAS_COMPUTE_64F
-            elif ctype == 4: # CUDA_C_32F
-                return 2     # HIPBLAS_COMPUTE_32F
-            elif ctype == 5: # CUDA_C_64F
-                return 7     # HIPBLAS_COMPUTE_64F
-            elif ctype == 6: # CUDA_C_16F
-                return 0     # HIPBLAS_COMPUTE_16F
+            if ctype == 2:    # CUDA_R_16F
+                return 0      # HIPBLAS_COMPUTE_16F
+            elif ctype == 0:  # CUDA_R_32F
+                return 2      # HIPBLAS_COMPUTE_32F
+            elif ctype == 1:  # CUDA_R_64F
+                return 7      # HIPBLAS_COMPUTE_64F
+            elif ctype == 4:  # CUDA_C_32F
+                return 2      # HIPBLAS_COMPUTE_32F
+            elif ctype == 5:  # CUDA_C_64F
+                return 7      # HIPBLAS_COMPUTE_64F
+            elif ctype == 6:  # CUDA_C_16F
+                return 0      # HIPBLAS_COMPUTE_16F
         return convert_blas_dtype(ctype)
 
-    ###############################################################################
+    ##########################################################################
     # Context
-    ###############################################################################
+    ##########################################################################
 
     cpdef intptr_t create() except? 0:
         cdef Handle handle
@@ -536,12 +540,10 @@ ELSE:
         check_status(status)
         return <intptr_t>handle
 
-
     cpdef destroy(intptr_t handle):
         with nogil:
             status = cublasDestroy(<Handle>handle)
         check_status(status)
-
 
     cpdef int getVersion(intptr_t handle) except? -1:
         cdef int version
@@ -550,7 +552,6 @@ ELSE:
         check_status(status)
         return version
 
-
     cpdef int getPointerMode(intptr_t handle) except? -1:
         cdef PointerMode mode
         with nogil:
@@ -558,24 +559,23 @@ ELSE:
         check_status(status)
         return mode
 
-
     cpdef setPointerMode(intptr_t handle, int mode):
         with nogil:
             status = cublasSetPointerMode(<Handle>handle, <PointerMode>mode)
         check_status(status)
 
-
-    ###############################################################################
+    ##########################################################################
     # Stream
-    ###############################################################################
+    ##########################################################################
 
     cpdef setStream(intptr_t handle, size_t stream):
-        # TODO(leofang): It seems most of cuBLAS APIs support stream capture (as of
-        # CUDA 11.5) under certain conditions, see
+        # TODO(leofang): It seems most of cuBLAS APIs support stream capture
+        # (as of CUDA 11.5) under certain conditions, see
         # https://docs.nvidia.com/cuda/cublas/index.html#CUDA-graphs
-        # Before we come up with a robust strategy to test the support conditions,
-        # we disable this functionality.
-        if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
+        # Before we come up with a robust strategy
+        # to test the support conditions, we disable this functionality.
+        if not runtime._is_hip_environment and \
+                runtime.streamIsCapturing(stream):
             raise NotImplementedError(
                 'calling cuBLAS API during stream capture is currently '
                 'unsupported')
@@ -584,7 +584,6 @@ ELSE:
             status = cublasSetStream(<Handle>handle, <Stream>stream)
         check_status(status)
 
-
     cpdef size_t getStream(intptr_t handle) except? 0:
         cdef Stream stream
         with nogil:
@@ -592,20 +591,18 @@ ELSE:
         check_status(status)
         return <size_t>stream
 
-
     cdef _setStream(intptr_t handle):
         """Set current stream"""
         setStream(handle, stream_module.get_current_stream_ptr())
 
-    ###############################################################################
+    ##########################################################################
     # Math Mode
-    ###############################################################################
+    ##########################################################################
 
     cpdef setMathMode(intptr_t handle, int mode):
         with nogil:
             status = cublasSetMathMode(<Handle>handle, <Math>mode)
         check_status(status)
-
 
     cpdef int getMathMode(intptr_t handle) except? -1:
         cdef Math mode
@@ -614,10 +611,9 @@ ELSE:
         check_status(status)
         return <int>mode
 
-
-    ###############################################################################
+    ##########################################################################
     # BLAS Level 1
-    ###############################################################################
+    ##########################################################################
 
     cpdef isamax(intptr_t handle, int n, size_t x, int incx, size_t result):
         _setStream(handle)
@@ -647,7 +643,6 @@ ELSE:
                 <Handle>handle, n, <cuDoubleComplex*>x, incx, <int*>result)
         check_status(status)
 
-
     cpdef isamin(intptr_t handle, int n, size_t x, int incx, size_t result):
         _setStream(handle)
         with nogil:
@@ -675,7 +670,6 @@ ELSE:
             status = cublasIzamin(
                 <Handle>handle, n, <cuDoubleComplex*>x, incx, <int*>result)
         check_status(status)
-
 
     cpdef sasum(intptr_t handle, int n, size_t x, int incx, size_t result):
         _setStream(handle)
@@ -705,26 +699,26 @@ ELSE:
                 <Handle>handle, n, <cuDoubleComplex*>x, incx, <double*>result)
         check_status(status)
 
-
-    cpdef saxpy(intptr_t handle, int n, size_t alpha, size_t x, int incx, size_t y,
-                int incy):
+    cpdef saxpy(intptr_t handle, int n, size_t alpha,
+                size_t x, int incx, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasSaxpy(
-                <Handle>handle, n, <float*>alpha, <float*>x, incx, <float*>y, incy)
+                <Handle>handle, n, <float*>alpha,
+                <float*>x, incx, <float*>y, incy)
         check_status(status)
 
-    cpdef daxpy(intptr_t handle, int n, size_t alpha, size_t x, int incx, size_t y,
-                int incy):
+    cpdef daxpy(intptr_t handle, int n, size_t alpha,
+                size_t x, int incx, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasDaxpy(
-                <Handle>handle, n, <double*>alpha, <double*>x, incx, <double*>y,
-                incy)
+                <Handle>handle, n, <double*>alpha,
+                <double*>x, incx, <double*>y, incy)
         check_status(status)
 
-    cpdef caxpy(intptr_t handle, int n, size_t alpha, size_t x, int incx, size_t y,
-                int incy):
+    cpdef caxpy(intptr_t handle, int n, size_t alpha,
+                size_t x, int incx, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasCaxpy(
@@ -732,15 +726,14 @@ ELSE:
                 <cuComplex*>y, incy)
         check_status(status)
 
-    cpdef zaxpy(intptr_t handle, int n, size_t alpha, size_t x, int incx, size_t y,
-                int incy):
+    cpdef zaxpy(intptr_t handle, int n, size_t alpha,
+                size_t x, int incx, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasZaxpy(
-                <Handle>handle, n, <cuDoubleComplex*>alpha, <cuDoubleComplex*>x,
-                incx, <cuDoubleComplex*>y, incy)
+                <Handle>handle, n, <cuDoubleComplex*>alpha,
+                <cuDoubleComplex*>x, incx, <cuDoubleComplex*>y, incy)
         check_status(status)
-
 
     cpdef sdot(intptr_t handle, int n, size_t x, int incx, size_t y, int incy,
                size_t result):
@@ -795,7 +788,6 @@ ELSE:
                 <cuDoubleComplex*>y, incy, <cuDoubleComplex*>result)
         check_status(status)
 
-
     cpdef snrm2(intptr_t handle, int n, size_t x, int incx, size_t result):
         _setStream(handle)
         with nogil:
@@ -823,7 +815,6 @@ ELSE:
             status = cublasDznrm2(<Handle>handle, n, <cuDoubleComplex*>x, incx,
                                   <double*>result)
         check_status(status)
-
 
     cpdef sscal(intptr_t handle, int n, size_t alpha, size_t x, int incx):
         _setStream(handle)
@@ -867,32 +858,34 @@ ELSE:
                                   <cuDoubleComplex*>x, incx)
         check_status(status)
 
-
-    ###############################################################################
+    ##########################################################################
     # BLAS Level 2
-    ###############################################################################
+    ##########################################################################
 
-    cpdef sgemv(intptr_t handle, int trans, int m, int n, size_t alpha, size_t A,
+    cpdef sgemv(intptr_t handle, int trans, int m,
+                int n, size_t alpha, size_t A,
                 int lda, size_t x, int incx, size_t beta, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasSgemv(
                 <Handle>handle, <Operation>trans, m, n, <float*>alpha,
-                <float*>A, lda, <float*>x, incx, <float*>beta, <float*>y, incy)
+                <float*>A, lda, <float*>x, incx,
+                <float*>beta, <float*>y, incy)
         check_status(status)
 
-
-    cpdef dgemv(intptr_t handle, int trans, int m, int n, size_t alpha, size_t A,
+    cpdef dgemv(intptr_t handle, int trans, int m,
+                int n, size_t alpha, size_t A,
                 int lda, size_t x, int incx, size_t beta, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasDgemv(
                 <Handle>handle, <Operation>trans, m, n, <double*>alpha,
-                <double*>A, lda, <double*>x, incx, <double*>beta, <double*>y, incy)
+                <double*>A, lda, <double*>x, incx,
+                <double*>beta, <double*>y, incy)
         check_status(status)
 
-
-    cpdef cgemv(intptr_t handle, int trans, int m, int n, size_t alpha, size_t A,
+    cpdef cgemv(intptr_t handle, int trans, int m,
+                int n, size_t alpha, size_t A,
                 int lda, size_t x, int incx, size_t beta, size_t y, int incy):
         _setStream(handle)
         with nogil:
@@ -902,39 +895,42 @@ ELSE:
                 <cuComplex*>y, incy)
         check_status(status)
 
-
-    cpdef zgemv(intptr_t handle, int trans, int m, int n, size_t alpha, size_t A,
+    cpdef zgemv(intptr_t handle, int trans, int m,
+                int n, size_t alpha, size_t A,
                 int lda, size_t x, int incx, size_t beta, size_t y, int incy):
         _setStream(handle)
         with nogil:
             status = cublasZgemv(
-                <Handle>handle, <Operation>trans, m, n, <cuDoubleComplex*>alpha,
+                <Handle>handle, <Operation>trans,
+                m, n, <cuDoubleComplex*>alpha,
                 <cuDoubleComplex*>A, lda, <cuDoubleComplex*>x, incx,
                 <cuDoubleComplex*>beta, <cuDoubleComplex*>y, incy)
         check_status(status)
 
-
-    cpdef sger(intptr_t handle, int m, int n, size_t alpha, size_t x, int incx,
+    cpdef sger(intptr_t handle, int m, int n,
+               size_t alpha, size_t x, int incx,
                size_t y, int incy, size_t A, int lda):
         _setStream(handle)
         with nogil:
             status = cublasSger(
-                <Handle>handle, m, n, <float*>alpha, <float*>x, incx, <float*>y,
+                <Handle>handle, m, n, <float*>alpha,
+                <float*>x, incx, <float*>y,
                 incy, <float*>A, lda)
         check_status(status)
 
-
-    cpdef dger(intptr_t handle, int m, int n, size_t alpha, size_t x, int incx,
+    cpdef dger(intptr_t handle, int m, int n,
+               size_t alpha, size_t x, int incx,
                size_t y, int incy, size_t A, int lda):
         _setStream(handle)
         with nogil:
             status = cublasDger(
-                <Handle>handle, m, n, <double*>alpha, <double*>x, incx, <double*>y,
+                <Handle>handle, m, n, <double*>alpha,
+                <double*>x, incx, <double*>y,
                 incy, <double*>A, lda)
         check_status(status)
 
-
-    cpdef cgeru(intptr_t handle, int m, int n, size_t alpha, size_t x, int incx,
+    cpdef cgeru(intptr_t handle, int m, int n,
+                size_t alpha, size_t x, int incx,
                 size_t y, int incy, size_t A, int lda):
         _setStream(handle)
         with nogil:
@@ -943,8 +939,8 @@ ELSE:
                 <cuComplex*>y, incy, <cuComplex*>A, lda)
         check_status(status)
 
-
-    cpdef cgerc(intptr_t handle, int m, int n, size_t alpha, size_t x, int incx,
+    cpdef cgerc(intptr_t handle, int m, int n,
+                size_t alpha, size_t x, int incx,
                 size_t y, int incy, size_t A, int lda):
         _setStream(handle)
         with nogil:
@@ -953,8 +949,8 @@ ELSE:
                 <cuComplex*>y, incy, <cuComplex*>A, lda)
         check_status(status)
 
-
-    cpdef zgeru(intptr_t handle, int m, int n, size_t alpha, size_t x, int incx,
+    cpdef zgeru(intptr_t handle, int m, int n,
+                size_t alpha, size_t x, int incx,
                 size_t y, int incy, size_t A, int lda):
         _setStream(handle)
         with nogil:
@@ -964,8 +960,8 @@ ELSE:
                 <cuDoubleComplex*>A, lda)
         check_status(status)
 
-
-    cpdef zgerc(intptr_t handle, int m, int n, size_t alpha, size_t x, int incx,
+    cpdef zgerc(intptr_t handle, int m, int n,
+                size_t alpha, size_t x, int incx,
                 size_t y, int incy, size_t A, int lda):
         _setStream(handle)
         with nogil:
@@ -974,7 +970,6 @@ ELSE:
                 <cuDoubleComplex*>x, incx, <cuDoubleComplex*>y, incy,
                 <cuDoubleComplex*>A, lda)
         check_status(status)
-
 
     cpdef ssbmv(intptr_t handle, int uplo, int n, int k,
                 size_t alpha, size_t A, int lda,
@@ -987,7 +982,6 @@ ELSE:
                 <float*>x, incx, <float*>beta, <float*>y, incy)
         check_status(status)
 
-
     cpdef dsbmv(intptr_t handle, int uplo, int n, int k,
                 size_t alpha, size_t A, int lda,
                 size_t x, int incx, size_t beta, size_t y, int incy):
@@ -999,10 +993,9 @@ ELSE:
                 <double*>x, incx, <double*>beta, <double*>y, incy)
         check_status(status)
 
-
-    ###############################################################################
+    ##########################################################################
     # BLAS Level 3
-    ###############################################################################
+    ##########################################################################
 
     cpdef sgemm(intptr_t handle, int transa, int transb,
                 int m, int n, int k, size_t alpha, size_t A, int lda,
@@ -1015,7 +1008,6 @@ ELSE:
                 <float*>C, ldc)
         check_status(status)
 
-
     cpdef dgemm(intptr_t handle, int transa, int transb,
                 int m, int n, int k, size_t alpha, size_t A, int lda,
                 size_t B, int ldb, size_t beta, size_t C, int ldc):
@@ -1023,10 +1015,10 @@ ELSE:
         with nogil:
             status = cublasDgemm(
                 <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                <double*>alpha, <double*>A, lda, <double*>B, ldb, <double*>beta,
+                <double*>alpha, <double*>A, lda,
+                <double*>B, ldb, <double*>beta,
                 <double*>C, ldc)
         check_status(status)
-
 
     cpdef cgemm(intptr_t handle, int transa, int transb,
                 int m, int n, int k, size_t alpha, size_t A, int lda,
@@ -1038,7 +1030,6 @@ ELSE:
                 <cuComplex*>alpha, <cuComplex*>A, lda, <cuComplex*>B, ldb,
                 <cuComplex*>beta, <cuComplex*>C, ldc)
         check_status(status)
-
 
     cpdef zgemm(intptr_t handle, int transa, int transb,
                 int m, int n, int k, size_t alpha, size_t A, int lda,
@@ -1052,7 +1043,6 @@ ELSE:
                 <cuDoubleComplex*>C, ldc)
         check_status(status)
 
-
     cpdef sgemmBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
             size_t alpha, size_t Aarray, int lda, size_t Barray, int ldb,
@@ -1061,10 +1051,10 @@ ELSE:
         with nogil:
             status = cublasSgemmBatched(
                 <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                <float*>alpha, <const float**>Aarray, lda, <const float**>Barray,
+                <float*>alpha, <const float**>Aarray, lda,
+                <const float**>Barray,
                 ldb, <float*>beta, <float**>Carray, ldc, batchCount)
         check_status(status)
-
 
     cpdef dgemmBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
@@ -1079,7 +1069,6 @@ ELSE:
                 <double**>Carray, ldc, batchCount)
         check_status(status)
 
-
     cpdef cgemmBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
             size_t alpha, size_t Aarray, int lda, size_t Barray, int ldb,
@@ -1092,7 +1081,6 @@ ELSE:
                 <const cuComplex**>Barray, ldb, <cuComplex*>beta,
                 <cuComplex**>Carray, ldc, batchCount)
         check_status(status)
-
 
     cpdef zgemmBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
@@ -1107,11 +1095,12 @@ ELSE:
                 <cuDoubleComplex**>Carray, ldc, batchCount)
         check_status(status)
 
-
     cpdef sgemmStridedBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
-            size_t alpha, size_t A, int lda, long long strideA, size_t B, int ldb,
-            long long strideB, size_t beta, size_t C, int ldc, long long strideC,
+            size_t alpha, size_t A, int lda,
+            long long strideA, size_t B, int ldb,
+            long long strideB, size_t beta,
+            size_t C, int ldc, long long strideC,
             int batchCount):
         _setStream(handle)
         with nogil:
@@ -1125,11 +1114,12 @@ ELSE:
                 batchCount)
         check_status(status)
 
-
     cpdef dgemmStridedBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
-            size_t alpha, size_t A, int lda, long long strideA, size_t B, int ldb,
-            long long strideB, size_t beta, size_t C, int ldc, long long strideC,
+            size_t alpha, size_t A, int lda,
+            long long strideA, size_t B, int ldb,
+            long long strideB, size_t beta,
+            size_t C, int ldc, long long strideC,
             int batchCount):
         _setStream(handle)
         with nogil:
@@ -1143,11 +1133,12 @@ ELSE:
                 batchCount)
         check_status(status)
 
-
     cpdef cgemmStridedBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
-            size_t alpha, size_t A, int lda, long long strideA, size_t B, int ldb,
-            long long strideB, size_t beta, size_t C, int ldc, long long strideC,
+            size_t alpha, size_t A, int lda,
+            long long strideA, size_t B, int ldb,
+            long long strideB, size_t beta,
+            size_t C, int ldc, long long strideC,
             int batchCount):
         _setStream(handle)
         with nogil:
@@ -1161,11 +1152,12 @@ ELSE:
                 batchCount)
         check_status(status)
 
-
     cpdef zgemmStridedBatched(
             intptr_t handle, int transa, int transb, int m, int n, int k,
-            size_t alpha, size_t A, int lda, long long strideA, size_t B, int ldb,
-            long long strideB, size_t beta, size_t C, int ldc, long long strideC,
+            size_t alpha, size_t A, int lda,
+            long long strideA, size_t B, int ldb,
+            long long strideB, size_t beta, size_t C,
+            int ldc, long long strideC,
             int batchCount):
         _setStream(handle)
         with nogil:
@@ -1179,7 +1171,6 @@ ELSE:
                 batchCount)
         check_status(status)
 
-
     cpdef strsm(
             intptr_t handle, int side, int uplo, int trans, int diag,
             int m, int n, size_t alpha, size_t Aarray, int lda,
@@ -1187,11 +1178,12 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasStrsm(
-                <Handle>handle, <SideMode>side, <FillMode>uplo, <Operation>trans,
-                <DiagType>diag, m, n, <const float*>alpha, <const float*>Aarray,
+                <Handle>handle, <SideMode>side,
+                <FillMode>uplo, <Operation>trans,
+                <DiagType>diag, m, n,
+                <const float*>alpha, <const float*>Aarray,
                 lda, <float*>Barray, ldb)
         check_status(status)
-
 
     cpdef dtrsm(
             intptr_t handle, int side, int uplo, int trans, int diag,
@@ -1200,11 +1192,12 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasDtrsm(
-                <Handle>handle, <SideMode>side, <FillMode>uplo, <Operation>trans,
-                <DiagType>diag, m, n, <const double*>alpha, <const double*>Aarray,
+                <Handle>handle, <SideMode>side,
+                <FillMode>uplo, <Operation>trans,
+                <DiagType>diag, m, n,
+                <const double*>alpha, <const double*>Aarray,
                 lda, <double*>Barray, ldb)
         check_status(status)
-
 
     cpdef ctrsm(
             intptr_t handle, int side, int uplo, int trans, int diag,
@@ -1213,11 +1206,11 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasCtrsm(
-                <Handle>handle, <SideMode>side, <FillMode>uplo, <Operation>trans,
+                <Handle>handle, <SideMode>side,
+                <FillMode>uplo, <Operation>trans,
                 <DiagType>diag, m, n, <const cuComplex*>alpha,
                 <const cuComplex*>Aarray, lda, <cuComplex*>Barray, ldb)
         check_status(status)
-
 
     cpdef ztrsm(
             intptr_t handle, int side, int uplo, int trans, int diag,
@@ -1226,14 +1219,16 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasZtrsm(
-                <Handle>handle, <SideMode>side, <FillMode>uplo, <Operation>trans,
+                <Handle>handle, <SideMode>side,
+                <FillMode>uplo, <Operation>trans,
                 <DiagType>diag, m, n, <const cuDoubleComplex*>alpha,
-                <const cuDoubleComplex*>Aarray, lda, <cuDoubleComplex*>Barray, ldb)
+                <const cuDoubleComplex*>Aarray, lda,
+                <cuDoubleComplex*>Barray, ldb)
         check_status(status)
 
-
     cpdef ssyrk(intptr_t handle, int uplo, int trans, int n, int k,
-                size_t alpha, size_t A, int lda, size_t beta, size_t C, int ldc):
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t C, int ldc):
         _setStream(handle)
         with nogil:
             status = cublasSsyrk(
@@ -1242,9 +1237,9 @@ ELSE:
                 <const float*>beta, <float*>C, ldc)
         check_status(status)
 
-
     cpdef dsyrk(intptr_t handle, int uplo, int trans, int n, int k,
-                size_t alpha, size_t A, int lda, size_t beta, size_t C, int ldc):
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t C, int ldc):
         _setStream(handle)
         with nogil:
             status = cublasDsyrk(
@@ -1253,9 +1248,9 @@ ELSE:
                 <const double*>beta, <double*>C, ldc)
         check_status(status)
 
-
     cpdef csyrk(intptr_t handle, int uplo, int trans, int n, int k,
-                size_t alpha, size_t A, int lda, size_t beta, size_t C, int ldc):
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t C, int ldc):
         _setStream(handle)
         with nogil:
             status = cublasCsyrk(
@@ -1264,9 +1259,9 @@ ELSE:
                 <const cuComplex*>beta, <cuComplex*>C, ldc)
         check_status(status)
 
-
     cpdef zsyrk(intptr_t handle, int uplo, int trans, int n, int k,
-                size_t alpha, size_t A, int lda, size_t beta, size_t C, int ldc):
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t C, int ldc):
         _setStream(handle)
         with nogil:
             status = cublasZsyrk(
@@ -1275,13 +1270,13 @@ ELSE:
                 <const cuDoubleComplex*>beta, <cuDoubleComplex*>C, ldc)
         check_status(status)
 
-
-    ###############################################################################
+    #######################################################################
     # BLAS extension
-    ###############################################################################
+    #######################################################################
 
     cpdef sgeam(intptr_t handle, int transa, int transb, int m, int n,
-                size_t alpha, size_t A, int lda, size_t beta, size_t B, int ldb,
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t B, int ldb,
                 size_t C, int ldc):
         _setStream(handle)
         with nogil:
@@ -1292,18 +1287,21 @@ ELSE:
         check_status(status)
 
     cpdef dgeam(intptr_t handle, int transa, int transb, int m, int n,
-                size_t alpha, size_t A, int lda, size_t beta, size_t B, int ldb,
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t B, int ldb,
                 size_t C, int ldc):
         _setStream(handle)
         with nogil:
             status = cublasDgeam(
                 <Handle>handle, <Operation>transa, <Operation>transb, m, n,
-                <const double*>alpha, <const double*>A, lda, <const double*>beta,
+                <const double*>alpha, <const double*>A,
+                lda, <const double*>beta,
                 <const double*>B, ldb, <double*>C, ldc)
         check_status(status)
 
     cpdef cgeam(intptr_t handle, int transa, int transb, int m, int n,
-                size_t alpha, size_t A, int lda, size_t beta, size_t B, int ldb,
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t B, int ldb,
                 size_t C, int ldc):
         _setStream(handle)
         with nogil:
@@ -1315,7 +1313,8 @@ ELSE:
         check_status(status)
 
     cpdef zgeam(intptr_t handle, int transa, int transb, int m, int n,
-                size_t alpha, size_t A, int lda, size_t beta, size_t B, int ldb,
+                size_t alpha, size_t A, int lda,
+                size_t beta, size_t B, int ldb,
                 size_t C, int ldc):
         _setStream(handle)
         with nogil:
@@ -1325,7 +1324,6 @@ ELSE:
                 <const cuDoubleComplex*>beta, <const cuDoubleComplex*>B, ldb,
                 <cuDoubleComplex*>C, ldc)
         check_status(status)
-
 
     cpdef sdgmm(intptr_t handle, int mode, int m, int n, size_t A, int lda,
                 size_t x, int incx, size_t C, int ldc):
@@ -1350,7 +1348,8 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasCdgmm(
-                <Handle>handle, <SideMode>mode, m, n, <const cuComplex*>A, lda,
+                <Handle>handle, <SideMode>mode,
+                m, n, <const cuComplex*>A, lda,
                 <const cuComplex*>x, incx, <cuComplex*>C, ldc)
         check_status(status)
 
@@ -1359,10 +1358,11 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasZdgmm(
-                <Handle>handle, <SideMode>mode, m, n, <const cuDoubleComplex*>A,
-                lda, <const cuDoubleComplex*>x, incx, <cuDoubleComplex*>C, ldc)
+                <Handle>handle, <SideMode>mode,
+                m, n, <const cuDoubleComplex*>A,
+                lda, <const cuDoubleComplex*>x, incx,
+                <cuDoubleComplex*>C, ldc)
         check_status(status)
-
 
     cpdef sgemmEx(
             intptr_t handle, int transa, int transb, int m, int n, int k,
@@ -1372,12 +1372,14 @@ ELSE:
         _setStream(handle)
         with nogil:
             status = cublasSgemmEx(
-                <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                <const float*>alpha, <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda,
-                <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb, <const float*>beta,
+                <Handle>handle, <Operation>transa,
+                <Operation>transb, m, n, k,
+                <const float*>alpha, <const void*>A,
+                <DataType>(convert_blas_dtype(Atype)), lda,
+                <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                ldb, <const float*>beta,
                 <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc)
         check_status(status)
-
 
     cpdef sgetrfBatched(intptr_t handle, int n, size_t Aarray, int lda,
                         size_t PivotArray, size_t infoArray, int batchSize):
@@ -1388,7 +1390,6 @@ ELSE:
                 <int*>PivotArray, <int*>infoArray, batchSize)
         check_status(status)
 
-
     cpdef dgetrfBatched(intptr_t handle, int n, size_t Aarray, int lda,
                         size_t PivotArray, size_t infoArray, int batchSize):
         _setStream(handle)
@@ -1397,7 +1398,6 @@ ELSE:
                 <Handle>handle, n, <double**>Aarray, lda,
                 <int*>PivotArray, <int*>infoArray, batchSize)
         check_status(status)
-
 
     cpdef cgetrfBatched(intptr_t handle, int n, size_t Aarray, int lda,
                         size_t PivotArray, size_t infoArray, int batchSize):
@@ -1408,7 +1408,6 @@ ELSE:
                 <int*>PivotArray, <int*>infoArray, batchSize)
         check_status(status)
 
-
     cpdef zgetrfBatched(intptr_t handle, int n, size_t Aarray, int lda,
                         size_t PivotArray, size_t infoArray, int batchSize):
         _setStream(handle)
@@ -1418,10 +1417,10 @@ ELSE:
                 <int*>PivotArray, <int*>infoArray, batchSize)
         check_status(status)
 
-
     cpdef int sgetrsBatched(intptr_t handle, int trans, int n, int nrhs,
                             size_t Aarray, int lda, size_t devIpiv,
-                            size_t Barray, int ldb, size_t info, int batchSize):
+                            size_t Barray, int ldb, size_t info,
+                            int batchSize):
         _setStream(handle)
         with nogil:
             IF CUPY_HIP_VERSION != 0:
@@ -1438,7 +1437,8 @@ ELSE:
 
     cpdef int dgetrsBatched(intptr_t handle, int trans, int n, int nrhs,
                             size_t Aarray, int lda, size_t devIpiv,
-                            size_t Barray, int ldb, size_t info, int batchSize):
+                            size_t Barray, int ldb, size_t info,
+                            int batchSize):
         _setStream(handle)
         with nogil:
             IF CUPY_HIP_VERSION != 0:
@@ -1455,7 +1455,8 @@ ELSE:
 
     cpdef int cgetrsBatched(intptr_t handle, int trans, int n, int nrhs,
                             size_t Aarray, int lda, size_t devIpiv,
-                            size_t Barray, int ldb, size_t info, int batchSize):
+                            size_t Barray, int ldb, size_t info,
+                            int batchSize):
         _setStream(handle)
         with nogil:
             IF CUPY_HIP_VERSION != 0:
@@ -1472,7 +1473,8 @@ ELSE:
 
     cpdef int zgetrsBatched(intptr_t handle, int trans, int n, int nrhs,
                             size_t Aarray, int lda, size_t devIpiv,
-                            size_t Barray, int ldb, size_t info, int batchSize):
+                            size_t Barray, int ldb, size_t info,
+                            int batchSize):
         _setStream(handle)
         with nogil:
             IF CUPY_HIP_VERSION != 0:
@@ -1487,7 +1489,6 @@ ELSE:
                     <cuDoubleComplex**>Barray, ldb, <int*>info, batchSize)
         check_status(status)
 
-
     cpdef sgetriBatched(
             intptr_t handle, int n, size_t Aarray, int lda, size_t PivotArray,
             size_t Carray, int ldc, size_t infoArray, int batchSize):
@@ -1499,11 +1500,11 @@ ELSE:
                     <float**>Carray, ldc, <int*>infoArray, batchSize)
             ELSE:
                 status = cublasSgetriBatched(
-                    <Handle>handle, n, <const float**>Aarray, lda, <int*>PivotArray,
-                    <float**>Carray, ldc, <int*>infoArray, batchSize)
+                    <Handle>handle, n, <const float**>Aarray, lda,
+                    <int*>PivotArray, <float**>Carray, ldc, <int*>infoArray,
+                    batchSize)
 
         check_status(status)
-
 
     cpdef dgetriBatched(
             intptr_t handle, int n, size_t Aarray, int lda, size_t PivotArray,
@@ -1516,11 +1517,11 @@ ELSE:
                     <double**>Carray, ldc, <int*>infoArray, batchSize)
             ELSE:
                 status = cublasDgetriBatched(
-                    <Handle>handle, n, <const double**>Aarray, lda, <int*>PivotArray,
-                    <double**>Carray, ldc, <int*>infoArray, batchSize)
+                    <Handle>handle, n, <const double**>Aarray, lda,
+                    <int*>PivotArray, <double**>Carray, ldc, <int*>infoArray,
+                    batchSize)
 
         check_status(status)
-
 
     cpdef cgetriBatched(
             intptr_t handle, int n, size_t Aarray, int lda, size_t PivotArray,
@@ -1540,7 +1541,6 @@ ELSE:
 
         check_status(status)
 
-
     cpdef zgetriBatched(
             intptr_t handle, int n, size_t Aarray, int lda, size_t PivotArray,
             size_t Carray, int ldc, size_t infoArray, int batchSize):
@@ -1558,7 +1558,6 @@ ELSE:
                     <cuDoubleComplex**>Carray, ldc, <int*>infoArray, batchSize)
         check_status(status)
 
-
     cpdef gemmEx(
             intptr_t handle, int transa, int transb, int m, int n, int k,
             size_t alpha, size_t A, int Atype, int lda, size_t B,
@@ -1572,43 +1571,50 @@ ELSE:
             ):
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmEx_v11(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb,
-                        <const void*>beta,
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <const void*>beta,
                         <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc,
-                        <DataType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <DataType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
                 ELSE:
                     status = cublasGemmEx_v11(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb,
-                        <const void*>beta,
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <const void*>beta,
                         <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc,
-                        <ComputeType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <ComputeType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
             else:
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmEx(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb,
-                        <const void*>beta,
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <const void*>beta,
                         <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc,
-                        <DataType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <DataType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
                 ELSE:
                     status = cublasGemmEx(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb,
-                        <const void*>beta,
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <const void*>beta,
                         <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc,
-                        <ComputeType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <ComputeType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
         check_status(status)
-
 
     cpdef gemmStridedBatchedEx(
             intptr_t handle, int transa, int transb, int m, int n, int k,
@@ -1623,69 +1629,82 @@ ELSE:
             if computeType >= CUBLAS_COMPUTE_16F and CUPY_HIP_VERSION == 0:
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmStridedBatchedEx_v11(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda, <long long>strideA,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb, <long long>strideB,
-                        <const void*>beta,
-                        <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc, <long long>strideC,
-                        batchCount, <DataType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda, <long long>strideA,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <long long>strideB, <const void*>beta,
+                        <void*>C, <DataType>(convert_blas_dtype(Ctype)),
+                        ldc, <long long>strideC, batchCount,
+                        <DataType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
                 ELSE:
                     status = cublasGemmStridedBatchedEx_v11(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda, <long long>strideA,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb, <long long>strideB,
-                        <const void*>beta,
-                        <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc, <long long>strideC,
-                        batchCount, <ComputeType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda, <long long>strideA,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <long long>strideB, <const void*>beta,
+                        <void*>C, <DataType>(convert_blas_dtype(Ctype)),
+                        ldc, <long long>strideC, batchCount,
+                        <ComputeType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
             else:
                 IF 0 < CUPY_HIP_VERSION < 60000000:
                     status = cublasGemmStridedBatchedEx(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda, <long long>strideA,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb, <long long>strideB,
-                        <const void*>beta,
-                        <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc, <long long>strideC,
-                        batchCount, <DataType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda, <long long>strideA,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <long long>strideB, <const void*>beta,
+                        <void*>C, <DataType>(convert_blas_dtype(Ctype)),
+                        ldc, <long long>strideC, batchCount,
+                        <DataType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
                 ELSE:
                     status = cublasGemmStridedBatchedEx(
-                        <Handle>handle, <Operation>transa, <Operation>transb, m, n, k,
-                        <const void*>alpha,
-                        <const void*>A, <DataType>(convert_blas_dtype(Atype)), lda, <long long>strideA,
-                        <const void*>B, <DataType>(convert_blas_dtype(Btype)), ldb, <long long>strideB,
-                        <const void*>beta,
-                        <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc, <long long>strideC,
-                        batchCount, <ComputeType>(convert_blas_computetype(computeType)), <GemmAlgo>algo)
+                        <Handle>handle, <Operation>transa, <Operation>transb,
+                        m, n, k, <const void*>alpha,
+                        <const void*>A, <DataType>(convert_blas_dtype(Atype)),
+                        lda, <long long>strideA,
+                        <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                        ldb, <long long>strideB, <const void*>beta,
+                        <void*>C, <DataType>(convert_blas_dtype(Ctype)),
+                        ldc, <long long>strideC,
+                        batchCount,
+                        <ComputeType>(convert_blas_computetype(computeType)),
+                        <GemmAlgo>algo)
         check_status(status)
 
-
-    cpdef stpttr(intptr_t handle, int uplo, int n, size_t AP, size_t A, int lda):
+    cpdef stpttr(intptr_t handle, int uplo, int n,
+                 size_t AP, size_t A, int lda):
         _setStream(handle)
         with nogil:
             status = cublasStpttr(<Handle>handle, <FillMode>uplo, n,
                                   <const float*>AP, <float*>A, lda)
         check_status(status)
 
-
-    cpdef dtpttr(intptr_t handle, int uplo, int n, size_t AP, size_t A, int lda):
+    cpdef dtpttr(intptr_t handle, int uplo, int n,
+                 size_t AP, size_t A, int lda):
         _setStream(handle)
         with nogil:
             status = cublasDtpttr(<Handle>handle, <FillMode>uplo, n,
                                   <const double*>AP, <double*>A, lda)
         check_status(status)
 
-
-    cpdef strttp(intptr_t handle, int uplo, int n, size_t A, int lda, size_t AP):
+    cpdef strttp(intptr_t handle, int uplo, int n,
+                 size_t A, int lda, size_t AP):
         _setStream(handle)
         with nogil:
             status = cublasStrttp(<Handle>handle, <FillMode>uplo, n,
                                   <const float*>A, lda, <float*>AP)
         check_status(status)
 
-
-    cpdef dtrttp(intptr_t handle, int uplo, int n, size_t A, int lda, size_t AP):
+    cpdef dtrttp(intptr_t handle, int uplo, int n,
+                 size_t A, int lda, size_t AP):
         _setStream(handle)
         with nogil:
             status = cublasDtrttp(<Handle>handle, <FillMode>uplo, n,
