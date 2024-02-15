@@ -86,6 +86,7 @@ cpdef int to_cuda_dtype(dtype, bint is_half_allowed=False) except -1:
     else:
         raise TypeError('dtype is not supported: {}'.format(dtype))
 
+
 cdef _numpy_can_cast = numpy.can_cast
 
 
