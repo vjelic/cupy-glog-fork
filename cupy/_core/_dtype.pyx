@@ -69,7 +69,7 @@ cpdef int to_cuda_dtype(dtype, bint is_half_allowed=False) except -1:
         dtype_char = dtype.char
     except AttributeError:
         dtype_char = dtype
-    
+
     if dtype_char == 'e' and is_half_allowed:
         return runtime.CUDA_R_16F
     elif dtype_char == 'f':

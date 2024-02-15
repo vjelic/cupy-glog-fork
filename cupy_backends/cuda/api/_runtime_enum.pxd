@@ -28,7 +28,7 @@ cpdef enum:
     CUDA_C_8I = 7  # 8 bit complex as a pair of signed integers
     CUDA_R_8U = 8  # 8 bit real as a signed integer
     CUDA_C_8U = 9  # 8 bit complex as a pair of signed integers
-    
+
     # CUDA Limits
     cudaLimitStackSize = 0x00
     cudaLimitPrintfFifoSize = 0x01

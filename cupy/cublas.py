@@ -673,10 +673,8 @@ def _decide_ld_and_trans(a, trans):
             ld = a.shape[0]
         elif a._c_contiguous:
             ld = a.shape[1]
-            if not runtime.is_hip:
-                trans = 1 - trans
-            else:
-                trans = 111 ^ 112 ^ trans
+            trans = 1 - trans if not runtime.is_hip \
+                    else 111 ^ 112 ^ trans
     return ld, trans
 
 
