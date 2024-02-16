@@ -239,9 +239,6 @@ cdef class _ndarray_base:
 
     @property
     def __cuda_array_interface__(self):
-        if runtime._is_hip_environment:
-            raise AttributeError(
-                'HIP/ROCm does not support cuda array interface')
         cdef dict desc = {
             'shape': self.shape,
             'typestr': self.dtype.str,
@@ -2732,10 +2729,6 @@ cpdef _ndarray_base asfortranarray(_ndarray_base a, dtype=None):
 
 
 cpdef _ndarray_base _convert_object_with_cuda_array_interface(a):
-    if runtime._is_hip_environment:
-        raise RuntimeError(
-            'HIP/ROCm does not support cuda array interface')
-
     cdef Py_ssize_t sh, st
     cdef dict desc = a.__cuda_array_interface__
     cdef tuple shape = desc['shape']
