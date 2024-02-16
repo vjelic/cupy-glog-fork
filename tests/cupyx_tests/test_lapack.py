@@ -53,15 +53,11 @@ class TestGesv(unittest.TestCase):
         self.x_ref = x.reshape(b_shape)
         self.tol = self._tol[self.dtype.char.lower()]
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_gesv(self):
         lapack.gesv(self.a, self.b)
         cupy.testing.assert_allclose(self.b, self.x_ref,
                                      rtol=self.tol, atol=self.tol)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_invalid_cases(self):
         if self.nrhs is None or self.nrhs == 1:
             raise unittest.SkipTest()

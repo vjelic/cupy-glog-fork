@@ -757,9 +757,14 @@ def gemm(transa, transb, a, b, out=None, alpha=1.0, beta=0.0):
         elif out._c_contiguous:
             # Computes out.T = alpha * b.T @ a.T + beta * out.T
             try:
-                func(handle, 1 - transb, 1 - transa, n, m, k, alpha_ptr,
-                     b.data.ptr, ldb, a.data.ptr, lda, beta_ptr, out.data.ptr,
-                     n)
+                if not runtime.is_hip:
+                    func(handle, 1 - transb, 1 - transa, n, m, k, alpha_ptr,
+                         b.data.ptr, ldb, a.data.ptr, lda, beta_ptr,
+                         out.data.ptr, n)
+                else:
+                    func(handle, 111^112^transb, 111^112^transa,
+                         n, m, k, alpha_ptr, b.data.ptr, ldb,
+                         a.data.ptr, lda, beta_ptr, out.data.ptr, n)
             finally:
                 cublas.setPointerMode(handle, orig_mode)
             return out
@@ -996,11 +1001,11 @@ def syrk(trans, a, out=None, alpha=1.0, beta=0.0, lower=False):
     if out._c_contiguous:
         if not a._c_contiguous:
             a = a.copy(order='C')
-            trans = 1 - trans
+            trans = 1 - trans if not runtime.is_hip else 111^112^trans
             lda = a.shape[1]
         try:
-            func(handle, 1 - uplo, trans, n, k,
-                 alpha_ptr, a.data.ptr, lda,
+            func(handle, 1 - uplo if not runtime.is_hip else 121^122^uplo,
+                 trans, n, k, alpha_ptr, a.data.ptr, lda,
                  beta_ptr, out.data.ptr, ldo)
         finally:
             cublas.setPointerMode(handle, orig_mode)
@@ -1009,7 +1014,7 @@ def syrk(trans, a, out=None, alpha=1.0, beta=0.0, lower=False):
         if not a._f_contiguous:
             a = a.copy(order='F')
             lda = a.shape[0]
-            trans = 1 - trans
+            trans = 1 - trans if not runtime.is_hip else 111^112^trans
         c = out
         if not out._f_contiguous:
             c = out.copy(order='F')

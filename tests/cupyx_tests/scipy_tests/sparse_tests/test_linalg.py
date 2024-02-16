@@ -162,8 +162,6 @@ class TestEigsh:
             w = ret
         return xp.sort(w)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @pytest.mark.parametrize('format', ['csr', 'csc', 'coo'])
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=tol, atol=tol, sp_name='sp')
@@ -177,8 +175,6 @@ class TestEigsh:
             a = sp.linalg.aslinearoperator(a)
         return self._test_eigsh(a, xp, sp)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=tol, atol=tol, sp_name='sp')
     def test_dense(self, dtype, xp, sp):
@@ -274,8 +270,6 @@ class TestSvds:
         else:
             return xp.sort(ret)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @pytest.mark.parametrize('format', ['csr', 'csc', 'coo'])
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=tol, atol=tol, sp_name='sp')
@@ -289,8 +283,6 @@ class TestSvds:
             a = sp.linalg.aslinearoperator(a)
         return self._test_svds(a, xp, sp)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=tol, atol=tol, sp_name='sp')
     def test_dense(self, dtype, xp, sp):
@@ -386,8 +378,6 @@ class TestCg:
         else:
             return sp.linalg.cg(a, b, x0=x0, M=M, atol=atol)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
     def test_dense(self, dtype, xp, sp):
@@ -398,8 +388,6 @@ class TestCg:
                 M = sp.linalg.aslinearoperator(M)
         return self._test_cg(dtype, xp, sp, a, M)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @pytest.mark.parametrize('format', ['csr', 'csc', 'coo'])
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
@@ -433,8 +421,6 @@ class TestCg:
         else:
             return sp.linalg.cg(a, b)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_callback(self, dtype):
         if not (self.x0 is None and self.M is None and self.atol is None and
@@ -452,8 +438,6 @@ class TestCg:
         sp.linalg.cg(a, b, callback=callback)
         assert is_called
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_invalid(self):
         if not (self.x0 is None and self.M is None and self.atol is None and
                 self.use_linear_operator is False):
@@ -552,8 +536,6 @@ class TestGmres:
             return sp.linalg.gmres(
                 a, b, x0=x0, restart=self.restart, M=M, atol=atol)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
     def test_dense(self, dtype, xp, sp):
@@ -564,8 +546,6 @@ class TestGmres:
                 M = sp.linalg.aslinearoperator(M)
         return self._test_gmres(dtype, xp, sp, a, M)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @pytest.mark.parametrize('format', ['csr', 'csc', 'coo'])
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
@@ -599,8 +579,6 @@ class TestGmres:
         else:
             return sp.linalg.gmres(a, b)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_callback(self, dtype):
         if not (self.x0 is None and self.M is None and self.atol is None and
@@ -749,8 +727,6 @@ class TestLinearOperator:
             return self._inner_cases(xp, sp, A.T.conj()).H
         assert False
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @skip_HIP_spMM_error(outer=('transpose', 'hermitian'))
     @testing.numpy_cupy_allclose(sp_name='sp', rtol=1e-6)
     def test_matvec(self, xp, sp):
@@ -759,8 +735,6 @@ class TestLinearOperator:
         x_2dim = testing.shaped_random((self.N, 1), xp, self.dtype)
         return linop.matvec(x_1dim), linop.matvec(x_2dim)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @skip_HIP_spMM_error(outer=('transpose', 'hermitian'))
     @testing.numpy_cupy_allclose(
         sp_name='sp', rtol=1e-6, contiguous_check=False)
@@ -769,8 +743,6 @@ class TestLinearOperator:
         x = testing.shaped_random((self.N, 8), xp, self.dtype)
         return linop.matmat(x)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @skip_HIP_spMM_error(outer=('normal',))
     @testing.numpy_cupy_allclose(sp_name='sp', rtol=1e-6)
     def test_rmatvec(self, xp, sp):
@@ -779,8 +751,6 @@ class TestLinearOperator:
         x_2dim = testing.shaped_random((self.M, 1), xp, self.dtype)
         return linop.rmatvec(x_1dim), linop.rmatvec(x_2dim)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @skip_HIP_spMM_error(outer=('normal',))
     @testing.numpy_cupy_allclose(
         sp_name='sp', rtol=1e-6, contiguous_check=False)
@@ -789,8 +759,6 @@ class TestLinearOperator:
         x = testing.shaped_random((self.M, 8), xp, self.dtype)
         return linop.rmatmat(x)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @skip_HIP_spMM_error(outer=('transpose', 'hermitian'))
     @testing.numpy_cupy_allclose(
         sp_name='sp', rtol=1e-6, contiguous_check=False)
@@ -801,8 +769,6 @@ class TestLinearOperator:
         x2 = testing.shaped_random((self.N, 8), xp, self.dtype)
         return linop.dot(x0), linop.dot(x1), linop.dot(x2)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @skip_HIP_spMM_error(outer=('transpose', 'hermitian'))
     @testing.numpy_cupy_allclose(
         sp_name='sp', rtol=1e-6, contiguous_check=False)
@@ -1234,8 +1200,6 @@ class TestLOBPCG:
                                                cupy: %s''' % (stdout_numpy,
                                                               stdout_cupy)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.numpy_cupy_allclose(
         rtol=1e-5, atol=5e-3 if runtime.is_hip else 1e-3, sp_name='sp',
         contiguous_check=False)
@@ -1252,8 +1216,6 @@ class TestLOBPCG:
                                          verbosityLevel=1)
         return eigvals, _eigen_vec_transform(vecs, xp)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @pytest.mark.xfail(
         runtime.is_hip and
         (driver.get_build_version() >= 5_00_00000 and
@@ -1476,8 +1438,6 @@ class TestLsmr:
             a = sp.linalg.aslinearoperator(a)
         return self._test_lsmr(xp, sp, a)[0]
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.numpy_cupy_allclose(rtol=1e-1, atol=1e-1, sp_name='sp')
     def test_dense(self, xp, sp):
         if (self.damp == 0 and self.x0 == 'ones' and self.n != 20):
@@ -1562,8 +1522,6 @@ class TestCgs:
         else:
             return sp.linalg.cgs(a, b, x0=x0, M=M, atol=atol)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
     def test_dense(self, dtype, xp, sp):
@@ -1574,8 +1532,6 @@ class TestCgs:
                 M = sp.linalg.aslinearoperator(M)
         return self._test_cgs(dtype, xp, sp, a, M)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @pytest.mark.parametrize('format', ['csr', 'csc', 'coo'])
     @testing.for_dtypes('fdFD')
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
@@ -1609,8 +1565,6 @@ class TestCgs:
         else:
             return sp.linalg.cgs(a, b)
     
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_callback(self, dtype):
         if not (self.x0 is None and self.M is None and self.atol is None and
@@ -1628,8 +1582,6 @@ class TestCgs:
         sp.linalg.cgs(a, b, callback=callback)
         assert is_called
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_invalid(self):
         if not (self.x0 is None and self.M is None and self.atol is None and
                 self.use_linear_operator is False):
@@ -1713,8 +1665,6 @@ class TestMinres:
                 M = sp.linalg.aslinearoperator(M)
         return self._test_minres(xp, sp, a, M)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.numpy_cupy_allclose(rtol=1e-5, atol=1e-5, sp_name='sp')
     def test_dense(self, xp, sp):
         a, M = self._make_matrix(xp)
@@ -1753,8 +1703,6 @@ class TestMinres:
             with pytest.raises(ValueError):
                 sp.linalg.minres(a, b, M=ng_M)
 
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_callback(self):
         if not (self.x0 is None and self.M is None and
                 self.use_linear_operator is False):

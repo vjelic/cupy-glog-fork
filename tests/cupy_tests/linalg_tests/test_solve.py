@@ -176,8 +176,6 @@ class TestPinv(unittest.TestCase):
         cupy.testing.assert_allclose(result_cpu, result_gpu, atol=1e-3)
         cupy.testing.assert_array_equal(a_gpu_copy, a_gpu)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_pinv(self):
         self.check_x((3, 3), rcond=1e-15)
         self.check_x((2, 4), rcond=1e-15)
@@ -237,8 +235,6 @@ class TestLstsq:
         with pytest.raises(numpy.linalg.LinAlgError):
             cupy.linalg.lstsq(a, b, rcond=None)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_lstsq_solutions(self):
         # Comapres numpy.linalg.lstsq and cupy.linalg.lstsq solutions for:
         #   a shapes range from (3, 3) to (5, 3) and (3, 5)
@@ -285,8 +281,6 @@ class TestLstsq:
         self.check_invalid_shapes((3, 3), (2, 2))
         self.check_invalid_shapes((4, 3), (10, 3, 3))
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_float_dtypes(no_float16=True)
     @testing.numpy_cupy_allclose(atol=1e-3)
     def test_warn_rcond(self, xp, dtype):

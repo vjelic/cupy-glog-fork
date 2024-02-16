@@ -24,8 +24,6 @@ class TestEigenvalue:
 
     @testing.for_all_dtypes()
     @testing.numpy_cupy_allclose(rtol=1e-3, atol=1e-4, contiguous_check=False)
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_eigh(self, xp, dtype):
         if xp == numpy and dtype == numpy.float16:
             # NumPy's eigh does not support float16
@@ -57,8 +55,6 @@ class TestEigenvalue:
 
     @testing.for_all_dtypes(no_bool=True, no_float16=True, no_complex=True)
     @testing.numpy_cupy_allclose(rtol=1e-3, atol=1e-4, contiguous_check=False)
-    @pytest.mark.skipif(runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_eigh_batched(self, xp, dtype):
         a = xp.array([[[1, 0, 3], [0, 5, 0], [7, 0, 9]],
                       [[3, 0, 3], [0, 7, 0], [7, 0, 11]]], dtype)

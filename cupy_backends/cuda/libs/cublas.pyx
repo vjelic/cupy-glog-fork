@@ -1371,14 +1371,26 @@ ELSE:
             int ldc):
         _setStream(handle)
         with nogil:
-            status = cublasSgemmEx(
-                <Handle>handle, <Operation>transa,
-                <Operation>transb, m, n, k,
-                <const float*>alpha, <const void*>A,
-                <DataType>(convert_blas_dtype(Atype)), lda,
-                <const void*>B, <DataType>(convert_blas_dtype(Btype)),
-                ldb, <const float*>beta,
-                <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc)
+            IF CUPY_HIP_VERSION!=0:
+                # workaround until hipblasSgemmEx is supported
+                if (Atype != 0 or Btype != 0 or Ctype != 0):
+                    status = CUBLAS_STATUS_NOT_SUPPORTED
+                else:
+                    status = hipblasSgemm(
+                        <Handle>handle, <Operation>transa,
+                        <Operation>transb, m, n, k,
+                        <const float*>alpha, <const float*>A,
+                        lda, <const float*>B, ldb, <const float*>beta,
+                        <float*>C, ldc)
+            ELSE:
+                status = cublasSgemmEx(
+                    <Handle>handle, <Operation>transa,
+                    <Operation>transb, m, n, k,
+                    <const float*>alpha, <const void*>A,
+                    <DataType>(convert_blas_dtype(Atype)), lda,
+                    <const void*>B, <DataType>(convert_blas_dtype(Btype)),
+                    ldb, <const float*>beta,
+                    <void*>C, <DataType>(convert_blas_dtype(Ctype)), ldc)
         check_status(status)
 
     cpdef sgetrfBatched(intptr_t handle, int n, size_t Aarray, int lda,

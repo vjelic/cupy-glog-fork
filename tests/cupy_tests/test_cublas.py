@@ -199,8 +199,6 @@ class TestGemv:
         self.dtype = numpy.dtype(self.dtype)
         self.tol = self._tol[self.dtype.char.lower()]
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     def test_gemv(self):
         a = testing.shaped_random(self.shape, cupy, dtype=self.dtype,
                                   order=self.order)
@@ -249,8 +247,6 @@ class TestSbmv:
                 B[(k + i), j] = A[i, j]
         return B
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fd')
     def test_sbmv(self, dtype):
         dtype = numpy.dtype(dtype)
@@ -353,8 +349,6 @@ class TestSyrk:
             return a
         return a.T
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_syrk(self, dtype):
         dtype = numpy.dtype(dtype)
@@ -381,8 +375,6 @@ class TestSyrk:
         cupy.testing.assert_allclose(ccu, rru, rtol=tol, atol=tol)
         cupy.testing.assert_allclose(ccl, rrl, rtol=tol, atol=tol)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_syrk_out(self, dtype):
         dtype = numpy.dtype(dtype)
@@ -441,8 +433,6 @@ class TestGemmAndGeam:
             a = a.T.conj()
         return a
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_gemm(self, dtype):
         if not (self.mode is None and self.orderc == 'C'):
@@ -458,8 +448,6 @@ class TestGemmAndGeam:
         c = cublas.gemm(self.transa, self.transb, a, b)
         cupy.testing.assert_allclose(c, ref, rtol=tol, atol=tol)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_gemm_out(self, dtype):
         dtype = numpy.dtype(dtype)
@@ -556,8 +544,6 @@ class TestDgmm:
             self.x = testing.shaped_random(
                 (xlen, xlen), cupy, dtype=dtype, scale=1.0)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_dgmm(self, dtype):
         if self.orderc != 'F':
@@ -570,8 +556,6 @@ class TestDgmm:
         c = cublas.dgmm(self.side, self.a, self.x)
         cupy.testing.assert_allclose(c, ref, rtol=self.tol, atol=self.tol)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_dgmm_out(self, dtype):
         self._setup(dtype)
@@ -583,8 +567,6 @@ class TestDgmm:
         cublas.dgmm(self.side, self.a, self.x, out=c)
         cupy.testing.assert_allclose(c, ref, rtol=self.tol, atol=self.tol)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_dgmm_inplace(self, dtype):
         if self.orderc != 'F':
@@ -608,8 +590,6 @@ class TestDgmm:
         return (self.ordera, self.orderc, self.shape, self.side) in \
             self._dgmm_incx_minus_one_hip_skip_condition
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_dgmm_incx_minus_one(self, dtype):
         if self.orderc != 'F':
@@ -634,8 +614,6 @@ class TestDgmm:
         c = cublas.dgmm(self.side, self.a, self.x, incx=0)
         cupy.testing.assert_allclose(c, ref, rtol=self.tol, atol=self.tol)
 
-    @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-            reason="hipblasSgemmEx not implemented")
     @testing.for_dtypes('fdFD')
     def test_dgmm_x_matrix(self, dtype):
         if self.orderc != 'F':

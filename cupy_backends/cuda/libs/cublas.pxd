@@ -69,6 +69,8 @@ IF CUPY_HIP_VERSION != 0:
         CUBLAS_COMPUTE_64F_PEDANTIC = 8    # double - pedantic
         CUBLAS_COMPUTE_32I = 9             # signed 32-bit int - default
         CUBLAS_COMPUTE_32I_PEDANTIC = 10   # signed 32-bit int - pedantic
+
+        CUBLAS_STATUS_NOT_SUPPORTED = 7
 ELSE:
     cpdef enum:
         # need to revisit this when cython supports C++ enums (in 3.0)
