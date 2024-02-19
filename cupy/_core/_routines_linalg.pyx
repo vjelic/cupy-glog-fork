@@ -470,8 +470,8 @@ cpdef inline tuple _mat_to_cublas_contiguous(
         return a, 111 + trans if runtime._is_hip_environment else trans, lda
     if not a._c_contiguous:
         a = a.copy()
-    return a, 112 - trans if runtime._is_hip_environment \
-            else 1-trans, a._strides[0] // a.itemsize
+    return a, (112 - trans if runtime._is_hip_environment
+               else 1-trans), a._strides[0] // a.itemsize
 
 
 cpdef _ndarray_base dot(
