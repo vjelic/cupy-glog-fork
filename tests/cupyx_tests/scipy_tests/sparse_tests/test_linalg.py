@@ -1564,7 +1564,7 @@ class TestCgs:
                 return sp.linalg.cgs(a, b)
         else:
             return sp.linalg.cgs(a, b)
-    
+
     @testing.for_dtypes('fdFD')
     def test_callback(self, dtype):
         if not (self.x0 is None and self.M is None and self.atol is None and

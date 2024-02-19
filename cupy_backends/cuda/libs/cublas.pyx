@@ -1177,12 +1177,15 @@ ELSE:
             size_t Barray, int ldb):
         _setStream(handle)
         with nogil:
-            status = cublasStrsm(
-                <Handle>handle, <SideMode>side,
-                <FillMode>uplo, <Operation>trans,
-                <DiagType>diag, m, n,
-                <const float*>alpha, <const float*>Aarray,
-                lda, <float*>Barray, ldb)
+            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 50700000:
+                status = CUBLAS_STATUS_NOT_SUPPORTED
+            ELSE:
+                status = cublasStrsm(
+                    <Handle>handle, <SideMode>side,
+                    <FillMode>uplo, <Operation>trans,
+                    <DiagType>diag, m, n,
+                    <const float*>alpha, <const float*>Aarray,
+                    lda, <float*>Barray, ldb)
         check_status(status)
 
     cpdef dtrsm(
@@ -1191,12 +1194,15 @@ ELSE:
             size_t Barray, int ldb):
         _setStream(handle)
         with nogil:
-            status = cublasDtrsm(
-                <Handle>handle, <SideMode>side,
-                <FillMode>uplo, <Operation>trans,
-                <DiagType>diag, m, n,
-                <const double*>alpha, <const double*>Aarray,
-                lda, <double*>Barray, ldb)
+            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 50700000:
+                status = CUBLAS_STATUS_NOT_SUPPORTED
+            ELSE:
+                status = cublasDtrsm(
+                    <Handle>handle, <SideMode>side,
+                    <FillMode>uplo, <Operation>trans,
+                    <DiagType>diag, m, n,
+                    <const double*>alpha, <const double*>Aarray,
+                    lda, <double*>Barray, ldb)
         check_status(status)
 
     cpdef ctrsm(
@@ -1205,11 +1211,14 @@ ELSE:
             size_t Barray, int ldb):
         _setStream(handle)
         with nogil:
-            status = cublasCtrsm(
-                <Handle>handle, <SideMode>side,
-                <FillMode>uplo, <Operation>trans,
-                <DiagType>diag, m, n, <const cuComplex*>alpha,
-                <const cuComplex*>Aarray, lda, <cuComplex*>Barray, ldb)
+            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 50700000:
+                status = CUBLAS_STATUS_NOT_SUPPORTED
+            ELSE:
+                status = cublasCtrsm(
+                    <Handle>handle, <SideMode>side,
+                    <FillMode>uplo, <Operation>trans,
+                    <DiagType>diag, m, n, <const cuComplex*>alpha,
+                    <const cuComplex*>Aarray, lda, <cuComplex*>Barray, ldb)
         check_status(status)
 
     cpdef ztrsm(
@@ -1218,12 +1227,15 @@ ELSE:
             size_t Barray, int ldb):
         _setStream(handle)
         with nogil:
-            status = cublasZtrsm(
-                <Handle>handle, <SideMode>side,
-                <FillMode>uplo, <Operation>trans,
-                <DiagType>diag, m, n, <const cuDoubleComplex*>alpha,
-                <const cuDoubleComplex*>Aarray, lda,
-                <cuDoubleComplex*>Barray, ldb)
+            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 50700000:
+                status = CUBLAS_STATUS_NOT_SUPPORTED
+            ELSE:
+                status = cublasZtrsm(
+                    <Handle>handle, <SideMode>side,
+                    <FillMode>uplo, <Operation>trans,
+                    <DiagType>diag, m, n, <const cuDoubleComplex*>alpha,
+                    <const cuDoubleComplex*>Aarray, lda,
+                    <cuDoubleComplex*>Barray, ldb)
         check_status(status)
 
     cpdef ssyrk(intptr_t handle, int uplo, int trans, int n, int k,

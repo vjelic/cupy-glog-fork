@@ -15,6 +15,7 @@ from cupy_builder.install_build import PLATFORM_LINUX
 from cupy_builder.install_build import PLATFORM_WIN32
 from cupy_builder.install_utils import get_rocm_version
 
+
 def ensure_module_file(file):
     if isinstance(file, tuple):
         return file
