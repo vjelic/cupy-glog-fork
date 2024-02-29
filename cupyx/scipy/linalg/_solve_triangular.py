@@ -5,6 +5,7 @@ from cupy.cuda import cublas
 from cupy.cuda import device
 from cupy.linalg import _util
 from cupyx.scipy.linalg import _uarray
+from cupy_backends.cuda.api import runtime
 
 
 @_uarray.implements('solve_triangular')
@@ -88,6 +89,8 @@ def solve_triangular(a, b, trans=0, lower=False, unit_diagonal=False,
         trans = cublas.CUBLAS_OP_T
     elif trans == 'C':
         trans = cublas.CUBLAS_OP_C
+    elif runtime.is_hip:
+        trans = trans + 111
 
     if unit_diagonal:
         diag = cublas.CUBLAS_DIAG_UNIT

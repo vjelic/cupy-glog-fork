@@ -467,10 +467,11 @@ cpdef inline tuple _mat_to_cublas_contiguous(
         lda = a._strides[1] // a.itemsize
         if lda < a._shape[0]:
             lda = a._shape[0]
-        return a, trans, lda
+        return a, 111 + trans if runtime._is_hip_environment else trans, lda
     if not a._c_contiguous:
         a = a.copy()
-    return a, 1 - trans, a._strides[0] // a.itemsize
+    return a, (112 - trans if runtime._is_hip_environment
+               else 1-trans), a._strides[0] // a.itemsize
 
 
 cpdef _ndarray_base dot(
@@ -612,10 +613,12 @@ cpdef _ndarray_base tensordot_core(
         c.shape = (n, m)
 
     if dtype not in 'efdFD':
-        if transa:
+        if (runtime._is_hip_environment and transa==112) \
+                or (not runtime._is_hip_environment and transa):
             a = a.T
             a = _internal_ascontiguousarray(a)
-        if transb:
+        if (runtime._is_hip_environment and transb==112) \
+                or (not runtime._is_hip_environment and transb):
             b = _internal_ascontiguousarray(b)
         _integral_tensordot_core(b, a, c, m, n, k, dtype, ret_shape)
         if copy_to_out is not None:
@@ -1014,8 +1017,8 @@ cpdef _ndarray_base matmul(
         if dtype.char in 'fFdD':
             cublas.gemmStridedBatchedEx(
                 handle,
-                0,  # transa
-                0,  # transb
+                cublas.CUBLAS_OP_N,  # transa
+                cublas.CUBLAS_OP_N,  # transb
                 n, m, ka, one.ctypes.data,
                 a.data.ptr, cuda_dtype, lda, strideA,
                 b.data.ptr, cuda_dtype, ldb, strideB,
@@ -1031,8 +1034,8 @@ cpdef _ndarray_base matmul(
         if dtype == numpy.float32:
             cublas.sgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                cublas.CUBLAS_OP_N,  # transa
+                cublas.CUBLAS_OP_N,  # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1040,8 +1043,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.float64:
             cublas.dgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                cublas.CUBLAS_OP_N,  # transa
+                cublas.CUBLAS_OP_N,  # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1049,8 +1052,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.complex64:
             cublas.cgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                cublas.CUBLAS_OP_N,  # transa
+                cublas.CUBLAS_OP_N,  # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,
@@ -1058,8 +1061,8 @@ cpdef _ndarray_base matmul(
         elif dtype == numpy.complex128:
             cublas.zgemmBatched(
                 handle,
-                0,  # transa
-                0,  # transb
+                cublas.CUBLAS_OP_N,  # transa
+                cublas.CUBLAS_OP_N,  # transb
                 n, m, ka, one.ctypes.data,
                 ap.data.ptr, lda,
                 bp.data.ptr, ldb,

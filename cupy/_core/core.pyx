@@ -2684,15 +2684,15 @@ cpdef _ndarray_base _internal_asfortranarray(_ndarray_base a):
         if a.dtype == numpy.float32:
             cublas.sgeam(
                 handle,
-                1,  # transpose a
-                1,  # transpose newarray
+                cublas.CUBLAS_OP_T,  # transpose a
+                cublas.CUBLAS_OP_T,  # transpose newarray
                 m, n, one.ctypes.data, a.data.ptr, n,
                 zero.ctypes.data, a.data.ptr, n, newarray.data.ptr, m)
         elif a.dtype == numpy.float64:
             cublas.dgeam(
                 handle,
-                1,  # transpose a
-                1,  # transpose newarray
+                cublas.CUBLAS_OP_T,  # transpose a
+                cublas.CUBLAS_OP_T,  # transpose newarray
                 m, n, one.ctypes.data, a.data.ptr, n,
                 zero.ctypes.data, a.data.ptr, n, newarray.data.ptr, m)
     else:
