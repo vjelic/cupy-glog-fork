@@ -12,7 +12,7 @@ from cupy_backends.cuda cimport stream as stream_module
 # Extern
 ###############################################################################
 
-cdef extern from '../../cupy_cudnn.h' nogil:
+cdef extern from '../../cupy_miopen.h' nogil:
     # Types
     ctypedef int ActivationMode 'miopenActivationMode_t'
     ctypedef int BatchNormMode 'miopenBatchNormMode_t'
