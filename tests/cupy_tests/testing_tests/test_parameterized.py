@@ -210,6 +210,11 @@ class TestParameterizePytestImpl:
         ]
     ),
 ])
+# Pytest 7.0.1 creates test with names test_b[A-c-_param_0_{x='D'}-e]
+#  instead of test_b[A-_param_0_{x='D'}-e-c]
+@pytest.mark.skipif(
+    pytest.__version__ > "7.4.2", reason="test name not compatible"
+)
 def test_parameterize_pytest_impl(testdir, src, outcomes):
     testdir.makepyfile('from cupy import testing\n' + src)
     result = testdir.runpytest('-v', '--tb=no')
