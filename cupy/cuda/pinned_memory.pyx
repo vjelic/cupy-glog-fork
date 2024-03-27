@@ -8,7 +8,10 @@ from fastrlock cimport rlock
 from cupy_backends.cuda.api import runtime
 
 from cupy._core cimport internal
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy import _util
 
 

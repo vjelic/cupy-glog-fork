@@ -1,6 +1,9 @@
 from libc.stdint cimport intptr_t
 
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy._core.core cimport _ndarray_base
 from cupy.cuda.device cimport get_compute_capability
 

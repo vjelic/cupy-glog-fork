@@ -5,7 +5,10 @@
 from cpython cimport sequence
 from libc.stdint cimport intptr_t
 
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy._core.core cimport _internal_ascontiguousarray
 from cupy._core.internal cimport _contig_axes, is_in
 from cupy.cuda cimport common

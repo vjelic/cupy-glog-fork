@@ -26,7 +26,10 @@ from cupy._core cimport _memory_range
 from cupy._core cimport _routines_manipulation as _manipulation
 from cupy._core cimport _routines_math as _math
 from cupy.cuda cimport device
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 
 
 cdef extern from '../../cupy_backends/cupy_complex.h':

@@ -47,7 +47,10 @@ from cupy.cuda cimport pinned_memory
 from cupy.cuda cimport memory
 from cupy.cuda cimport stream as stream_module
 from cupy_backends.cuda cimport stream as _stream_module
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 
 
 # If rop of cupy.ndarray is called, cupy's op is the last chance.

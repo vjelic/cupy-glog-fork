@@ -20,7 +20,10 @@ from cupy.cuda cimport device
 from cupy.cuda cimport memory_hook
 from cupy.cuda cimport stream as stream_module
 from cupy_backends.cuda.api cimport driver
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 
 from cupy_backends.cuda.api.runtime import CUDARuntimeError
 from cupy import _util

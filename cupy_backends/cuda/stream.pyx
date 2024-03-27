@@ -1,7 +1,10 @@
 import os as _os
 import threading as _threading
 
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 
 
 cdef object _thread_local = _threading.local()
