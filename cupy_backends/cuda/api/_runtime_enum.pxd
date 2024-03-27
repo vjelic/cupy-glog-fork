@@ -33,9 +33,6 @@ cpdef enum:
     cudaLimitStackSize = 0x00
     cudaLimitPrintfFifoSize = 0x01
     cudaLimitMallocHeapSize = 0x02
-    cudaLimitDevRuntimeSyncDepth = 0x03
-    cudaLimitDevRuntimePendingLaunchCount = 0x04
-    cudaLimitMaxL2FetchGranularity = 0x05
 
     # cudaChannelFormatKind
     cudaChannelFormatKindSigned = 0
@@ -93,7 +90,6 @@ cpdef enum:
 
     # cudaMemLocationType
     cudaMemLocationTypeDevice = 1
-
 
 # This was a legacy mistake: the prefix "cuda" should have been removed
 # so that we can directly assign their C counterparts here. Now because
@@ -228,6 +224,10 @@ IF CUPY_HIP_VERSION > 0:
 ELSE:
     # For CUDA/RTD
     cpdef enum:
+        cudaLimitDevRuntimeSyncDepth = 0x03
+        cudaLimitDevRuntimePendingLaunchCount = 0x04
+        cudaLimitMaxL2FetchGranularity = 0x05
+
         cudaDevAttrMaxThreadsPerBlock = 1
         cudaDevAttrMaxBlockDimX
         cudaDevAttrMaxBlockDimY
@@ -343,3 +343,8 @@ ELSE:
         cudaDevAttrGPUDirectRDMAFlushWritesOptions
         cudaDevAttrGPUDirectRDMAWritesOrdering
         cudaDevAttrMemoryPoolSupportedHandleTypes
+
+IF CUPY_HIP_VERSION > 0:
+    cpdef enum:
+        hipIpcMemLazyEnablePeerAccess = 1
+        hipMemAttachGlobal = 1
