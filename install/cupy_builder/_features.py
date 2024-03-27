@@ -96,6 +96,7 @@ _cuda_files = [
     'cupy_backends.cuda.api._driver_enum',
     'cupy_backends.cuda.api.runtime',
     'cupy_backends.cuda.api._runtime_enum',
+    'cupy_backends.cuda.api.runtime_hip',
     'cupy_backends.cuda.libs.cublas',
     'cupy_backends.cuda.libs.curand',
     'cupy_backends.cuda.libs.cusparse',
