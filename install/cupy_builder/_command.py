@@ -123,6 +123,7 @@ class custom_build_ext(setuptools.command.build_ext.build_ext):
             compile_time_env['CUPY_CUDA_VERSION'] = 0
             compile_time_env['CUPY_HIP_VERSION'] = 0
             compile_time_env['CUPY_USE_GEN_HIP_CODE'] = 0
+            compile_time_env['CUPY_DONT_USE_GEN_HIP_CODE'] = 1
         elif ctx.use_hip:  # on ROCm/HIP
             compile_time_env['CUPY_CUDA_VERSION'] = 0
             compile_time_env['CUPY_HIP_VERSION'] = build.get_hip_version()
@@ -133,6 +134,7 @@ class custom_build_ext(setuptools.command.build_ext.build_ext):
                 ctx.features['cuda'].get_version())
             compile_time_env['CUPY_HIP_VERSION'] = 0
             compile_time_env['CUPY_USE_GEN_HIP_CODE'] = 0
+            compile_time_env['CUPY_DONT_USE_GEN_HIP_CODE'] = 1
 
         print('Compile-time constants: ' +
               json.dumps(compile_time_env, indent=4))
