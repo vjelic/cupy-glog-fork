@@ -143,9 +143,9 @@ cdef int deviceAttributeComputeCapabilityMinor
 cdef bint _is_hip_environment
 
 IF CUPY_DONT_USE_GEN_HIP_CODE:
-    ###############################################################################
+    ###########################################################################
     # Classes
-    ###############################################################################
+    ###########################################################################
 
     cdef class PointerAttributes:
         cdef:
@@ -162,24 +162,22 @@ IF CUPY_DONT_USE_GEN_HIP_CODE:
             int locationType
             int devId
 
-    ###############################################################################
+    ###########################################################################
     # Error handling
-    ###############################################################################
+    ###########################################################################
 
     cpdef check_status(int status)
 
-
-    ###############################################################################
+    ###########################################################################
     # Initialization
-    ###############################################################################
+    ###########################################################################
 
     cpdef int driverGetVersion() except? -1
     cpdef int runtimeGetVersion() except? -1
 
-
-    ###############################################################################
+    ###########################################################################
     # Device and context operations
-    ###############################################################################
+    ###########################################################################
 
     cpdef int getDevice() except? -1
     cpdef int deviceGetAttribute(int attrib, int device) except? -1
@@ -197,17 +195,16 @@ IF CUPY_DONT_USE_GEN_HIP_CODE:
     cpdef size_t deviceGetLimit(int limit) except? -1
     cpdef deviceSetLimit(int limit, size_t value)
 
-
-    ###############################################################################
+    ###########################################################################
     # Memory management
-    ###############################################################################
+    ###########################################################################
 
     cpdef intptr_t malloc(size_t size) except? 0
     cpdef intptr_t mallocManaged(size_t size, unsigned int flags=*) except? 0
     cpdef intptr_t malloc3DArray(intptr_t desc, size_t width, size_t height,
-     size_t depth, unsigned int flags=*) except? 0
+                                 size_t depth, unsigned int flags=*) except? 0
     cpdef intptr_t mallocArray(intptr_t desc, size_t width, size_t height,
-       unsigned int flags=*) except? 0
+                               unsigned int flags=*) except? 0
     cpdef intptr_t mallocAsync(size_t size, intptr_t stream) except? 0
     cpdef intptr_t mallocFromPoolAsync(size_t, intptr_t, intptr_t) except? 0
     cpdef intptr_t hostAlloc(size_t size, unsigned int flags) except? 0
@@ -220,35 +217,35 @@ IF CUPY_DONT_USE_GEN_HIP_CODE:
     cpdef memGetInfo()
     cpdef memcpy(intptr_t dst, intptr_t src, size_t size, int kind)
     cpdef memcpyAsync(intptr_t dst, intptr_t src, size_t size, int kind,
-      intptr_t stream)
+                      intptr_t stream)
     cpdef memcpyPeer(intptr_t dst, int dstDevice, intptr_t src, int srcDevice,
-     size_t size)
+                     size_t size)
     cpdef memcpyPeerAsync(intptr_t dst, int dstDevice,
-      intptr_t src, int srcDevice,
-      size_t size, intptr_t stream)
+                          intptr_t src, int srcDevice,
+                          size_t size, intptr_t stream)
     cpdef memcpy2D(intptr_t dst, size_t dpitch, intptr_t src, size_t spitch,
-       size_t width, size_t height, MemoryKind kind)
-    cpdef memcpy2DAsync(intptr_t dst, size_t dpitch, intptr_t src, size_t spitch,
-    size_t width, size_t height, MemoryKind kind,
-    intptr_t stream)
+                   size_t width, size_t height, MemoryKind kind)
+    cpdef memcpy2DAsync(intptr_t dst, size_t dpitch, intptr_t src,
+                        size_t spitch, size_t width, size_t height,
+                        MemoryKind kind, intptr_t stream)
     cpdef memcpy2DFromArray(intptr_t dst, size_t dpitch, intptr_t src,
-    size_t wOffset, size_t hOffset, size_t width,
-    size_t height, int kind)
+                            size_t wOffset, size_t hOffset, size_t width,
+                            size_t height, int kind)
     cpdef memcpy2DFromArrayAsync(intptr_t dst, size_t dpitch, intptr_t src,
-     size_t wOffset, size_t hOffset, size_t width,
-     size_t height, int kind, intptr_t stream)
+                                 size_t wOffset, size_t hOffset, size_t width,
+                                 size_t height, int kind, intptr_t stream)
     cpdef memcpy2DToArray(intptr_t dst, size_t wOffset, size_t hOffset,
-      intptr_t src, size_t spitch, size_t width, size_t height,
-      int kind)
+                          intptr_t src, size_t spitch, size_t width,
+                          size_t height, int kind)
     cpdef memcpy2DToArrayAsync(intptr_t dst, size_t wOffset, size_t hOffset,
-       intptr_t src, size_t spitch, size_t width,
-       size_t height, int kind, intptr_t stream)
+                               intptr_t src, size_t spitch, size_t width,
+                               size_t height, int kind, intptr_t stream)
     cpdef memcpy3D(intptr_t Memcpy3DParmsPtr)
     cpdef memcpy3DAsync(intptr_t Memcpy3DParmsPtr, intptr_t stream)
     cpdef memset(intptr_t ptr, int value, size_t size)
     cpdef memsetAsync(intptr_t ptr, int value, size_t size, intptr_t stream)
     cpdef memPrefetchAsync(intptr_t devPtr, size_t count, int dstDevice,
-       intptr_t stream)
+                           intptr_t stream)
     cpdef memAdvise(intptr_t devPtr, size_t count, int advice, int device)
     cpdef PointerAttributes pointerGetAttributes(intptr_t ptr)
     cpdef intptr_t deviceGetDefaultMemPool(int) except? 0
@@ -260,20 +257,20 @@ IF CUPY_DONT_USE_GEN_HIP_CODE:
     cpdef memPoolGetAttribute(intptr_t, int)
     cpdef memPoolSetAttribute(intptr_t, int, object)
 
-
-    ###############################################################################
+    ###########################################################################
     # Stream and Event
-    ###############################################################################
+    ###########################################################################
 
     cpdef intptr_t streamCreate() except? 0
     cpdef intptr_t streamCreateWithFlags(unsigned int flags) except? 0
     cpdef streamDestroy(intptr_t stream)
     cpdef streamSynchronize(intptr_t stream)
     cpdef streamAddCallback(intptr_t stream, callback, intptr_t arg,
-    unsigned int flags=*)
+                            unsigned int flags=*)
     cpdef launchHostFunc(intptr_t stream, callback, intptr_t arg)
     cpdef streamQuery(intptr_t stream)
-    cpdef streamWaitEvent(intptr_t stream, intptr_t event, unsigned int flags=*)
+    cpdef streamWaitEvent(intptr_t stream, intptr_t event,
+                          unsigned int flags=*)
     cpdef streamBeginCapture(intptr_t stream, int mode=*)
     cpdef intptr_t streamEndCapture(intptr_t stream) except? 0
     cpdef bint streamIsCapturing(intptr_t stream) except*
@@ -285,20 +282,18 @@ IF CUPY_DONT_USE_GEN_HIP_CODE:
     cpdef eventRecord(intptr_t event, intptr_t stream)
     cpdef eventSynchronize(intptr_t event)
 
-
-    ##############################################################################
+    ###########################################################################
     # util
-    ##############################################################################
+    ###########################################################################
 
     cdef _ensure_context()
 
-
-    ##############################################################################
+    ###########################################################################
     # Texture
-    ##############################################################################
+    ###########################################################################
 
     cpdef uintmax_t createTextureObject(
-    intptr_t ResDesc, intptr_t TexDesc) except? 0
+        intptr_t ResDesc, intptr_t TexDesc) except? 0
     cpdef destroyTextureObject(uintmax_t texObject)
     cdef ChannelFormatDesc getChannelDesc(intptr_t array) except*
     cdef ResourceDesc getTextureObjectResourceDesc(uintmax_t texobj) except*
@@ -306,16 +301,15 @@ IF CUPY_DONT_USE_GEN_HIP_CODE:
     cdef Extent make_Extent(size_t w, size_t h, size_t d) except*
     cdef Pos make_Pos(size_t x, size_t y, size_t z) except*
     cdef PitchedPtr make_PitchedPtr(
-    intptr_t d, size_t p, size_t xsz, size_t ysz) except*
+        intptr_t d, size_t p, size_t xsz, size_t ysz) except*
 
     cpdef uintmax_t createSurfaceObject(intptr_t ResDesc) except? 0
     cpdef destroySurfaceObject(uintmax_t surfObject)
     # TODO(leofang): add cudaGetSurfaceObjectResourceDesc
 
-
-    ##############################################################################
+    ###########################################################################
     # Graph
-    ##############################################################################
+    ###########################################################################
 
     cpdef graphDestroy(intptr_t graph)
     cpdef graphExecDestroy(intptr_t graphExec)

@@ -45,13 +45,11 @@ ELSE:
             self.locationType = locationType
             self.devId = devId
 
-
     ###########################################################################
     # Thread-local storage
     ###########################################################################
 
     cdef object _thread_local = _threading.local()
-
 
     cdef class _ThreadLocal:
 
@@ -69,7 +67,6 @@ ELSE:
                 tls = _thread_local.tls = _ThreadLocal()
             return <_ThreadLocal>tls
 
-
     ###########################################################################
     # Extern
     ###########################################################################
@@ -86,7 +83,6 @@ ELSE:
     cdef extern from '../../cupy_backend_runtime.h' nogil:
         bint hip_environment
 
-
     ###########################################################################
     # Constants
     ###########################################################################
@@ -100,7 +96,6 @@ ELSE:
     deviceAttributeComputeCapabilityMajor = cudaDevAttrComputeCapabilityMajor
     deviceAttributeComputeCapabilityMinor = cudaDevAttrComputeCapabilityMinor
 
-
     # Provide access to constants from Python.
     # TODO(kmaehashi): Deprecate aliases above so that we can just do:
     # from cupy_backends.cuda.api._runtime_enum import *
@@ -112,9 +107,7 @@ ELSE:
             if not key.startswith('_'):
                 setattr(this, key, getattr(_runtime_enum, key))
 
-
     _export_enum()
-
 
     ###########################################################################
     # Constants (CuPy)
@@ -122,7 +115,6 @@ ELSE:
 
     _is_hip_environment = hip_environment  # for runtime being cimport'd
     is_hip = hip_environment  # for runtime being import'd
-
 
     ###########################################################################
     # Error handling
@@ -140,14 +132,12 @@ ELSE:
         def __reduce__(self):
             return (type(self), (self.status,))
 
-
     @cython.profile(False)
     cpdef inline check_status(int status):
         if status != 0:
             # to reset error status
             cudaGetLastError()
             raise CUDARuntimeError(status)
-
 
     ###########################################################################
     # Initialization
@@ -172,7 +162,6 @@ ELSE:
             status = cudaRuntimeGetVersion(&version)
             check_status(status)
         return version
-
 
     ###########################################################################
     # Device and context operations
@@ -231,28 +220,34 @@ ELSE:
                 'memoryClockRate': props.memoryClockRate,
                 'memoryBusWidth': props.memoryBusWidth,
                 'l2CacheSize': props.l2CacheSize,
-                'maxThreadsPerMultiProcessor': props.maxThreadsPerMultiProcessor,
+                'maxThreadsPerMultiProcessor': (
+                    props.maxThreadsPerMultiProcessor),
                 'isMultiGpuBoard': props.isMultiGpuBoard,
                 'cooperativeLaunch': props.cooperativeLaunch,
-                'cooperativeMultiDeviceLaunch': props.cooperativeMultiDeviceLaunch,
+                'cooperativeMultiDeviceLaunch': (
+                    props.cooperativeMultiDeviceLaunch),
             }
         IF CUPY_USE_CUDA_PYTHON or CUPY_CUDA_VERSION >= 9020:
             properties['deviceOverlap'] = props.deviceOverlap
             properties['maxTexture1DMipmap'] = props.maxTexture1DMipmap
             properties['maxTexture1DLinear'] = props.maxTexture1DLinear
-            properties['maxTexture1DLayered'] = tuple(props.maxTexture1DLayered)
+            properties['maxTexture1DLayered'] = tuple(
+                props.maxTexture1DLayered)
             properties['maxTexture2DMipmap'] = tuple(props.maxTexture2DMipmap)
             properties['maxTexture2DLinear'] = tuple(props.maxTexture2DLinear)
-            properties['maxTexture2DLayered'] = tuple(props.maxTexture2DLayered)
+            properties['maxTexture2DLayered'] = tuple(
+                props.maxTexture2DLayered)
             properties['maxTexture2DGather'] = tuple(props.maxTexture2DGather)
             properties['maxTexture3DAlt'] = tuple(props.maxTexture3DAlt)
             properties['maxTextureCubemap'] = props.maxTextureCubemap
             properties['maxTextureCubemapLayered'] = tuple(
                 props.maxTextureCubemapLayered)
             properties['maxSurface1D'] = props.maxSurface1D
-            properties['maxSurface1DLayered'] = tuple(props.maxSurface1DLayered)
+            properties['maxSurface1DLayered'] = tuple(
+                props.maxSurface1DLayered)
             properties['maxSurface2D'] = tuple(props.maxSurface2D)
-            properties['maxSurface2DLayered'] = tuple(props.maxSurface2DLayered)
+            properties['maxSurface2DLayered'] = tuple(
+                props.maxSurface2DLayered)
             properties['maxSurface3D'] = tuple(props.maxSurface3D)
             properties['maxSurfaceCubemap'] = props.maxSurfaceCubemap
             properties['maxSurfaceCubemapLayered'] = tuple(
@@ -274,7 +269,8 @@ ELSE:
             properties['singleToDoublePrecisionPerfRatio'] = (
                 props.singleToDoublePrecisionPerfRatio)
             properties['pageableMemoryAccess'] = props.pageableMemoryAccess
-            properties['concurrentManagedAccess'] = props.concurrentManagedAccess
+            properties['concurrentManagedAccess'] = (
+                props.concurrentManagedAccess)
             properties['computePreemptionSupported'] = (
                 props.computePreemptionSupported)
             properties['canUseHostPointerForRegisteredMem'] = (
@@ -289,7 +285,8 @@ ELSE:
             properties['luid'] = props.luid
             properties['luidDeviceNodeMask'] = props.luidDeviceNodeMask
         if CUPY_USE_CUDA_PYTHON or CUPY_CUDA_VERSION >= 11000:
-            properties['persistingL2CacheMaxSize'] = props.persistingL2CacheMaxSize
+            properties['persistingL2CacheMaxSize'] = (
+                props.persistingL2CacheMaxSize)
             properties['maxBlocksPerMultiProcessor'] = (
                 props.maxBlocksPerMultiProcessor)
             properties['accessPolicyMaxWindowSize'] = (
@@ -315,9 +312,11 @@ ELSE:
 
             cdef dict arch = {}  # for hipDeviceArch_t
             arch['hasGlobalInt32Atomics'] = props.arch.hasGlobalInt32Atomics
-            arch['hasGlobalFloatAtomicExch'] = props.arch.hasGlobalFloatAtomicExch
+            arch['hasGlobalFloatAtomicExch'] = (
+                props.arch.hasGlobalFloatAtomicExch)
             arch['hasSharedInt32Atomics'] = props.arch.hasSharedInt32Atomics
-            arch['hasSharedFloatAtomicExch'] = props.arch.hasSharedFloatAtomicExch
+            arch['hasSharedFloatAtomicExch'] = (
+                props.arch.hasSharedFloatAtomicExch)
             arch['hasFloatAtomicAdd'] = props.arch.hasFloatAtomicAdd
             arch['hasGlobalInt64Atomics'] = props.arch.hasGlobalInt64Atomics
             arch['hasSharedInt64Atomics'] = props.arch.hasSharedInt64Atomics
@@ -340,7 +339,8 @@ ELSE:
             properties['managedMemory'] = props.managedMemory
             properties['directManagedMemAccessFromHost'] = (
                 props.directManagedMemAccessFromHost)
-            properties['concurrentManagedAccess'] = props.concurrentManagedAccess
+            properties['concurrentManagedAccess'] = (
+                props.concurrentManagedAccess)
             properties['pageableMemoryAccess'] = props.pageableMemoryAccess
             properties['pageableMemoryAccessUsesHostPageTables'] = (
                 props.pageableMemoryAccessUsesHostPageTables)
@@ -420,7 +420,6 @@ ELSE:
         status = cudaDeviceSetLimit(<Limit>limit, value)
         check_status(status)
 
-
     ###########################################################################
     # IPC operations
     ###########################################################################
@@ -470,7 +469,6 @@ ELSE:
         status = cudaIpcOpenMemHandle(&devPtr, handle_, flags)
         check_status(status)
         return <intptr_t>devPtr
-
 
     ###########################################################################
     # Memory management
@@ -624,7 +622,7 @@ ELSE:
                         MemoryKind kind, intptr_t stream):
         with nogil:
             status = cudaMemcpy2DAsync(<void*>dst, dpitch, <void*>src, spitch,
-                                       width, height, kind, 
+                                       width, height, kind,
                                        <driver.Stream>stream)
         check_status(status)
 
@@ -711,14 +709,14 @@ ELSE:
         check_status(status)
         IF CUPY_HIP_VERSION >= 60000000:
             if attrs.type == 0:         # hipMemoryTypeHost
-                attrs.type = <MemoryType>1 # cudaMemoryTypeHost
+                attrs.type = <MemoryType>1  # cudaMemoryTypeHost
             elif attrs.type == 1:       # hipMemoryTypeDevice
-                attrs.type = <MemoryType>2 # cudaMemoryTypeDevice
+                attrs.type = <MemoryType>2  # cudaMemoryTypeDevice
         ELIF CUPY_HIP_VERSION > 0:
             if attrs.memoryType == 0:   # hipMemoryTypeHost
-                attrs.memoryType = <MemoryType>1 # cudaMemoryTypeHost
-            elif attrs.memoryType == 1: # hipMemoryTypeDevice
-                attrs.memoryType = <MemoryType>2 # cudaMemoryTypeDevice
+                attrs.memoryType = <MemoryType>1  # cudaMemoryTypeHost
+            elif attrs.memoryType == 1:  # hipMemoryTypeDevice
+                attrs.memoryType = <MemoryType>2  # cudaMemoryTypeDevice
         IF CUPY_CUDA_VERSION > 0 or CUPY_HIP_VERSION > 60000000:
             return PointerAttributes(
                 attrs.device,
@@ -848,7 +846,6 @@ ELSE:
                                              out)
         check_status(status)
 
-
     ###########################################################################
     # Stream and Event
     ###########################################################################
@@ -859,24 +856,20 @@ ELSE:
         check_status(status)
         return <intptr_t>stream
 
-
     cpdef intptr_t streamCreateWithFlags(unsigned int flags) except? 0:
         cdef driver.Stream stream
         status = cudaStreamCreateWithFlags(&stream, flags)
         check_status(status)
         return <intptr_t>stream
 
-
     cpdef streamDestroy(intptr_t stream):
         status = cudaStreamDestroy(<driver.Stream>stream)
         check_status(status)
-
 
     cpdef streamSynchronize(intptr_t stream):
         with nogil:
             status = cudaStreamSynchronize(<driver.Stream>stream)
         check_status(status)
-
 
     cdef _streamCallbackFunc(driver.Stream hStream, int status,
                              void* func_arg) with gil:
@@ -885,13 +878,11 @@ ELSE:
         func(<intptr_t>hStream, status, arg)
         cpython.Py_DECREF(obj)
 
-
     cdef _HostFnFunc(void* func_arg) with gil:
         obj = <object>func_arg
         func, arg = obj
         func(arg)
         cpython.Py_DECREF(obj)
-
 
     cpdef streamAddCallback(intptr_t stream, callback, intptr_t arg,
                             unsigned int flags=0):
@@ -906,10 +897,10 @@ ELSE:
                 <void*>func_arg, flags)
         check_status(status)
 
-
     cpdef launchHostFunc(intptr_t stream, callback, intptr_t arg):
         if 0 < CUPY_HIP_VERSION < 50200000:
-            raise RuntimeError('This feature is supported on HIP since ROCm 5.2')
+            raise RuntimeError('This feature is supported on '
+                               'HIP since ROCm 5.2')
 
         func_arg = (callback, arg)
         cpython.Py_INCREF(func_arg)
@@ -919,10 +910,8 @@ ELSE:
                 <void*>func_arg)
         check_status(status)
 
-
     cpdef streamQuery(intptr_t stream):
         return cudaStreamQuery(<driver.Stream>stream)
-
 
     cpdef streamWaitEvent(intptr_t stream, intptr_t event,
                           unsigned int flags=0):
@@ -930,7 +919,6 @@ ELSE:
             status = cudaStreamWaitEvent(<driver.Stream>stream,
                                          <driver.Event>event, flags)
         check_status(status)
-
 
     cpdef streamBeginCapture(intptr_t stream,
                              int mode=streamCaptureModeRelaxed):
@@ -942,7 +930,6 @@ ELSE:
                                             <StreamCaptureMode>mode)
         check_status(status)
 
-
     cpdef intptr_t streamEndCapture(intptr_t stream) except? 0:
         # TODO(leofang): check and raise if stream == 0?
         cdef Graph g
@@ -953,20 +940,18 @@ ELSE:
         check_status(status)
         return <intptr_t>g
 
-
     cpdef bint streamIsCapturing(intptr_t stream) except*:
         cdef StreamCaptureStatus s
         if 0 < CUPY_HIP_VERSION < 50000000:
             raise RuntimeError('streamIsCapturing is not supported in ROCm')
         with nogil:
             status = cudaStreamIsCapturing(<driver.Stream>stream, &s)
-        check_status(status)  # cudaErrorStreamCaptureImplicit could be 
-                              # raised here
+        # cudaErrorStreamCaptureImplicit could be raised here
+        check_status(status)
         if s == <StreamCaptureStatus>streamCaptureStatusInvalidated:
             raise RuntimeError('the stream was capturing, but an error has '
                                'invalidated the capture sequence')
         return <bint>s
-
 
     cpdef intptr_t eventCreate() except? 0:
         cdef driver.Event event
@@ -980,11 +965,9 @@ ELSE:
         check_status(status)
         return <intptr_t>event
 
-
     cpdef eventDestroy(intptr_t event):
         status = cudaEventDestroy(<driver.Event>event)
         check_status(status)
-
 
     cpdef float eventElapsedTime(intptr_t start, intptr_t end) except? 0:
         cdef float ms
@@ -993,21 +976,17 @@ ELSE:
         check_status(status)
         return ms
 
-
     cpdef eventQuery(intptr_t event):
         return cudaEventQuery(<driver.Event>event)
-
 
     cpdef eventRecord(intptr_t event, intptr_t stream):
         status = cudaEventRecord(<driver.Event>event, <driver.Stream>stream)
         check_status(status)
 
-
     cpdef eventSynchronize(intptr_t event):
         with nogil:
             status = cudaEventSynchronize(<driver.Event>event)
         check_status(status)
-
 
     ###########################################################################
     # util
@@ -1024,7 +1003,6 @@ ELSE:
             # Call Runtime API to establish context on this host thread.
             memGetInfo()
             tls.context_initialized[dev] = True
-
 
     ###########################################################################
     # Texture
@@ -1090,7 +1068,6 @@ ELSE:
     cdef PitchedPtr make_PitchedPtr(
             intptr_t d, size_t p, size_t xsz, size_t ysz) except*:
         return make_cudaPitchedPtr(<void*>d, p, xsz, ysz)
-
 
     ###########################################################################
     # Graph
