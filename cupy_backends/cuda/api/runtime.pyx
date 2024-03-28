@@ -415,6 +415,8 @@ ELSE:
         return value
 
     cpdef deviceSetLimit(int limit, size_t value):
+        if 0 < CUPY_HIP_VERSION < 50300000:
+            raise RuntimeError('deviceSetLimit requires ROCm 5.3+')
         status = cudaDeviceSetLimit(<Limit>limit, value)
         check_status(status)
 
@@ -1120,6 +1122,8 @@ ELSE:
         check_status(status)
 
     cpdef graphUpload(intptr_t graphExec, intptr_t stream):
+        if 0 < CUPY_HIP_VERSION < 50300000:
+            raise RuntimeError('graphUpload requires ROCm 5.3+')
         if runtimeGetVersion() < 11010:
             raise RuntimeError('graphUpload is supported since CUDA 11.1+')
         with nogil:
