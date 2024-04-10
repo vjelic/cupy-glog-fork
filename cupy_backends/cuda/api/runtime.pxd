@@ -142,7 +142,7 @@ cdef int deviceAttributeComputeCapabilityMinor
 
 cdef bint _is_hip_environment
 
-IF CUPY_DONT_USE_GEN_HIP_CODE:
+IF not CUPY_USE_GEN_HIP_CODE:
     ###########################################################################
     # Classes
     ###########################################################################
