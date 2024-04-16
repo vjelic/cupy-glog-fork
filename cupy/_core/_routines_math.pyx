@@ -11,7 +11,10 @@ import cupy._core.core as core
 from cupy._core cimport internal
 from cupy import _util
 
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy._core cimport _accelerator
 from cupy._core._dtype cimport get_dtype
 from cupy._core.core cimport _ndarray_init

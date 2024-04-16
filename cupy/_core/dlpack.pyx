@@ -9,7 +9,10 @@ from libc.stdint cimport uint64_t
 from libc.stdint cimport intptr_t
 from libcpp.vector cimport vector
 
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy_backends.cuda cimport stream as stream_module
 from cupy._core.core cimport _ndarray_base
 from cupy.cuda cimport memory

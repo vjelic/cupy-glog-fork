@@ -9,7 +9,10 @@ from libc.stdint cimport intptr_t
 from libcpp cimport vector
 
 from cupy_backends.cuda.api cimport driver
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 
 cdef extern from '../../cupy_nccl.h':
     ctypedef struct ncclComm:

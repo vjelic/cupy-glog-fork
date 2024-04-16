@@ -1,7 +1,10 @@
 # distutils: language = c++
 
 """Thin wrapper of cuda profiler."""
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 
 
 # TODO(kmaehashi): cudaProfilerInitialize is deprecated thus unsupported in

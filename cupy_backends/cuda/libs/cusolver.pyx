@@ -4,7 +4,10 @@
 
 cimport cython  # NOQA
 
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy_backends.cuda cimport stream as stream_module
 
 IF CUPY_USE_GEN_HIP_CODE:

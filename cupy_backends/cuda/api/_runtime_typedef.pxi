@@ -116,6 +116,9 @@ cdef extern from *:
     ctypedef int MemAllocationType 'cudaMemAllocationType'
     ctypedef int MemAllocationHandleType 'cudaMemAllocationHandleType'
     ctypedef int MemLocationType 'cudaMemLocationType'
+    IF CUPY_HIP_VERSION > 0:
+        ctypedef int MemoryType 'hipMemoryType'
+
     IF CUPY_CUDA_VERSION > 0:
         # This is for the annoying nested struct, which is not
         # perfectly supprted in Cython

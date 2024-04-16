@@ -5,7 +5,10 @@ import numpy
 
 from cupy._core.core cimport _ndarray_base
 from cupy._core.core cimport _internal_ascontiguousarray
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy_backends.cuda.api.runtime cimport Array, \
     ChannelFormatDesc, ChannelFormatKind, \
     Memcpy3DParms, MemoryKind, PitchedPtr, ResourceDesc, ResourceType, \

@@ -14,7 +14,10 @@ from libcpp cimport vector
 from cupy._core cimport _carray
 from cupy._core.core cimport _ndarray_base
 from cupy_backends.cuda.api cimport driver
-from cupy_backends.cuda.api cimport runtime
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
+ELSE:
+    from cupy_backends.cuda.api cimport runtime
 from cupy.cuda cimport stream as stream_module
 from cupy.cuda.memory cimport MemoryPointer
 from cupy.cuda.texture cimport TextureObject, SurfaceObject
