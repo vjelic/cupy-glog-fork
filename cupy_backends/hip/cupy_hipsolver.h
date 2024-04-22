@@ -18,7 +18,8 @@ hipsolverStatus_t cusolverGetProperty(hipLibraryPropertyType_t type, int* val) {
 }
 
 
-#if HIP_VERSION < 60240094
+#if HIP_VERSION < 50631061
+typedef enum hipsolverDnParams_t {};
 typedef hipsolverHandle_t hipsolverDnHandle_t;
 typedef void* hipsolverGesvdjInfo_t;
 typedef void* hipsolverSyevjInfo_t;
