@@ -34,7 +34,7 @@ static hipDataType convert_hipDatatype(cudaDataType type) {
 extern "C" {
 
 typedef hipsparseIndexBase_t cusparseIndexBase_t;
-typedef hipsparseStatus_t cusparseStatus_t;
+//typedef hipsparseStatus_t cusparseStatus_t;
 
 typedef hipsparseHandle_t cusparseHandle_t;
 typedef hipsparseMatDescr_t cusparseMatDescr_t;
