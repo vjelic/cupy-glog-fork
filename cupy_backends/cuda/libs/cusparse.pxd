@@ -215,6 +215,6 @@ cdef class DnMatBatchAttributes:
     cdef:
         public int count
         public int64_t stride
-
-cpdef intptr_t create() except? 0
-cpdef void destroy(intptr_t handle) except *
+IF CUPY_HIP_VERSION == 0:
+    cpdef intptr_t create() except? 0
+    cpdef void destroy(intptr_t handle) except *
