@@ -33,7 +33,7 @@ static hipDataType convert_hipDatatype(cudaDataType type) {
 
 extern "C" {
 
-typedef hipsparseIndexBase_t cusparseIndexBase_t;
+//typedef hipsparseIndexBase_t cusparseIndexBase_t;
 //typedef hipsparseStatus_t cusparseStatus_t;
 
 typedef hipsparseHandle_t cusparseHandle_t;
@@ -3020,12 +3020,6 @@ typedef hipsparseDnMatDescr_t cusparseDnMatDescr_t;
 typedef void* cusparseDnMatDescr_t;
 #endif
 
-
-#if HIP_VERSION >= 402
-typedef hipsparseIndexType_t cusparseIndexType_t;
-#else
-typedef enum {} cusparseIndexType_t;
-#endif
 
 #if HIP_VERSION >= 402
 typedef hipsparseFormat_t cusparseFormat_t;
