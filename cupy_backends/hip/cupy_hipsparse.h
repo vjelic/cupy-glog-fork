@@ -9,19 +9,19 @@
 #include <hip/library_types.h>  // for hipDataType
 #include <stdexcept>  // for gcc 10.0
 
-cusparseStatus_t cusparseCsrmvEx_bufferSize(...) {
+hipsparseStatus_t cusparseCsrmvEx_bufferSize(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
 
-cusparseStatus_t cusparseCsrmvEx(...) {
+hipsparseStatus_t cusparseCsrmvEx(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
 
-cusparseStatus_t cusparseConstrainedGeMM_bufferSize(...) {
+hipsparseStatus_t cusparseConstrainedGeMM_bufferSize(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
 
-cusparseStatus_t cusparseConstrainedGeMM(...) {
+hipsparseStatus_t cusparseConstrainedGeMM(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
 
