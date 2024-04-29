@@ -1387,7 +1387,7 @@ ELSE:
         else:
             _libname = 'cusparse64_12.dll'
     ELIF 0 < CUPY_HIP_VERSION:
-        _libname = __file__
+        _libname = 'libhipsparse.so'
     ELSE:
         _libname = None
     
