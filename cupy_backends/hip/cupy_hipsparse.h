@@ -25,4 +25,6 @@ hipsparseStatus_t cusparseConstrainedGeMM(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
 
+#define CUSPARSE_VERSION (hipsparseVersionMajor*100000+hipsparseVersionMinor*100+hipsparseVersionPatch)
+
 #endif  // INCLUDE_GUARD_HIP_CUPY_HIPSPARSE_H
