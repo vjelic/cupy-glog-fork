@@ -9,6 +9,8 @@
 #include <hip/library_types.h>  // for hipDataType
 #include <stdexcept>  // for gcc 10.0
 
+typedef enum {} cusparseAlgMode_t;
+
 hipsparseStatus_t cusparseCsrmvEx_bufferSize(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
