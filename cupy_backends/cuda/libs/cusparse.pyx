@@ -3,9 +3,9 @@ cimport cython  # NOQA
 
 IF CUPY_HIP_VERSION > 0:
     from cupy_backends.cuda.api cimport runtime_hip as runtime
+    from cupy_backends.cuda.api.runtime_hip cimport _is_hip_environment
 ELSE:
     from cupy_backends.cuda.api cimport runtime
-from cupy_backends.cuda.api.runtime cimport _is_hip_environment
 from cupy_backends.cuda cimport stream as stream_module
 from cupy_backends.cuda._softlink cimport SoftLink
 
@@ -1522,7 +1522,7 @@ ELSE:
             self.status = status
             cdef bytes name
             cdef bytes msg
-            if runtime._is_hip_environment:
+            if _is_hip_environment:
                 name = HIP_STATUS[status]
                 msg = name
             else:
@@ -3322,19 +3322,13 @@ ELSE:
     cpdef size_t createBsrilu02Info() except? -1:
         cdef bsrilu02Info_t info
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCreateBsrilu02Info(&info)
+            status = cusparseCreateBsrilu02Info(&info)
         check_status(status)
         return <size_t>info
     
     cpdef void destroyBsrilu02Info(size_t info) except *:
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDestroyBsrilu02Info(<bsrilu02Info_t>info)
+            status = cusparseDestroyBsrilu02Info(<bsrilu02Info_t>info)
         check_status(status)
     
     cpdef size_t createCsric02Info() except? -1:
@@ -3352,19 +3346,13 @@ ELSE:
     cpdef size_t createBsric02Info() except? -1:
         cdef bsric02Info_t info
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCreateBsric02Info(&info)
+            status = cusparseCreateBsric02Info(&info)
         check_status(status)
         return <size_t>info
     
     cpdef void destroyBsric02Info(size_t info) except *:
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDestroyBsric02Info(<bsric02Info_t>info)
+            status = cusparseDestroyBsric02Info(<bsric02Info_t>info)
         check_status(status)
     
     cpdef void scsrilu02_numericBoost(
@@ -3372,12 +3360,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 40000000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseScsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
-                    <double*>tol, <float*>boost_val)
+            status = cusparseScsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
+                <double*>tol, <float*>boost_val)
         check_status(status)
     
     cpdef void dcsrilu02_numericBoost(
@@ -3385,12 +3370,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 40000000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDcsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
-                    <double*>tol, <double*>boost_val)
+            status = cusparseDcsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
+                <double*>tol, <double*>boost_val)
         check_status(status)
     
     cpdef void ccsrilu02_numericBoost(
@@ -3398,12 +3380,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 40000000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCcsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
-                    <double*>tol, <cuComplex*>boost_val)
+            status = cusparseCcsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
+                <double*>tol, <cuComplex*>boost_val)
         check_status(status)
     
     cpdef void zcsrilu02_numericBoost(
@@ -3411,12 +3390,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 40000000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZcsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
-                    <double*>tol, <cuDoubleComplex*>boost_val)
+            status = cusparseZcsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <csrilu02Info_t>info, enable_boost,
+                <double*>tol, <cuDoubleComplex*>boost_val)
         check_status(status)
     
     cpdef void xcsrilu02_zeroPivot(
@@ -3597,12 +3573,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
-                    <double*>tol, <float*>boost_val)
+            status = cusparseSbsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
+                <double*>tol, <float*>boost_val)
         check_status(status)
     
     cpdef void dbsrilu02_numericBoost(
@@ -3610,12 +3583,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
-                    <double*>tol, <double*>boost_val)
+            status = cusparseDbsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
+                <double*>tol, <double*>boost_val)
         check_status(status)
     
     cpdef void cbsrilu02_numericBoost(
@@ -3623,12 +3593,9 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
-                    <double*>tol, <cuComplex*>boost_val)
+            status = cusparseCbsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
+                <double*>tol, <cuComplex*>boost_val)
         check_status(status)
     
     cpdef void zbsrilu02_numericBoost(
@@ -3636,23 +3603,17 @@ ELSE:
             size_t tol, size_t boost_val) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsrilu02_numericBoost(
-                    <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
-                    <double*>tol, <cuDoubleComplex*>boost_val)
+            status = cusparseZbsrilu02_numericBoost(
+                <cusparseHandle_t>handle, <bsrilu02Info_t>info, enable_boost,
+                <double*>tol, <cuDoubleComplex*>boost_val)
         check_status(status)
     
     cpdef void xbsrilu02_zeroPivot(
             intptr_t handle, size_t info, size_t position) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseXbsrilu02_zeroPivot(
-                    <cusparseHandle_t>handle, <bsrilu02Info_t>info, <int*>position)
+            status = cusparseXbsrilu02_zeroPivot(
+                <cusparseHandle_t>handle, <bsrilu02Info_t>info, <int*>position)
         check_status(status)
     
     cpdef int sbsrilu02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
@@ -3662,14 +3623,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsrilu02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseSbsrilu02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -3680,14 +3638,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsrilu02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseDbsrilu02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -3698,14 +3653,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsrilu02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseCbsrilu02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -3716,14 +3668,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsrilu02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseZbsrilu02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -3733,15 +3682,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsrilu02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseSbsrilu02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void dbsrilu02_analysis(
@@ -3750,15 +3696,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsrilu02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseDbsrilu02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void cbsrilu02_analysis(
@@ -3767,15 +3710,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsrilu02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseCbsrilu02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void zbsrilu02_analysis(
@@ -3784,15 +3724,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsrilu02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseZbsrilu02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void sbsrilu02(
@@ -3802,15 +3739,12 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsrilu02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseSbsrilu02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void dbsrilu02(
@@ -3820,15 +3754,12 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsrilu02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseDbsrilu02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void cbsrilu02(
@@ -3838,15 +3769,12 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsrilu02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseCbsrilu02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void zbsrilu02(
@@ -3856,15 +3784,12 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30900000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsrilu02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pBuffer)
+            status = cusparseZbsrilu02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsrilu02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pBuffer)
         check_status(status)
     
     cpdef void xcsric02_zeroPivot(
@@ -4047,11 +3972,8 @@ ELSE:
             intptr_t handle, size_t info, size_t position) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseXbsric02_zeroPivot(
-                    <cusparseHandle_t>handle, <bsric02Info_t>info, <int*>position)
+            status = cusparseXbsric02_zeroPivot(
+                <cusparseHandle_t>handle, <bsric02Info_t>info, <int*>position)
         check_status(status)
     
     cpdef int sbsric02_bufferSize(intptr_t handle, int dirA, int mb, int nnzb,
@@ -4061,14 +3983,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsric02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseSbsric02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -4079,14 +3998,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsric02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseDbsric02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -4097,14 +4013,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsric02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseCbsric02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -4115,14 +4028,11 @@ ELSE:
         cdef int pBufferSizeInBytes
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsric02_bufferSize(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, &pBufferSizeInBytes)
+            status = cusparseZbsric02_bufferSize(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, &pBufferSizeInBytes)
         check_status(status)
         return <int>pBufferSizeInBytes
     
@@ -4132,15 +4042,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pInputBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsric02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <const float*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pInputBuffer)
+            status = cusparseSbsric02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <const float*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pInputBuffer)
         check_status(status)
     
     cpdef void dbsric02_analysis(
@@ -4149,15 +4056,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pInputBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsric02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <const double*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pInputBuffer)
+            status = cusparseDbsric02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <const double*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pInputBuffer)
         check_status(status)
     
     cpdef void cbsric02_analysis(
@@ -4166,15 +4070,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pInputBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsric02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <const cuComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
-                    <void*>pInputBuffer)
+            status = cusparseCbsric02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <const cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy,
+                <void*>pInputBuffer)
         check_status(status)
     
     cpdef void zbsric02_analysis(
@@ -4183,15 +4084,12 @@ ELSE:
             int blockDim, size_t info, int policy, size_t pInputBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsric02_analysis(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA,
-                    <const cuDoubleComplex*>bsrSortedVal, <const int*>bsrSortedRowPtr,
-                    <const int*>bsrSortedColInd, blockDim, <bsric02Info_t>info,
-                    <cusparseSolvePolicy_t>policy, <void*>pInputBuffer)
+            status = cusparseZbsric02_analysis(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA,
+                <const cuDoubleComplex*>bsrSortedVal, <const int*>bsrSortedRowPtr,
+                <const int*>bsrSortedColInd, blockDim, <bsric02Info_t>info,
+                <cusparseSolvePolicy_t>policy, <void*>pInputBuffer)
         check_status(status)
     
     cpdef void sbsric02(
@@ -4201,14 +4099,11 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseSbsric02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+            status = cusparseSbsric02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <float*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
         check_status(status)
     
     cpdef void dbsric02(
@@ -4218,14 +4113,11 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseDbsric02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+            status = cusparseDbsric02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <double*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
         check_status(status)
     
     cpdef void cbsric02(
@@ -4235,14 +4127,11 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseCbsric02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+            status = cusparseCbsric02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
         check_status(status)
     
     cpdef void zbsric02(
@@ -4252,14 +4141,11 @@ ELSE:
             size_t pBuffer) except *:
         _setStream(handle)
         with nogil:
-            IF CUPY_HIP_VERSION > 0 and CUPY_HIP_VERSION < 30800000:
-                status = CUSPARSE_STATUS_NOT_SUPPORTED;
-            ELSE:
-                status = cusparseZbsric02(
-                    <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
-                    <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
-                    <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
-                    <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
+            status = cusparseZbsric02(
+                <cusparseHandle_t>handle, <cusparseDirection_t>dirA, mb, nnzb,
+                <const cusparseMatDescr_t>descrA, <cuDoubleComplex*>bsrSortedVal,
+                <const int*>bsrSortedRowPtr, <const int*>bsrSortedColInd, blockDim,
+                <bsric02Info_t>info, <cusparseSolvePolicy_t>policy, <void*>pBuffer)
         check_status(status)
     
     cpdef size_t sgtsv2_bufferSizeExt(
