@@ -1522,7 +1522,7 @@ ELSE:
             self.status = status
             cdef bytes name
             cdef bytes msg
-            if _is_hip_environment:
+            if runtime._is_hip_environment:
                 name = HIP_STATUS[status]
                 msg = name
             else:
