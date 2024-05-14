@@ -9,6 +9,10 @@
 #include <hip/library_types.h>  // for hipDataType
 #include <stdexcept>  // for gcc 10.0
 
+#if HIP_VERSION < 401
+#define HIPSPARSE_STATUS_NOT_SUPPORTED (hipsparseStatus_t)10
+#endif
+
 extern "C" {
 #if HIP_VERSION < 308
 typedef void* bsric02Info_t;
@@ -856,6 +860,106 @@ hipsparseStatus_t cusparseDenseToSparse_convert(cusparseHandle_t           handl
 }
 #endif
 
+#if HIP_VERSION < 403
+hipsparseStatus_t cusparseSgtsv2_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsv2_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsv2_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsv2_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgtsv2(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsv2(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsv2(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsv2(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgtsv2_nopivot_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsv2_nopivot_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsv2_nopivot_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsv2_nopivot_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgtsv2_nopivot(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsv2_nopivot(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsv2_nopivot(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsv2_nopivot(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+#endif
+
+#if HIP_VERSION < 405
+hipsparseStatus_t cusparseSgtsv2StridedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsv2StridedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsv2StridedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsv2StridedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgtsv2StridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsv2StridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsv2StridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsv2StridedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+#endif
+
 #if HIP_VERSION < 50000000
 hipsparseStatus_t cusparseSpMatSetAttribute(cusparseSpMatDescr_t     spMatDescr,
                                            cusparseSpMatAttribute_t attribute,
@@ -914,6 +1018,73 @@ hipsparseStatus_t cusparseSpSM_solve(cusparseHandle_t     handle,
                                     void*                externalBuffer) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
+#endif
+
+#if HIP_VERSION < 501
+hipsparseStatus_t cusparseSgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgtsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgpsvInterleavedBatch_bufferSizeExt(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseSgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseDgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseCgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
+hipsparseStatus_t cusparseZgpsvInterleavedBatch(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+
 #endif
 }  // extern "C"
 
