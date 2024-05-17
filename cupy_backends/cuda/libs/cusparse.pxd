@@ -160,7 +160,7 @@ IF CUPY_HIP_VERSION == 0:
             public IndexType idxType
             public IndexBase idxBase
             public DataType valueType
-    
+
     cdef class CooAttributes:
         cdef:
             public int64_t rows
@@ -172,7 +172,7 @@ IF CUPY_HIP_VERSION == 0:
             public IndexType idxType
             public IndexBase idxBase
             public DataType valueType
-    
+
     cdef class CooAoSAttributes:
         cdef:
             public int64_t rows
@@ -183,7 +183,7 @@ IF CUPY_HIP_VERSION == 0:
             public IndexType idxType
             public IndexBase idxBase
             public DataType valueType
-    
+
     cdef class CsrAttributes:
         cdef:
             public int64_t rows
@@ -196,13 +196,13 @@ IF CUPY_HIP_VERSION == 0:
             public IndexType colIdxType
             public IndexBase idxBase
             public DataType valueType
-    
+
     cdef class DnVecAttributes:
         cdef:
             public int64_t size
             public intptr_t values
             public DataType valueType
-    
+
     cdef class DnMatAttributes:
         cdef:
             public int64_t rows
@@ -211,7 +211,7 @@ IF CUPY_HIP_VERSION == 0:
             public intptr_t values
             public DataType valueType
             public Order order
-    
+
     cdef class DnMatBatchAttributes:
         cdef:
             public int count
