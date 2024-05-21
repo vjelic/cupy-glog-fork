@@ -23,6 +23,18 @@ typedef void* bsrilu02Info_t;
 #endif
 typedef enum {} cusparseAlgMode_t;
 
+#if HIP_VERSION < 600
+// Error handling
+const char* cusparseGetErrorName(...) {
+    // Unavailable in hipSparse; this should not be called
+    return "CUPY_HIPSPARSE_BINDING_UNEXPECTED_ERROR";
+}
+const char* cusparseGetErrorString(...) {
+    // Unavailable in hipSparse; this should not be called
+    return "unexpected error in CuPy hipSparse binding";
+}
+#endif
+
 hipsparseStatus_t cusparseCsrmvEx_bufferSize(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
