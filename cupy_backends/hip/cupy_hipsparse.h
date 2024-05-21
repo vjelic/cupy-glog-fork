@@ -37,6 +37,12 @@ const char* cusparseGetErrorString(...) {
 
 #if HIP_VERSION < 540
 typedef enum {} cusparseCsr2CscAlg_t;
+hipsparseStatus_t cusparseCsr2cscEx2_bufferSize(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+hipsparseStatus_t cusparseCsr2cscEx2(...) {
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
 #endif
 
 
