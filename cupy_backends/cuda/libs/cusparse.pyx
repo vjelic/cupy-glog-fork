@@ -1561,12 +1561,12 @@ ELSE:
     cdef SoftLink _lib = SoftLink(_libname, 'cusparse')
     # cuSPARSE 11.6+ (CUDA 11.3.1+)
     cdef f_type cusparseSpSM_createDescr = <f_type>_lib.get('SpSM_createDescr')
-    cdef f_type cusparseSpSM_destroyDescr = <f_type>_lib.get('SpSM_destroyDescr') # NOQA
+    cdef f_type cusparseSpSM_destroyDescr = <f_type>_lib.get('SpSM_destroyDescr')  # NOQA
     cdef f_type cusparseSpSM_bufferSize = <f_type>_lib.get('SpSM_bufferSize')
     cdef f_type cusparseSpSM_analysis = <f_type>_lib.get('SpSM_analysis')
     cdef f_type cusparseSpSM_solve = <f_type>_lib.get('SpSM_solve')
     # cuSPARSE 11.5+ (CUDA 11.3.0+)
-    cdef f_type cusparseSpMatSetAttribute = <f_type>_lib.get('SpMatSetAttribute') # NOQA
+    cdef f_type cusparseSpMatSetAttribute = <f_type>_lib.get('SpMatSetAttribute')  # NOQA
     # cuSPARSE 11.3.1+ (CUDA 11.2.0+)
     cdef f_type cusparseCreateCsc = <f_type>_lib.get('CreateCsc')
     # cuSPARSE 11.3+ (CUDA 11.1.1+)
@@ -1782,7 +1782,10 @@ ELSE:
         # https://docs.nvidia.com/cuda/cusparse/index.html#optimization-notes
         # Before we come up with a robust strategy to test the support
         # conditions, we disable this functionality.
-        if not runtime._is_hip_environment and runtime.streamIsCapturing(stream):
+        if (
+            not runtime._is_hip_environment and
+            runtime.streamIsCapturing(stream)
+        ):
             raise NotImplementedError(
                 'calling cuSPARSE API during stream capture is currently '
                 'unsupported')
