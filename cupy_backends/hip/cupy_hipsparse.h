@@ -36,7 +36,7 @@ const char* cusparseGetErrorString(...) {
 #endif
 
 #if HIP_VERSION < 540
-typedef enum {} cusparseCsr2CscAlg_t;
+typedef enum {} hipsparseCsr2CscAlg_t;
 hipsparseStatus_t cusparseCsr2cscEx2_bufferSize(...) {
   return HIPSPARSE_STATUS_NOT_SUPPORTED;
 }
@@ -519,18 +519,18 @@ typedef void* cusparseSpVecDescr_t;
 typedef void* cusparseDnVecDescr_t;
 typedef void* cusparseSpMatDescr_t;
 typedef void* cusparseDnMatDescr_t;
-typedef enum {} cusparseIndexType_t;
-typedef enum {} cusparseFormat_t;
-typedef enum {} cusparseOrder_t;
-typedef enum {} cusparseSpMVAlg_t;
-typedef enum {} cusparseSpMMAlg_t;
-typedef enum {} cusparseSparseToDenseAlg_t;
-typedef enum {} cusparseDenseToSparseAlg_t;
+typedef enum {} hipsparseIndexType_t;
+typedef enum {} hipsparseFormat_t;
+typedef enum {} hipsparseOrder_t;
+typedef enum {} hipsparseSpMVAlg_t;
+typedef enum {} hipsparseSpMMAlg_t;
+typedef enum {} hipsparseSparseToDenseAlg_t;
+typedef enum {} hipsparseDenseToSparseAlg_t;
 #endif
 
 #if HIP_VERSION < 50000000
-typedef enum {} cusparseSpMatAttribute_t;
-typedef enum {} cusparseSpSMAlg_t;
+typedef enum {} hipsparseSpMatAttribute_t;
+typedef enum {} hipsparseSpSMAlg_t;
 typedef void * cusparseSpSMDescr_t;
 #endif
 
