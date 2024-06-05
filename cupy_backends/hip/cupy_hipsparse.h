@@ -33,6 +33,8 @@ const char* hipsparseGetErrorString(...) {
     // Unavailable in hipSparse; this should not be called
     return "unexpected error in CuPy hipSparse binding";
 }
+typedef void const* hipsparseConstSpMatDescr_t;
+typedef void const* hipsparseConstDnMatDescr_t;
 #endif
 
 #if HIP_VERSION < 54000000
