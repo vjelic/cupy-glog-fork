@@ -1109,6 +1109,27 @@ hipsparseStatus_t hipsparseZgpsvInterleavedBatch(...) {
 }
 
 #endif
+
+#if HIP_VERSION < 52000000
+hipsparseStatus_t hipsparseSpMatGetStridedBatch(hipsparseConstSpMatDescr_t spMatDescr,
+                                                int*                       batchCount){
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+hipsparseStatus_t hipsparseSpMatSetStridedBatch(hipsparseConstSpMatDescr_t spMatDescr,
+                                                int                        batchCount){
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+hipsparseStatus_t hipsparseDnMatGetStridedBatch(hipsparseConstDnMatDescr_t dnMatDescr,
+                                                int*                       batchCount,
+                                                int64_t*                   batchStride){
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+hipsparseStatus_t hipsparseDnMatSetStridedBatch(hipsparseDnMatDescr_t dnMatDescr,
+                                                int                   batchCount,
+                                                int64_t               batchStride){
+  return HIPSPARSE_STATUS_NOT_SUPPORTED;
+}
+#endif
 }  // extern "C"
 
 #endif  // INCLUDE_GUARD_HIP_CUPY_HIPSPARSE_H
