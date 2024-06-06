@@ -103,9 +103,6 @@ cpdef enum:
     CUSPARSE_SOLVE_POLICY_NO_LEVEL = 0
     CUSPARSE_SOLVE_POLICY_USE_LEVEL = 1
 
-    CUSPARSE_ALG_NAIVE = 0
-    CUSPARSE_ALG_MERGE_PATH = 1
-
     # Enums for cuSparse generic API
     CUSPARSE_FORMAT_CSR = 1  # Compressed Sparse Row (CSR)
     CUSPARSE_FORMAT_CSC = 2  # Compressed Sparse Column (CSC)
@@ -149,72 +146,76 @@ cpdef enum:
 
     # cusparseDenseToSparseAlg_t
     CUSPARSE_DENSETOSPARSE_ALG_DEFAULT = 0
+IF CUPY_HIP_VERSION == 0:
+    cpdef enum:
+        CUSPARSE_ALG_NAIVE = 0
+        CUSPARSE_ALG_MERGE_PATH = 1
 
-cdef class SpVecAttributes:
-    cdef:
-        public int64_t size
-        public int64_t nnz
-        public intptr_t idx
-        public intptr_t values
-        public IndexType idxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class SpVecAttributes:
+        cdef:
+            public int64_t size
+            public int64_t nnz
+            public intptr_t idx
+            public intptr_t values
+            public IndexType idxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class CooAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t nnz
-        public intptr_t rowIdx
-        public intptr_t colIdx
-        public intptr_t values
-        public IndexType idxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class CooAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t nnz
+            public intptr_t rowIdx
+            public intptr_t colIdx
+            public intptr_t values
+            public IndexType idxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class CooAoSAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t nnz
-        public intptr_t ind
-        public intptr_t values
-        public IndexType idxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class CooAoSAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t nnz
+            public intptr_t ind
+            public intptr_t values
+            public IndexType idxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class CsrAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t nnz
-        public intptr_t rowOffsets
-        public intptr_t colIdx
-        public intptr_t values
-        public IndexType rowOffsetType
-        public IndexType colIdxType
-        public IndexBase idxBase
-        public DataType valueType
+    cdef class CsrAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t nnz
+            public intptr_t rowOffsets
+            public intptr_t colIdx
+            public intptr_t values
+            public IndexType rowOffsetType
+            public IndexType colIdxType
+            public IndexBase idxBase
+            public DataType valueType
 
-cdef class DnVecAttributes:
-    cdef:
-        public int64_t size
-        public intptr_t values
-        public DataType valueType
+    cdef class DnVecAttributes:
+        cdef:
+            public int64_t size
+            public intptr_t values
+            public DataType valueType
 
-cdef class DnMatAttributes:
-    cdef:
-        public int64_t rows
-        public int64_t cols
-        public int64_t ld
-        public intptr_t values
-        public DataType valueType
-        public Order order
+    cdef class DnMatAttributes:
+        cdef:
+            public int64_t rows
+            public int64_t cols
+            public int64_t ld
+            public intptr_t values
+            public DataType valueType
+            public Order order
 
-cdef class DnMatBatchAttributes:
-    cdef:
-        public int count
-        public int64_t stride
+    cdef class DnMatBatchAttributes:
+        cdef:
+            public int count
+            public int64_t stride
 
-cpdef intptr_t create() except? 0
-cpdef void destroy(intptr_t handle) except *
+    cpdef intptr_t create() except? 0
+    cpdef void destroy(intptr_t handle) except *
