@@ -4,7 +4,6 @@
 #if CUPY_USE_HIP
 
 #include "hip/cupy_roctx.h"
-#include "stub/cupy_nvtx.h"
 
 #elif !defined(CUPY_NO_CUDA)
 
@@ -30,7 +29,6 @@ int nvtxRangePop() {
 
 }
 
-#include "stub/cupy_nvtx.h"
 
 #endif
 
