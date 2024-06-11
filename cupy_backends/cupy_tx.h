@@ -29,8 +29,6 @@ int nvtxRangePop() {
 
 }
 
-#include "hip/cupy_roctx.h"
-
 #endif
 
 #endif // #ifndef INCLUDE_GUARD_CUPY_TX_H
