@@ -9,7 +9,6 @@
 
 #define NVTX_EXPORT_API
 #include <nvtx3/nvToolsExt.h>
-#include <cuda/libs/nvtx.h>
 
 #else  // defined(CUPY_NO_CUDA)
 
@@ -30,6 +29,7 @@ int nvtxRangePop() {
 
 }
 
+#include "hip/cupy_roctx.h"
 
 #endif
 
