@@ -3,8 +3,8 @@
 """Thin wrapper of cuda profiler."""
 from cupy_backends.cuda.api cimport runtime
 
-IF CUPY_USE_GEN_HIP_CODE:
-    from cupy_backends.cuda.libs.profiler_hip import *
+IF CUPY_HIP_VERSION > 0:
+    from cupy_backends.cuda.api cimport runtime_hip as runtime
 ELSE:
     # TODO(kmaehashi): cudaProfilerInitialize is deprecated thus unsupported in
     # cudapython.
