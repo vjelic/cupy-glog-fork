@@ -67,4 +67,3 @@ ELSE:
         """
         status = cudaProfilerStop()
         runtime.check_status(status)
-        

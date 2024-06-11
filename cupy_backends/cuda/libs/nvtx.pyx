@@ -226,5 +226,4 @@ ELSE:
         return nvtxRangeStartEx(&attrib)
 
     cpdef RangeEnd(unsigned long long range_id):
-        nvtxRangeEnd(range_id)
-        
+        nvtxRangeEnd(range_id)  
