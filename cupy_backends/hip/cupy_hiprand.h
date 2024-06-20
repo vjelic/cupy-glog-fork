@@ -5,11 +5,13 @@
 
 extern "C" {
 
+#if HIP_VERSION < 60241132
 typedef enum {} hiprandOrdering_t;
 
 hiprandStatus_t hiprandSetGeneratorOrdering(...) {
     return HIPRAND_STATUS_NOT_IMPLEMENTED;
 }
+#endif
 
 #if HIP_VERSION < 50530201
 hiprandStatus_t hiprandGenerateLongLong(...) {
