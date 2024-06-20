@@ -8,6 +8,7 @@ import numpy
 import pytest
 
 from cupy.cuda import nccl
+from cupy.cuda import runtime
 from cupy import testing
 
 from cupyx.distributed import init_process_group
@@ -53,6 +54,7 @@ def _run_test_with_mpi(test_name, dtype=None):
 
 
 @pytest.mark.skipif(not nccl_available, reason='nccl is not installed')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 @testing.multi_gpu(2)
 class TestNCCLBackend:
     def _run_test(self, test, dtype):
@@ -110,6 +112,7 @@ class TestNCCLBackendWithMPI(TestNCCLBackend):
 
 
 @pytest.mark.skipif(not nccl_available, reason='nccl is not installed')
+@pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
 @testing.multi_gpu(2)
 class TestNCCLBackendSparse:
     def _run_test(self, test, dtype):
@@ -166,6 +169,7 @@ class TestNCCLBackendSparseWithMPI(TestNCCLBackendSparse):
 @pytest.mark.skipif(not nccl_available, reason='nccl is not installed')
 class TestInitDistributed(unittest.TestCase):
 
+    @pytest.mark.skipif(runtime.is_hip, reason='ROCm/HIP may have a bug')
     @testing.multi_gpu(2)
     def test_init(self):
         _run_test('init')
