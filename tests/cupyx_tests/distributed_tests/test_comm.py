@@ -18,6 +18,7 @@ import functools
 
 nccl_available = nccl.available
 
+
 def decorate_ifnot(cls_name, deco):
     '''This decorator applies deco if method is not an instance of cls_name
        The condition is checked only if its ROCm environment,
@@ -25,18 +26,19 @@ def decorate_ifnot(cls_name, deco):
     def decorater(method):
         @functools.wraps(method)
         def wrapper(instance, *args, **kwargs):
-            if runtime.is_hip and instance.__class__.__name__==cls_name:
+            if runtime.is_hip and instance.__class__.__name__ == cls_name:
                 return method(instance, *args, **kwargs)
             else:
                 return deco(method)(instance, *args, **kwargs)
-        return wrapper 
+        return wrapper
     return decorater
+
 
 def _run_test(test_name, dtype=None):
     # subprocess is required not to interfere with cupy module imported in top
     # of this file
     if runtime.is_hip:
-        pytest.skip('ROCm/HIP may have a bug') 
+        pytest.skip('ROCm/HIP may have a bug')
     runner_path = pathlib.Path(__file__).parent / 'comm_runner.py'
     args = [sys.executable, runner_path, test_name, 'store']
     if dtype is not None:
