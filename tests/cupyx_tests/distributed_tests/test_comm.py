@@ -118,6 +118,7 @@ class TestNCCLBackend:
     def test_barrier(self):
         self._run_test('barrier', None)
 
+
 @pytest.mark.skipif(not _mpi_available, reason='mpi is not installed')
 @testing.multi_gpu(2)
 class TestNCCLBackendWithMPI(TestNCCLBackend):
