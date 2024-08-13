@@ -511,8 +511,8 @@ def numpy_cupy_allclose(rtol=1e-7, atol=0, err_msg='', verbose=True,
     def check_func(c, n):
         rtol1, atol1 = _resolve_tolerance(type_check, c, rtol, atol)
         import numbers
-        if type(n) is numpy.ndarray and \
-           (issubclass(n.dtype.type, numbers.Real) or \
+        if type(n) is numpy.ndarray and
+           (issubclass(n.dtype.type, numbers.Real) or
             issubclass(n.dtype.type, numbers.Complex)):
             npc = cupy.asnumpy(c)
             diff = numpy.linalg.norm(npc - n, numpy.inf)
