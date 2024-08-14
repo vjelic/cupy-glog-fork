@@ -14,6 +14,7 @@ from cupy.testing import _array
 from cupy.testing import _parameterized
 import cupyx
 import cupyx.scipy.sparse
+from cupy_backends.cuda.api import runtime
 
 from cupy.testing._pytest_impl import is_available
 
@@ -511,7 +512,7 @@ def numpy_cupy_allclose(rtol=1e-7, atol=0, err_msg='', verbose=True,
     def check_func(c, n):
         rtol1, atol1 = _resolve_tolerance(type_check, c, rtol, atol)
         import numbers
-        if type(n) is numpy.ndarray and \
+        if runtime.is_hip and type(n) is numpy.ndarray and \
            (issubclass(n.dtype.type, numbers.Real) or
                 issubclass(n.dtype.type, numbers.Complex)):
             npc = cupy.asnumpy(c)
