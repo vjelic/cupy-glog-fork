@@ -515,10 +515,13 @@ def numpy_cupy_allclose(rtol=1e-7, atol=0, err_msg='', verbose=True,
         if runtime.is_hip and type(n) is numpy.ndarray and \
            (issubclass(n.dtype.type, numbers.Real) or
                 issubclass(n.dtype.type, numbers.Complex)):
-            npc = cupy.asnumpy(c)
-            diff = numpy.linalg.norm(npc - n, numpy.inf)
-            norm = numpy.linalg.norm(npc, numpy.inf)
-            assert diff <= (atol1 + rtol1 * norm)
+                try:
+                _array.assert_allclose(c, n, rtol1, atol1, err_msg, verbose)
+            except AssertionError:
+                npc = cupy.asnumpy(c)
+                diff = numpy.linalg.norm(npc - n, numpy.inf)
+                norm = numpy.linalg.norm(npc, numpy.inf)
+                assert diff <= (atol1 + rtol1 * norm)
         else:
             _array.assert_allclose(c, n, rtol1, atol1, err_msg, verbose)
 
