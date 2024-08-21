@@ -523,7 +523,8 @@ def numpy_cupy_allclose(rtol=1e-7, atol=0, err_msg='', verbose=True,
                 norm = numpy.linalg.norm(npc, numpy.inf)
                 if numpy.any(npc) and numpy.any(n):
                     min_positive = numpy.finfo(n.dtype).tiny
-                    if (abs(npc) < min_positive).any() or (abs(n) < min_positive).any():
+                    if (abs(npc) < min_positive).any() or \
+                        (abs(n) < min_positive).any():
                         # Denormal case handling
                         assert diff <= (atol1 + rtol1 * norm)
                     else:
