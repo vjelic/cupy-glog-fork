@@ -516,7 +516,7 @@ def numpy_cupy_allclose(rtol=1e-7, atol=0, err_msg='', verbose=True,
         except AssertionError as e:
             import numbers
             if runtime.is_hip and type(n) is numpy.ndarray and \
-                (issubclass(n.dtype.type, numbers.Real) or 
+                (issubclass(n.dtype.type, numbers.Real) or
                  issubclass(n.dtype.type, numbers.Complex)):
                 npc = cupy.asnumpy(c)
                 diff = numpy.linalg.norm(npc - n, numpy.inf)
