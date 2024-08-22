@@ -516,15 +516,15 @@ def numpy_cupy_allclose(rtol=1e-7, atol=0, err_msg='', verbose=True,
         except AssertionError as e:
             import numbers
             if runtime.is_hip and type(n) is numpy.ndarray and \
-                (issubclass(n.dtype.type, numbers.Real) or \
-                issubclass(n.dtype.type, numbers.Complex)):
+                (issubclass(n.dtype.type, numbers.Real) or 
+                 issubclass(n.dtype.type, numbers.Complex)):
                 npc = cupy.asnumpy(c)
                 diff = numpy.linalg.norm(npc - n, numpy.inf)
                 norm = numpy.linalg.norm(npc, numpy.inf)
                 if numpy.any(npc) and numpy.any(n):
                     min_positive = numpy.finfo(n.dtype).tiny
                     if (abs(npc) < min_positive).any() or \
-                        (abs(n) < min_positive).any():
+                            (abs(n) < min_positive).any():
                         # Denormal case handling
                         assert diff <= (atol1 + rtol1 * norm)
                     else:
