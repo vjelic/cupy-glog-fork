@@ -164,7 +164,8 @@ beta_params = [
     {'a': 5.0, 'b': [1.0, 5.0, 8.0, 1.0, 3.0]},
     {'a': [8.0, 6.0, 2.0, 4.0, 7.0], 'b': [3.0, 1.0, 2.0, 8.0, 1.0]}]
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,reason="Skipping due to segmentation fault")
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class Beta:
 
     target_method = 'beta'
@@ -208,7 +209,8 @@ standard_gamma_params = [
     {'shape': 1.0},
     {'shape': 3.0}]
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,reason="Skipping due to segmentation fault")
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class StandardGamma:
 
     target_method = 'standard_gamma'
@@ -294,7 +296,8 @@ gamma_params = [
     {'shape': 1.0, 'scale': 3.0},
     {'shape': 3.0, 'scale': 3.0}]
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,reason="Skipping due to segmentation fault")
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class Gamma:
 
     target_method = 'gamma'
@@ -451,7 +454,8 @@ chisquare_params = [
     {'df': [2, 5, 8]},
 ]
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,reason="Skipping due to segmentation fault")
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class Chisquare:
 
     target_method = 'chisquare'
@@ -477,7 +481,8 @@ f_params = [
     {'dfnum': [1.0, 3.0, 3.0], 'dfden': [3.0, 3.0, 1.0]},
 ]
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,reason="Skipping due to segmentation fault")
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class F:
 
     target_method = 'f'
@@ -503,7 +508,8 @@ dirichlet_params = [
     {'alpha': [2, 5, 8]}
 ]
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,reason="Skipping due to segmentation fault")
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class Dirichlet:
     target_method = 'dirichlet'
 
