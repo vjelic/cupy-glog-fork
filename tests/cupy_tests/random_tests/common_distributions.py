@@ -6,7 +6,6 @@ import numpy
 import cupy
 from cupy import testing
 from cupy.testing import _condition
-import pytest
 
 
 def two_sample_Kolmogorov_Smirnov_test(observed1, observed2):
@@ -165,8 +164,6 @@ beta_params = [
     {'a': [8.0, 6.0, 2.0, 4.0, 7.0], 'b': [3.0, 1.0, 2.0, 8.0, 1.0]}]
 
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-                    reason="Skipping due to segmentation fault")
 class Beta:
 
     target_method = 'beta'
@@ -211,8 +208,6 @@ standard_gamma_params = [
     {'shape': 3.0}]
 
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-                    reason="Skipping due to segmentation fault")
 class StandardGamma:
 
     target_method = 'standard_gamma'
@@ -299,8 +294,6 @@ gamma_params = [
     {'shape': 3.0, 'scale': 3.0}]
 
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-                    reason="Skipping due to segmentation fault")
 class Gamma:
 
     target_method = 'gamma'
@@ -458,8 +451,6 @@ chisquare_params = [
 ]
 
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-                    reason="Skipping due to segmentation fault")
 class Chisquare:
 
     target_method = 'chisquare'
@@ -486,8 +477,6 @@ f_params = [
 ]
 
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-                    reason="Skipping due to segmentation fault")
 class F:
 
     target_method = 'f'
@@ -514,8 +503,6 @@ dirichlet_params = [
 ]
 
 
-@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
-                    reason="Skipping due to segmentation fault")
 class Dirichlet:
     target_method = 'dirichlet'
 
