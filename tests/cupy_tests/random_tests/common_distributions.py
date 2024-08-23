@@ -164,6 +164,7 @@ beta_params = [
     {'a': 5.0, 'b': [1.0, 5.0, 8.0, 1.0, 3.0]},
     {'a': [8.0, 6.0, 2.0, 4.0, 7.0], 'b': [3.0, 1.0, 2.0, 8.0, 1.0]}]
 
+
 @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
                     reason="Skipping due to segmentation fault")
 class Beta:
@@ -208,6 +209,7 @@ standard_gamma_params = [
     {'shape': 0.5},
     {'shape': 1.0},
     {'shape': 3.0}]
+
 
 @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
                     reason="Skipping due to segmentation fault")
@@ -295,6 +297,7 @@ gamma_params = [
     {'shape': 0.5, 'scale': 3.0},
     {'shape': 1.0, 'scale': 3.0},
     {'shape': 3.0, 'scale': 3.0}]
+
 
 @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
                     reason="Skipping due to segmentation fault")
@@ -454,6 +457,7 @@ chisquare_params = [
     {'df': [2, 5, 8]},
 ]
 
+
 @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
                     reason="Skipping due to segmentation fault")
 class Chisquare:
@@ -481,6 +485,7 @@ f_params = [
     {'dfnum': [1.0, 3.0, 3.0], 'dfden': [3.0, 3.0, 1.0]},
 ]
 
+
 @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
                     reason="Skipping due to segmentation fault")
 class F:
@@ -507,6 +512,7 @@ dirichlet_params = [
     {'alpha': 1},
     {'alpha': [2, 5, 8]}
 ]
+
 
 @pytest.mark.skipif(cupy.cuda.runtime.is_hip,
                     reason="Skipping due to segmentation fault")
