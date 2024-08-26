@@ -101,6 +101,8 @@ class TestBinomial(
 @testing.parameterize(*common_distributions.beta_params)
 @testing.with_requires('numpy>=1.17.0')
 @testing.fix_random()
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class TestBeta(
     common_distributions.Beta,
     GeneratorTestCase
@@ -120,6 +122,8 @@ class TestStandardExponential(
 
 @testing.parameterize(*common_distributions.gamma_params)
 @testing.fix_random()
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class TestGamma(
     common_distributions.Gamma,
     GeneratorTestCase,
@@ -129,6 +133,8 @@ class TestGamma(
 
 @testing.parameterize(*common_distributions.standard_gamma_params)
 @testing.fix_random()
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class TestStandardGamma(
     common_distributions.StandardGamma,
     GeneratorTestCase,
@@ -344,6 +350,8 @@ class TestLogseries(
 
 @testing.parameterize(*common_distributions.chisquare_params)
 @testing.fix_random()
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class TestChisquare(
     common_distributions.Chisquare,
     GeneratorTestCase
@@ -353,6 +361,8 @@ class TestChisquare(
 
 @testing.parameterize(*common_distributions.f_params)
 @testing.fix_random()
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class TestF(
     common_distributions.F,
     GeneratorTestCase
@@ -362,6 +372,8 @@ class TestF(
 
 @testing.parameterize(*common_distributions.dirichlet_params)
 @testing.fix_random()
+@pytest.mark.skipif(cupy.cuda.runtime.is_hip,
+                    reason="Skipping due to segmentation fault")
 class TestDrichlet(
     common_distributions.Dirichlet,
 
