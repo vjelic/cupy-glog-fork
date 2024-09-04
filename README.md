@@ -2,6 +2,14 @@
 
 # CuPy : NumPy & SciPy for GPU
 
+***
+
+**NOTE**:
+
+This is a special set of commits for applications developed by the AMD DC GPU AISS team.
+
+***
+
 [![pypi](https://img.shields.io/pypi/v/cupy)](https://pypi.python.org/pypi/cupy)
 [![Conda](https://img.shields.io/conda/vn/conda-forge/cupy)](https://anaconda.org/conda-forge/cupy)
 [![GitHub license](https://img.shields.io/github/license/cupy/cupy)](https://github.com/cupy/cupy)
@@ -32,53 +40,50 @@ array([  3.,  12.], dtype=float32)
 CuPy also provides access to low-level CUDA features.
 You can pass `ndarray` to existing CUDA C/C++ programs via [RawKernels](https://docs.cupy.dev/en/stable/user_guide/kernel.html#raw-kernels), use [Streams](https://docs.cupy.dev/en/stable/reference/cuda.html) for performance, or even call [CUDA Runtime APIs](https://docs.cupy.dev/en/stable/reference/cuda.html#runtime-api) directly.
 
-## Installation
+## Install from Source
 
-### Pip
+***
 
-Binary packages (wheels) are available for Linux and Windows on [PyPI](https://pypi.org/org/cupy/).
-Choose the right package for your platform.
+**NOTE (Tested ROCm versions):**
 
-| Platform              | Architecture      | Command                                                       |
-| --------------------- | ----------------- | ------------------------------------------------------------- |
-| CUDA 10.2             | x86_64 / aarch64  | `pip install cupy-cuda102`                                    |
-| CUDA 11.0             | x86_64            | `pip install cupy-cuda110`                                    |
-| CUDA 11.1             | x86_64            | `pip install cupy-cuda111`                                    |
-| CUDA 11.2 ~ 11.8      | x86_64 / aarch64  | `pip install cupy-cuda11x`                                    |
-| CUDA 12.x             | x86_64 / aarch64  | `pip install cupy-cuda12x`                                    |
-| ROCm 4.3 (*[experimental](https://docs.cupy.dev/en/latest/install.html#using-cupy-on-amd-gpu-experimental)*)          | x86_64            | `pip install cupy-rocm-4-3`                                   |
-| ROCm 5.0 (*[experimental](https://docs.cupy.dev/en/latest/install.html#using-cupy-on-amd-gpu-experimental)*)          | x86_64            | `pip install cupy-rocm-5-0`                                   |
+The following installation instructions have been tested with ROCm 6.0.0 ... ROCm 6.2.0 (inclusive).
+They may or may not work with more recent or older releases of ROCm.
 
-> [!NOTE]\
-> To install pre-releases, append `--pre -U -f https://pip.cupy.dev/pre` (e.g., `pip install cupy-cuda11x --pre -U -f https://pip.cupy.dev/pre`).
+***
 
-### Conda
+We create our build environment via `conda` [^miniconda]. The environment file (`cupy.yaml`) is shown below.
+Note that while you can adapt the Python version, the Cython version should stay fixed.
 
-Binary packages are also available for Linux and Windows on [Conda-Forge](https://anaconda.org/conda-forge/cupy).
-
-| Platform              | Architecture                | Command                                                       |
-| --------------------- | --------------------------- | ------------------------------------------------------------- |
-| CUDA                  | x86_64 / aarch64 / ppc64le  | `conda install -c conda-forge cupy`                           |
-
-If you need to use a particular CUDA version (say 11.8), you can do `conda install -c conda-forge cupy cuda-version=11.8`.
-
-> [!NOTE]\
-> If you encounter any problem with CuPy installed from `conda-forge`, please feel free to report to [cupy-feedstock](https://github.com/conda-forge/cupy-feedstock/issues), and we will help investigate if it is just a packaging issue in `conda-forge`'s recipe or a real issue in CuPy.
-
-### Docker
-
-Use [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/overview.html) to run [CuPy container images](https://hub.docker.com/r/cupy/cupy).
-
-```
-$ docker run --gpus all -it cupy/cupy
+```yaml
+# file: cupy.yaml
+channels:
+- conda-forge
+dependencies:
+- python==3.10.13 # adapt to your needs
+- cython==0.29.35
 ```
 
-## Resources
+We then build as follows:
 
-- [Installation Guide](https://docs.cupy.dev/en/stable/install.html) - instructions on building from source
-- [Release Notes](https://github.com/cupy/cupy/releases)
-- [Projects using CuPy](https://github.com/cupy/cupy/wiki/Projects-using-CuPy)
-- [Contribution Guide](https://docs.cupy.dev/en/stable/contribution.html)
+```bash
+# initialize conda environment
+conda env create -n cupy_dev -f cupy_dev.yaml
+conda activate cupy_dev # now we are working in the `cupy_dev` conda env
+
+pip install --upgrade pip # always recommended
+
+# cd <path/to/parent-directory>
+git clone https://github.com/ROCm/cupy.git -b aiss/cai-branch
+cd cupy
+git submodule update --init
+export CUPY_INSTALL_USE_HIP=1
+export ROCM_HOME=/opt/rocm        # adapt to your environment
+export HCC_AMDGPU_TARGET="gfx90a" # adapt to your AMD GPU architecture
+python3 setup.py bdist_wheel      # build the wheel
+pip install dist/cupy*.whl        # install the wheel
+```
+
+[^miniconda]: <https://docs.anaconda.com/miniconda/#>
 
 ## License
 
