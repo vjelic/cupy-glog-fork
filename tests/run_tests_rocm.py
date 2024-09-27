@@ -66,9 +66,9 @@ CUPYX_TESTS = [
 ]
 
 TEST_SUITES = [
-    #'cupy_tests',
-    #'cupyx_tests',
-    #'example_tests',
+    'cupy_tests',
+    'cupyx_tests',
+    'example_tests',
     'install_tests',
 ]
 
