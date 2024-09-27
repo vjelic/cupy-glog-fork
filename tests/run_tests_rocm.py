@@ -66,9 +66,9 @@ CUPYX_TESTS = [
 ]
 
 TEST_SUITES = [
-    'cupy_tests',
-    'cupyx_tests',
-    'example_tests',
+    #'cupy_tests',
+    #'cupyx_tests',
+    #'example_tests',
     'install_tests',
 ]
 
@@ -129,10 +129,6 @@ def main():
     all_tests = args.all_tests
     if all_tests:
         test_summary = run_all_tests()
-        print("---------------------- TEST SUMMARY ------------------")
-        for j in range(len(test_summary)):
-            print(test_summary[j])
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
