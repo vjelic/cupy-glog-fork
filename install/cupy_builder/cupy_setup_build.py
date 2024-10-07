@@ -293,6 +293,8 @@ def make_extensions(ctx: Context, compiler, use_cython):
         settings['define_macros'].append(('__HIP_PLATFORM_AMD__', '1'))
         # deprecated since ROCm 4.2.0
         settings['define_macros'].append(('__HIP_PLATFORM_HCC__', '1'))
+        # the version.h header in rocthrust needs this setting to enforce using HIP during version check
+        settings['define_macros'].append(('THRUST_DEVICE_SYSTEM', 'THRUST_DEVICE_SYSTEM_HIP'))
 
     available_modules = []
     if no_cuda:
