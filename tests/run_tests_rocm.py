@@ -127,17 +127,21 @@ def run_all_tests():
 
 def main():
     all_tests = args.all_tests
+    print_summary = args.print_summary
     if all_tests:
         test_summary = run_all_tests()
-        print("---------------------- TEST SUMMARY ------------------")
-        for j in range(len(test_summary)):
-            print(test_summary[j])
+        if print_summary:
+            print("---------------------- TEST SUMMARY ------------------")
+            for j in range(len(test_summary)):
+                print(test_summary[j])
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--all-tests", action="store_true",
                         default=True, required=False, help="Run all tests")
+    parser.add_argument("--print-summary", action="store_true",
+                        help="Print test summary")
     args = parser.parse_args()
 
     main()
