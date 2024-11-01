@@ -14,7 +14,6 @@ from cupy.testing import _array
 from cupy.testing import _parameterized
 import cupyx
 import cupyx.scipy.sparse
-# from cupy_backends.cuda.api import runtime
 
 from cupy.testing._pytest_impl import is_available
 
