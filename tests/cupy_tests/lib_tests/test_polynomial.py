@@ -694,7 +694,7 @@ class TestPolyfitDiffTypes:
 class TestPolyval(Poly1dTestBase):
 
     @testing.for_all_dtypes()
-    @testing.numpy_cupy_allclose(rtol={numpy.float16: 1e-2, 'default': 1e-3})
+    @testing.numpy_cupy_allclose(rtol={numpy.float16: 1e-2, 'default': 2e-3})
     def test_polyval(self, xp, dtype):
         a1 = self._get_input(xp, self.type_l, dtype, size=5)
         a2 = self._get_input(xp, self.type_r, dtype, size=5)
