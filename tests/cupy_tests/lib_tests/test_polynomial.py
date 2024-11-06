@@ -696,10 +696,10 @@ class TestPolyval(Poly1dTestBase):
 
     @testing.for_all_dtypes()
     @testing.numpy_cupy_allclose(
-    rtol=(
-        {numpy.float16: 1e-2, 'default': 2e-3} 
-        if _runtime.is_hip 
-        else {numpy.float16: 1e-2, 'default': 1e-3}
+        rtol=(
+            {numpy.float16: 1e-2, 'default': 2e-3}
+            if _runtime.is_hip
+            else {numpy.float16: 1e-2, 'default': 1e-3}
         )
     )
     def test_polyval(self, xp, dtype):
